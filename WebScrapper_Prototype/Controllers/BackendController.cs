@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Net.Mail;
+using System.Net;
 using System.Text;
 using wazaware.co.za.DAL;
 using wazaware.co.za.Models;
@@ -424,7 +426,7 @@ namespace wazaware.co.za.Controllers
 		[HttpGet]
 		public IActionResult Index(int merge, int startDisplay, int productId, string view, string sortOrder, string findProduct, string currentFilter, string searchString, string dataBatch, int? page, int startImageDownload)
 		{
-			ViewBag.setting = view;
+            ViewBag.setting = view;
 			var products = from p in _context.Products
 						   select p;
 			ViewBag.CurrentSort = sortOrder;
@@ -515,6 +517,40 @@ namespace wazaware.co.za.Controllers
 			}
 			return View(products);
 		}
+        [HttpGet]
+        public async Task<IActionResult> SendSMSToTelkom(string mobileNumber, string message)
+		{
+			try
+			{
+                SmtpClient smtpClient = new("smtp.gmail.com", 587)
+                {
+                    EnableSsl = true,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential("brandenconnected@gmail.com", "mueadqbombixceuk")
+                };
+
+                MailMessage mailMessage = new()
+                {
+                    From = new MailAddress("brandenconnected@gmail.com")
+                };
+                mailMessage.To.Add($"{mobileNumber}@sms.co.za"); // use the appropriate email-to-SMS gateway domain
+				mailMessage.Subject = "SMS message";
+				mailMessage.Body = message[..Math.Min(160, message.Length)]; // limit the message to 160 characters
+
+				await smtpClient.SendMailAsync(mailMessage);
+                Console.WriteLine("Successfully Sent SMS\n" +
+					$"From : {mailMessage.From}\n" +
+					$"To : {mailMessage.To}\n" +
+					$"Subject : {mailMessage.Subject}\n" +
+					$"Body : {mailMessage.Body}\n");
+            }
+            catch (Exception ex)
+			{
+				Console.WriteLine($"An error occurred while sending the SMS message: {ex.Message}");
+			}
+			return RedirectToAction("Index");
+        }
+
 	}
 }
 

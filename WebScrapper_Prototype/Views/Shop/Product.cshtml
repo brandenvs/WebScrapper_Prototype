@@ -363,6 +363,8 @@
 		</div>
 		<!-- // -->
 	</div>
+	@if (ViewBag.Oops != true)
+	{
 	<!-- // -->
 	<!-- Breadcrumbs -->
 	<div class="breadcrumbs">
@@ -380,18 +382,18 @@
 		</div>
 	</div>
 	<!-- End Breadcrumbs -->
-	<!-- Start Product -->
-	<div class="product">
-		<div class="container">
-			<div id="progressBarContainer">
-				<div id="progressBar"></div>
-			</div>
+		<!-- Start Product -->
+		<div class="product">
+			<div class="container">
+				<div id="progressBarContainer">
+					<div id="progressBar"></div>
+				</div>
 				<div class="modal-body">
 					<div class="row no-gutters">
 						<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
 							<!-- Product Slider -->
 							<div class="product-gallery">
-								<img src="@Url.Action("GetImage", "Backend", new { id = Model.Product.ProductId })" alt="@Model.Product.ProductName" />					
+								<img src="@Url.Action("GetImage", "Backend", new { id = Model.Product.ProductId })" alt="@Model.Product.ProductName" />
 							</div>
 							<!-- End Product slider -->
 						</div>
@@ -410,9 +412,9 @@
 										<a href="#"> (1 customer review)</a>
 									</div>
 								</div>
-									<div class="quickview-stock">
-										<span><i class="fa fa-check-circle-o"></i> @Model.Product.ProductStock</span>
-									</div>								
+								<div class="quickview-stock">
+									<span><i class="fa fa-check-circle-o"></i> @Model.Product.ProductStock</span>
+								</div>
 								<div class="product-price">
 									<span class="text-decoration-line-through" style="color:red">R @Model.Product.ProductPriceBase</span>
 									<h3 style="font-weight:800;">R @Model.Product.ProductPriceSale</h3>
@@ -435,10 +437,11 @@
 							</div>
 						</div>
 					</div>
-				</div>			
+				</div>
+			</div>
 		</div>
-	</div>		
-	<!-- // -->
+		<!-- // -->
+
 	<!-- Similar Products -->
 	<div style="border-top:dotted; border-width:2px; margin:15px; padding:10px;"></div>
 	<div class="container">
@@ -459,6 +462,11 @@
 	</div>
 	<div style="border-top:dotted; border-width:2px; margin:15px; padding:10px;"></div>
 	<!-- // -->
+	}
+	else
+	{
+		<h1>Product Is Sold Out!</h1>
+	}
 	<!-- Footer Partial View-->
 	<partial name="_Footer" />
 	<!-- // -->

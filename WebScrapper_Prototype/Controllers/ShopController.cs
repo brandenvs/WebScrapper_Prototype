@@ -33,8 +33,6 @@ namespace wazaware.co.za.Controllers
 		}
 		/// <summary>
 		/// Responsible for the Shop RazorView
-		/// ViewBags that need to be Fulfilled:
-		/// ViewBag.IsCookie; ViewBag.FirstName; ViewBag.ItemCount
 		/// </summary>
 		[HttpGet]
 		public async Task<IActionResult> Index(string search, int productId, int actionCode)
@@ -183,7 +181,7 @@ namespace wazaware.co.za.Controllers
 				await SetUserModel(int.Parse(cookieResponse)); // Sets User Model so that {_user} can be called
 			/// Update ViewBags Appropriately ///				
 			// Check if user is a Cookie or Registered
-			if (!_user.Email!.Contains("wazawareCookie6.542-Email"))
+			if (!_user!.Email!.Contains("wazawareCookie6.542-Email"))
 				_isCookieUser = false;
 			else
 				_isCookieUser = true;
@@ -242,7 +240,7 @@ namespace wazaware.co.za.Controllers
 		/// Responsible for 
 		/// </summary>
 		[HttpGet]
-		public async Task<IActionResult> Products(string search, string manufacturer, int page)
+		public async Task<IActionResult> Products(string search, string manufacturer, int page, string category, string filter)
 		{
 			var cookieResponse = await SyncUserCookieAsync();
 			if (cookieResponse != null)
@@ -349,64 +347,67 @@ namespace wazaware.co.za.Controllers
 			return View();
 		}
 		/// <summary>
-		/// Responsible for 
-		/// </summary>
-		[HttpGet]
-		public async Task<IActionResult> Upgrade(string filter)
-		{
-			var products = _context.Products.Where(s => s.ProductVisibility!.Equals("ProductVisibility"));
-			switch (filter)
-			{
-				case "Kits":
-					ViewBag.Filter = "Upgrade Kits are Coming Soon!";
-					return View();			
-				case "SSDs":
-					products = _context.Products.Where(s => s.ProductCategory!.Equals("SSDs"));
-					ViewBag.Filter = "SSDs";
-					break;
-				case "Case Fans":
-					products = _context.Products.Where(s => s.ProductCategory!.Equals("Case Fans"));
-					ViewBag.Filter = "Case Fans";
-					break;
-				case "Motherboards":
-					products = _context.Products.Where(s => s.ProductCategory!.Equals("Motherboards"));
-					ViewBag.Filter = "Motherboards";
-					break;
-				case "PSUs":
-					products = _context.Products.Where(s => s.ProductCategory!.Equals("PSUs"));
-					ViewBag.Filter = "PSUs";
-					break;
-				case "Memory":
-					products = _context.Products.Where(s => s.ProductCategory!.Equals("Memory"));
-					ViewBag.Filter = "Memory";
-					break;
-				case "CPU Coolers":
-					products = _context.Products.Where(s => s.ProductCategory!.Equals("CPU Coolers"));
-					ViewBag.Filter = "CPU Coolers";
-					break;					
-				default :		
-					products = _context.Products.Where(s => s.ProductCategory!.Equals(filter));
-					if(products != null)
-						ViewBag.Filter = filter;
-					else
-						ViewBag.Filter = "404: No Products Found!";
-					break;
-			}		
-			return View(products.ToPagedList(1, 100));
-		}
-		/// <summary>
 		/// Responsible for the Product RazorView
 		/// </summary>
 		[HttpGet]
-		public IActionResult Product(int id)
+		public async Task<IActionResult> ProductAsync(int id)
 		{
-			var product = _context.Products.Where(p => p.ProductId!.Equals(id)).FirstOrDefault();
-	
-			var viewModel = new ProductsViewModel
+			var cookieResponse = await SyncUserCookieAsync();
+			if (cookieResponse != null)
+				await SetUserModel(int.Parse(cookieResponse)); // Sets User Model so that {_user} can be called
+			/// Update ViewBags Appropriately ///				
+			// Check if user is a Cookie or Registered
+			if (!_user!.Email!.Contains("wazawareCookie6.542-Email"))
+				_isCookieUser = false;
+			else
+				_isCookieUser = true;
+			ViewBag.isCookie = _isCookieUser;
+			// Load Shopping Cart
+			// Checks for products in Shopping Cart
+			var shoppingCart = LoadShoppingCart(_user.UserId);
+			if (shoppingCart == null)
 			{
-				Product = product!
-			};
-			return View(viewModel);
+				ViewBag.ItemCount = 0;
+				List<Product> shoppingCartEmpty = new()
+					{
+						new Product
+						{
+							ProductName = "non",
+							ProductStock = "non",
+							ProductDescription = "non",
+							ProductCategory = "non",
+							ProductPriceBase = 0,
+							ProductPriceSale = 0,
+							ProductVendorName = "non",
+							ProductVendorUrl = "non",
+							ProductVisibility = "visible",
+							ProductDataBatchNo = "non",
+							ProductImageUrl = "non"
+						}
+					};
+			}
+			else
+				ViewBag.ItemCount = shoppingCart.Count;
+			var product = _context.Products.Where(p => p.ProductId!.Equals(id)).FirstOrDefault(); 
+			if (product != null)
+			{
+				ViewBag.Oops = false;
+				var viewModel = new ProductsViewModel
+				{
+					Cart = shoppingCart,
+					Product = product
+				};
+				return View(viewModel);
+			}
+			else
+			{
+				ViewBag.Oops = true;
+				var viewModel = new ProductsViewModel
+				{
+					Cart = shoppingCart
+				};
+				return View(viewModel);
+			}
 		}
 		/// <summary>
 		/// Responsible for Shopping UserShoppingCart Overlay
@@ -496,7 +497,7 @@ namespace wazaware.co.za.Controllers
 		/// Responsible for the WebsiteCritical RazorView
 		/// </summary>
 		[HttpGet]
-		public async Task<IActionResult> WebsiteCritical()
+		public IActionResult WebsiteCritical()
 		{
 			return View();
 		}
@@ -540,7 +541,10 @@ namespace wazaware.co.za.Controllers
 			UserManagerService ums = new(_context, _httpContextAccessor);
 			_user = await ums.GetCurrentUserModel(cookieResponse);
 		}
-		public IPagedList<Product> SearchProducts(string search)
+        /// <summary>
+        /// ...
+        /// </summary>
+        public IPagedList<Product> SearchProducts(string search)
 		{
 			search = search.ToLower();
 			var splitSearch = search.Split(' ');
