@@ -1,0 +1,767 @@
+﻿@using wazaware.co.za.Controllers;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@model X.PagedList.IPagedList<wazaware.co.za.Models.Product>
+@{
+	ViewData["Title"] = "Shop";
+}
+<!DOCTYPE html>
+<configuration>
+	<system.webServer>
+		<security>
+			<dynamicIpSecurity denyAction="Forbidden">
+				<denyByConcurrentRequests enabled="true" maxConcurrentRequests="10" />
+				<denyByRequestRate enabled="true" maxRequests="30" requestIntervalInMilliseconds="300" />
+			</dynamicIpSecurity>
+		</security>
+	</system.webServer>
+</configuration>
+<html lang="zxx">
+<head>
+	<!-- Meta Tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="WaZaWare.co.za /Find the Right Price/ | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta property="og:title" content="WaZaWare">
+	<meta property="og:description" content="WaZaWare.co.za /Find the Right Price/ | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta property="og:image" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/LogoOfficialIcon.png">
+	<meta property="og:url" content="https://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com">
+	<meta property="og:type" content="website">
+	<meta name="twitter:card" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/LogoOfficialIcon.png">
+	<meta name="twitter:title" content="WaZaWare">
+	<meta name="twitter:description" content="WaZaWare.co.za /Find the Right Price/ | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta name="twitter:image" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/LogoOfficialIcon.png">
+	<!-- Logo -->
+	<link rel="shortcut icon" href="/Media/Logo/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/Media/Logo/favicon.ico" type="image/x-icon">
+	<!-- Title Tag  -->
+	<title>Upgrade Your PC</title>
+	<!-- Web Font -->
+	<link href="https://fonts.googleapis.com/css?family=Lato:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+	<!-- StyleSheet -->
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="~/css/bootstrap.min.css">
+	<link rel="stylesheet" href="~/bootstrap/css/bootstrap.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+	<!-- Magnific Popup -->
+	<link rel="stylesheet" href="~/css/magnific-popup.min.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="~/css/font-awesome.css">
+	<!-- Fancybox -->
+	<link rel="stylesheet" href="~/css/jquery.fancybox.min.css">
+	<!-- Themify Icons -->
+	<link rel="stylesheet" href="~/css/themify-icons.css">
+	<!-- Jquery Ui -->
+	<link rel="stylesheet" href="~/css/jquery-ui.css">
+	<!-- Nice Select CSS -->
+	<link rel="stylesheet" href="~/css/niceselect.css">
+	<!-- Animate CSS -->
+	<link rel="stylesheet" href="~/css/animate.css">
+	<!-- Flex Slider CSS -->
+	<link rel="stylesheet" href="~/css/flex-slider.min.css">
+	<!-- Owl Carousel -->
+	<link rel="stylesheet" href="~/css/owl-carousel.css">
+	<!-- Slicknav -->
+	<link rel="stylesheet" href="~/css/slicknav.min.css">
+	<!-- Alertify -->
+	<link rel="stylesheet" href="~/alertifyjs/css/alertify.min.css" />
+	<link rel="stylesheet" href="~/alertifyjs/css/themes/default.min.css" />
+	<!-- Reset CSS -->
+	<link rel="stylesheet" href="~/css/reset.css">
+	<!-- Temp CSS -->
+	<link rel="stylesheet" href="~/css/style.css">
+	<!-- Responsive CSS -->
+	<link rel="stylesheet" href="~/css/responsive.css">
+	<!-- Site CSS -->
+	<link rel="stylesheet" href="~/css/site.css">
+	<!-- Custom (TESTING) CSS -->
+	<style type="text/css">
+		a {
+			text-decoration: none;
+			color: #333333;
+		}
+
+		.shop .shop-top {
+			background-color: lightsteelblue;
+			padding: 5px 15px;
+		}
+
+		.content {
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			flex-wrap: wrap;
+		}
+		/* show mobile div on screens narrower than 768px */
+		@@media (max-width: 767px) {
+			.content h3 {
+				font-size: 17px;
+			}
+
+			.content p {
+				font-size: 12px;
+			}
+		}
+
+		.content p {
+			margin: 0;
+		}
+
+		.curvedEdges {
+			border-radius: 100rem;
+			background-color: lightsteelblue;
+		}
+
+		.shop-sidebar .single-widget {
+			background-color: #c6c6c6a1
+		}
+
+		.section-divider {
+			border-top: 1px solid #FFFF;
+			padding-top: 20px;
+			margin: 25px 0;
+		}
+
+		.div-divider {
+			border-right: 1px solid black;
+			padding-right: 10px;
+			margin-right: 10px;
+		}
+		/* hide mobile div by default */
+		.mobile {
+			display: none;
+		}
+
+		/* show desktop div on screens wider than 768px */
+		@@media (min-width: 768px) {
+			.desktop {
+				display: block;
+			}
+
+			.mobile {
+				display: none;
+			}
+		}
+
+		/* show mobile div on screens narrower than 768px */
+		@@media (max-width: 767px) {
+			.desktop {
+				display: none;
+			}
+
+			.mobile {
+				display: block;
+			}
+		}
+		
+
+		.navbar-dark .nav-item .nav-link {
+			color: #fff;
+		}
+
+			.navbar-dark .nav-item .nav-link:hover {
+				background-color: rgba(255, 255, 255, 0.1);
+				transition: all 0.3s ease;
+				border-radius: 0.25rem;
+				color: #fff;
+			}
+
+		.fa-li {
+			position: relative;
+			left: 0;
+		}
+
+		.single-product {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+		/* show mobile div on screens narrower than 768px */
+		@@media (max-width: 767px) {
+			.single-product {
+				display: flex;
+				flex-direction: row;
+			}
+
+				.single-product .button-head {
+					bottom: 0;
+					position: inherit;
+					display: flex;
+					justify-content: center;
+				}
+		}
+
+		.single-product .product-img {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+		}
+
+		.shop-services .single-service {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.product-img img {
+			object-fit: contain;
+		}
+
+		.product-area {
+			padding: 50px 25px;
+		}
+		/* show mobile div on screens narrower than 768px */
+		@@media (max-width: 767px) {
+			.product-area {
+				padding: 15px 0;
+			}
+		}
+	</style>
+</head>
+<body class="js">
+	<!-- Preloader -->
+	<div class="preloader">
+		<div class="preloader-inner">
+			<div class="preloader-icon">
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+	</div>
+	<!-- // -->
+	<!-- Scroller -->
+	<div id="progressBarContainer">
+		<div id="progressBar"></div>
+	</div>
+	<!-- // -->
+	<!-- Header Shop -->
+	<div class="header shop">
+		<!-- Topbar // Desktop Only -->
+		<div class="desktop">
+			<div class="topbar">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-5 col-md-12 col-12">
+							<!-- Top Left -->
+							<div class="top-left">
+								<ul class="list-main">
+									<li>
+										<div style="display:flex;flex-direction: row;flex-wrap: wrap;">
+											<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+											<a href="tel:0815650206" alt="Call us" style="border-radius:10px; white-space: nowrap;"
+											   data-toggle="tooltip" data-placement="right" title="Got a Question that can't wait? Give us a call!">
+												<lord-icon src="https://cdn.lordicon.com/pneolqso.json"
+														   trigger="hover"
+														   colors="primary:#f7941d,secondary:#545454,tertiary:#1663c7,quaternary:#ffffff"
+														   style="width:32px;height:32px">
+												</lord-icon>
+											</a>
+										</div>
+									</li>
+									<li>
+										<div style="display:flex;flex-direction: row;flex-wrap: wrap;">
+											<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+											<a href="mailto:brandenconnected@gmail.com" alt="Call us" style="border-radius:10px; white-space: nowrap;"
+											   data-toggle="tooltip" data-placement="right" title="Send us an email">
+												<lord-icon src="https://cdn.lordicon.com/tkgyrmwc.json"
+														   trigger="hover"
+														   colors="primary:#e88c30,secondary:#e88c30"
+														   style="width:32px;height:32px">
+												</lord-icon>
+											</a>
+										</div>
+									</li>
+								</ul>
+							</div>
+							<!--/ End Top Left -->
+						</div>
+						<div class="col-lg-6 col-md-12 col-12">
+							<!-- Top Right -->
+							<div class="right-content">
+								@if (ViewBag.IsCookie)
+								{
+									<ul class="list-main">
+										<li><i class="ti-shopping-cart"></i><a href="/Shop/Cart">Cart</a></li>
+										<li><i class="ti-bag"></i><a href="/Shop">Shop</a></li>
+										<li><i class="ti-power-off"></i><a href="/User">Login/Register</a></li>
+									</ul>
+								}
+								else
+								{
+									<ul class="list-main">
+										<li><i class="ti-shopping-cart"></i><a href="/Shop/Cart">Cart</a></li>
+										<li><i class="ti-bag"></i><a href="/Shop">Shop</a></li>
+										<li><i class="ti-power-off"></i><a href="/User">Account: @ViewBag.FirstName</a></li>
+									</ul>
+								}
+							</div>
+							<!-- End Top Right -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- // -->
+			<!-- Middle Inner -->
+			<div class="middle-inner">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-3 col-md-2 col-12">
+							<div class="logo">
+								<a href="/"><img src="/Media/Logo/LogoOfficialCropped.png" alt="WaZaWare Find The Right Price!" style="border-radius:10px;"></a>
+							</div>
+						</div>
+						<div class="col-lg-7 col-md-7 col-12">
+							<div class="search-bar-top">
+								<div class="search-bar" data-toggle="tooltip" data-placement="right" title="Search Bar only behaves as it should in the Shop for now">
+									<form class="form-inline my-2 my-lg-0">
+										@Html.TextBox("SearchString", ViewBag.CurrentFilter as string,
+										new {Class="form-control me-2", PlaceHolder="Search Products..." })
+										<button class="btnn" type="submit"><i class="ti-search"></i></button>
+									</form>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-3 col-12">
+							<div class="right-bar">
+								<div id="account" class="sinlge-bar shopping">
+									<a id="AccountHover" href="/User" onclick="loadAccount()" class="single-icon">
+										<i>
+											<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+											<lord-icon src="https://cdn.lordicon.com/dxjqoygy.json"
+													   trigger="loop-on-hover"
+													   delay="1000"
+													   colors="primary:#000000,secondary:#f7941d"
+													   style="width:50px;height:50px">
+											</lord-icon>
+										</i>
+									</a>
+									@if (ViewBag.IsCookie)
+									{
+										<div id="AccountOptions" class="shopping-item">
+											<div class="dropdown-cart-header">
+												<p>@ViewBag.FirstName</p>
+											</div>
+											<ul class="shopping-list">
+												<li>
+													<a class="h5" href="/User">Login</a>
+												</li>
+												<li>
+													<a class="h5" href="/User">Register</a>
+												</li>
+											</ul>
+										</div>
+									}
+									else
+									{
+										<div id="AccountOptions" class="shopping-item">
+											<div class="dropdown-cart-header">
+												<p>Hello <span class="font-weight-bold">@ViewBag.FirstName</span>,<br /> What would you like to do?</p>
+											</div>
+											<ul class="shopping-list">
+												<li>
+													<a class="cart-img" href="/User"><img src="#" alt="UserImage" /></a>
+												</li>
+												<li>
+													<a class="h4" href="/User">My Account</a>
+												</li>
+												<li>
+													<a class="h5" href="/User">My Orders</a>
+												</li>
+												<li>
+													<a class="h6" href="/User">Check Order Status</a>
+												</li>
+											</ul>
+											<div class="bottom">
+												<a href="#" onclick="userLogout()" class="btn animate">Logout</a>
+											</div>
+										</div>
+									}
+								</div>
+								<div id="shoppingbasket" class="sinlge-bar shopping">
+									<a id="basketHover" href="#" onclick="loadCart()" class="single-icon">
+										<i>
+											<span class="total-count">@ViewBag.ItemCount</span>
+											<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+											<lord-icon src="https://cdn.lordicon.com/ggihhudh.json"
+													   trigger="loop-on-hover"
+													   delay="1000"
+													   colors="primary:#c79816,secondary:#674e03,tertiary:#F7941D"
+													   style="width:50px;height:50px">
+											</lord-icon>
+										</i>
+									</a>
+									<!-- Shopping Item -->
+									<div class="shopping-item">
+										@if (ViewBag.BasketLoad == 1)
+										{
+											@if (Model.Count() > 0)
+											{
+												<div class="dropdown-cart-header">
+													<span>Items: @Model.Count</span>
+													<a href="/Shop/Cart">
+														View Cart
+													</a>
+												</div>
+												@foreach (var product in Model)
+												{
+													<ul class="shopping-list">
+														<li>
+															<a href="#" class="remove" title="Remove this item" onclick="loadDeleteCart('@product.ProductId')"><i class="fa fa-remove"></i></a>
+															<a class="cart-img" href="/Shop/Product/@product.ProductId">
+																<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" />
+															</a>
+															<h4><a href="/Shop/Product/@product.ProductId">@product.ProductName.Substring(0,20) ...</a></h4>
+															<p class="quantity">
+																1x - <span class="amount" style="text-decoration-line:line-through;">R @product.ProductPriceBase</span>
+																<span class="amount" style="color:red;font-weight:800;">R @product.ProductPriceSale</span>
+															</p>
+														</li>
+													</ul>
+												}
+												<div class="bottom">
+													<div class="total">
+														<span>Sub Total:</span>
+														<span class="total-amount" style="text-decoration-line:line-through; color:red;">R @ViewBag.CartTotalBase</span>
+													</div>
+													<div class="total">
+														<span>Discount:</span>
+														<span class="total-amount" style="color:red;font-weight:800;">R @ViewBag.Savings</span>
+													</div>
+													<div class="total">
+														<span>Total:</span>
+														<span class="total-amount" style="text-decoration-line:underline">R @ViewBag.CartTotalSale</span>
+													</div>
+													<a href="/Checkout" class="btn animate">Checkout</a>
+												</div>
+											}
+											else
+											{
+												<p>Your Cart is Empty</p>
+											}
+										}
+										else
+										{
+											<p onclick="loadCart()">Click to load</p>
+										}
+									</div>
+									<!--/ End Shopping Item -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- // -->
+			<!-- Header Inner Partial View-->
+			<partial name="_HeaderInner" />
+			<!-- // -->
+		</div>
+		<!-- // -->
+		<!-- Header Inner // Mobile Only -->
+		<div class="mobile">
+			<!-- Header Inner Partial View-->
+			<partial name="_HeaderInnerMobile" />
+			<!-- // -->
+		</div>
+		<!-- // -->
+	</div>
+	<!-- // -->
+	<!-- Carousel Partial View -->
+	@*<partial name="_Carousel" />*@
+	<!-- // -->
+	<!-- Product Grid -->
+	<section class="product-area shop section">
+		<div class="container" style="max-width:100%">
+			<div class="row">	
+				<div class="col-md-6 col-lg-12 col-12">
+					<div class="row">
+						<div class="col-12">
+							<div class="shop-top curvedEdges">
+								<div class="content" style="width:100%;">
+									<p><span style="color:blueviolet; font-weight:500;">Find the Latest Hardware at Everyday Low Prices!</span></p>
+									<h3>@ViewBag.Filter</h3>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						@if(Model != null)
+						{
+							@foreach (var product in Model)
+							{
+								<div class="col-lg-3 col-md-6 col-12">
+									<div class="single-product contain-fit">
+										<div class="product-img">
+											<a>
+												@if (product.ProductPriceBase * 0.65m > product.ProductPriceSale)
+												{
+													<span class="out-of-stock">Limited</span>
+												}
+												else if (product.ProductPriceBase > 9000)
+												{
+													<span class="new">New</span>
+												}
+											</a>
+											<a href="/Shop/Product/@product.ProductId">
+												<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" height="400" width="400" />
+											</a>
+											<div class="button-head">
+												<div class="product-action">
+													<a title="View Product" href="/Shop/Product/@product.ProductId">
+														<span>View Product</span>
+														<i>
+															<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+															<lord-icon src="https://cdn.lordicon.com/tyounuzx.json"
+																	   trigger="hover"
+																	   colors="primary:#121331,secondary:#e88c30"
+																	   style="width:35px;height:35px">
+															</lord-icon>
+														</i>
+													</a>
+													<a title="Add to Cart" href="#0" onclick="loadAddToCart('@product.ProductId')">
+														<i>
+															<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+															<lord-icon src="https://cdn.lordicon.com/mecwbjnp.json"
+																	   trigger="hover"
+																	   style="width:35px;height:35px">
+															</lord-icon>
+														</i><span>Add to Cart</span>
+													</a>
+												</div>
+											</div>
+										</div>
+										<div class="product-content">
+											<h3><a href="/Shop/Product/@product.ProductId">@product.ProductName.Substring(0,35) ...</a></h3>
+											<div class="product-price">
+												<span class="old" style="color:red;">R @product.ProductPriceBase</span><br>
+												<span style="font-weight:800;">R @product.ProductPriceSale</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							}
+						}
+						else
+						{
+							<h3>:(</h3>
+						}
+
+					</div>
+					<br />
+					<div class="row">
+						<div class="col-4">
+							<a href="/Shop" class="btn" style="color:aliceblue;"><i class="ti-arrow-left"> </i>Back to Shop</a>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+	</section>
+	<!-- // -->
+	<!-- Shop Services Partial View-->
+	<partial name="_Services" />
+	<!-- // -->
+	<!-- Footer Partial View-->
+	<partial name="_Footer" />
+	<!-- // -->
+	<!-- Jquery -->
+	<script src="~/js/jquery.min.js"></script>
+	<script src="~/js/jquery-migrate-3.0.0.js"></script>
+	<script src="~/js/jquery-ui.min.js"></script>
+	<!-- Popper JS -->
+	<script src="~/js/popper.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="~/js/bootstrap.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+	<!-- Slicknav JS -->
+	<script src="~/js/slicknav.min.js"></script>
+	<!-- Owl Carousel JS -->
+	<script src="~/js/owl-carousel.js"></script>
+	<!-- Magnific Popup JS -->
+	<script src="~/js/magnific-popup.js"></script>
+	<!-- Waypoints JS -->
+	<script src="~/js/waypoints.min.js"></script>
+	<!-- Countdown JS -->
+	<script src="~/js/finalcountdown.min.js"></script>
+	<!-- Nice Select JS -->
+	<script src="~/js/nicesellect.js"></script>
+	<!-- Flex Slider JS -->
+	<script src="~/js/flex-slider.js"></script>
+	<!-- Alertify -->
+	<script src="~/alertifyjs/alertify.min.js"></script>
+	<!-- ScrollUp JS -->
+	<script src="/js/scrollup.js"></script>
+	<!-- Onepage Nav JS -->
+	<script src="~/js/onepage-nav.min.js"></script>
+	<!-- Easing JS -->
+	<script src="~/js/easing.js"></script>
+	<!-- Active JS -->
+	<script src="~/js/active.js"></script>
+	<!-- Custom Scripts -->
+	<!-- Load ProgressBar -->
+	<script type="text/javascript">
+		const progressBarContainer = document.querySelector("#progressBarContainer");
+		const progressBar = document.querySelector("#progressBar");
+		let totalPageHeight = document.body.scrollHeight - window.innerHeight;
+		let debounceResize;
+
+		window.addEventListener("scroll", () => {
+			let newProgressHeight = window.pageYOffset / totalPageHeight;
+			progressBar.style.transform = `scale(1,${newProgressHeight})`;
+			progressBar.style.opacity = `${newProgressHeight}`;
+		}, {
+			capture: true,
+			passive: true
+		});
+
+		window.addEventListener("resize", () => {
+			clearTimeout(debounceResize);
+			debounceResize = setTimeout(() => {
+				totalPageHeight = document.body.scrollHeight - window.innerHeight;
+			}, 250);
+		});
+
+		progressBarContainer.addEventListener("click", (e) => {
+			let newPageScroll = e.clientY / progressBarContainer.offsetHeight * totalPageHeight;
+			window.scrollTo({
+				top: newPageScroll,
+				behavior: 'smooth'
+			});
+		});
+	</script>
+	<!--Functions-->
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#categories').show();
+			$('#pricerange').hide();
+		});
+
+		function showPriceRange() {
+			$('#pricerange').show();
+			$('#categories').hide();
+		}
+
+		function showCategories() {
+			$('#categories').show();
+			$('#pricerange').hide();
+		}
+
+		function userLogout() {
+			alertify.notify('Logging out', 'custom', 2, function () { console.log('dismissed'); });
+			$.ajax({
+				type: 'GET',
+				url: '/User/Logout',
+				success: function (r) {
+					alertify.notify('You have Logged out' + category, 'success', 3, function () { console.log('dismissed'); });
+				},
+				error: function (e) {
+					alertify.error('Error: JavaScript Function (userLogout)');
+				}
+			});
+			window.location.href = '/Shop/Index';
+		}
+
+		// [GET]
+		// Apply Category and Price filter for product grid
+		$(document).ready(function () {
+			var lastChecked;
+			var selectedCategory;
+			var selectedPriceRange;
+			$("input[type='checkbox']").change(function () {
+				if (lastChecked && lastChecked != this) {
+					lastChecked.checked = false;
+				}
+				lastChecked = this;
+				selectedPriceRange = $(this).parent().text();
+				filterProducts(selectedCategory, selectedPriceRange);
+			});
+			$(".categor-list a").click(function () {
+				selectedCategory = $(this).text();
+				filterProducts(selectedCategory, selectedPriceRange);
+
+			});
+			function filterProducts(category, priceRange) {
+				var data = {};
+				if (category) {
+					data.category = category;
+				}
+				if (priceRange) {
+					data.priceRange = priceRange;
+				}
+				$.ajax({
+					type: "GET",
+					url: "/Shop/Index",
+					data: data,
+					success: function (r) {
+						$("#products").html($(r).find("#products").html());
+						$("#priceRng1").html($(r).find("#priceRng1").html());
+						$("#priceRng2").html($(r).find("#priceRng2").html());
+						$("#priceRng3").html($(r).find("#priceRng3").html());
+						$("#priceRng4").html($(r).find("#priceRng4").html());
+					}
+				});
+			}
+		});
+
+		function inDevNotice() {
+			alertify.notify('Out-Of-Service!', 'error', 3, function () { console.log('dismissed'); });
+			alertify.notify('Functionality is under-construction as currently disable...Try me again abit later :)', 'warn', 5, function () { console.log('dismissed'); });
+		}
+
+		// [GET]
+		// Add to Cart
+		function loadAddToCart(productId) {
+			$.ajax({
+				type: 'GET',
+				url: '/Shop/Index',
+				data: { addProduct: productId },
+				success: function (r) {
+					$("#shoppingbasket").html($(r).find("#shoppingbasket").html());
+					alertify.notify('Added to Cart!', 'success', 5, function () { console.log('dismissed'); });
+				},
+				error: function (e) {
+					alertify.error('Error: JavaScript Function (loadAddToCart)');
+					alertify.error(e);
+				}
+			})
+		}
+
+		// [GET]
+		// Load Shopping Cart
+		function loadCart() {
+			let basketStart = 1;
+			$.ajax({
+				type: 'GET',
+				url: '/Shop/Index',
+				data: { basketStart: basketStart },
+				success: function (r) {
+					$("#shoppingbasket").html($(r).find("#shoppingbasket").html());
+				},
+				error: function (e) {
+					alertify.error('Error: JavaScript Function (loadCart)');
+					alertify.error(e);
+				}
+			});
+		}
+
+		// [POST]
+		// Delete from Cart
+		function loadDeleteCart(productId) {
+			$.ajax({
+				type: 'GET',
+				url: '/Shop/Index',
+				data: { removeProduct: productId },
+				success: function (r) {
+					$("#shoppingbasket").html($(r).find("#shoppingbasket").html());
+					alertify.notify('Removed from Cart!', 'custom', 2, function () { console.log('dismissed'); });
+				},
+				error: function (e) {
+					alertify.error('Error: JavaScript Function (loadAddToCart)');
+					alertify.error(e);
+				}
+			});
+		}
+	</script>
+</body>
+</html>

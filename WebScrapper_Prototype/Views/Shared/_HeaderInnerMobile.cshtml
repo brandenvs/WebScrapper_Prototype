@@ -1,0 +1,120 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col" style="display: flex;align-items: center;flex-direction: row;background-color: #ffc10766;padding: 10px;">
+            <div class="logo">
+                <a href="/"><img src="/Media/Logo/LogoOfficialCropped.png" alt="WaZaWare Find The Right Price!" style="border-radius:10px;"></a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="header-inner" style="display:block;">
+    <div class="container">
+        <div class="cat-nav-head">
+            <div class="row">
+                <div class="col">
+                    <div class="search-bar" style="display: contents;">
+                        <form class="form-inline my-2 my-lg-0" style="display: flex;flex-direction: row;flex-wrap: nowrap;padding: 0 10px;">
+                            @Html.TextBox("search", ViewBag.Search as string,
+                            new {Class="form-control me-2", Style="color:#000000; background:#fff;", PlaceHolder="Search..." })
+                            <button class="btn" type="submit" style="margin-right:0;"><i class="ti-search"></i></button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="menu-area">
+                        <nav class="navbar navbar-expand-lg">
+                            <div class="navbar-collapse">
+                                <div class="nav-inner">
+                                    <ul class="nav main-menu menu navbar-nav" style="display: flex; flex-direction: row;">
+                                        <li>
+                                            <a href="#0">Shop<i class="ti-angle-down"></i></a>
+                                            <ul class="dropdown">                                               
+                                                <li>
+                                                    @Html.ActionLink("Laptops", "Upgrade",
+                                                    new { filter = "Notebooks" })
+                                                </li>
+                                                <li>
+                                                    @Html.ActionLink("Monitors", "Upgrade",
+                                                    new { filter = "Monitors" })
+                                                </li>
+                                                <li>
+                                                    @Html.ActionLink("Peripherals", "Upgrade",
+                                                    new { filter = "Peripherals" })
+                                                </li>
+                                                <li>
+                                                    @Html.ActionLink("Chassis", "Upgrade",
+                                                    new { filter = "Chassis" })
+                                                </li>
+                                                <li>
+                                                    @Html.ActionLink("GPUs", "Upgrade",
+                                                    new { filter = "GPUS" })
+                                                </li>
+                                                <li>
+                                                    @Html.ActionLink("CPUs", "Upgrade",
+                                                    new { filter = "CPUS" })
+                                                </li>
+                                                <li>
+                                                    @Html.ActionLink("SSDs / HDDs", "Upgrade",
+                                                    new { filter = "SSDs" })
+                                                </li>
+                                                <li>
+                                                    @Html.ActionLink("Case Fans", "Upgrade",
+                                                    new { filter = "Case Fans" })
+                                                </li>
+                                                <li>
+                                                    @Html.ActionLink("Motherboards", "Upgrade",
+                                                    new { filter = "Motherboards" })
+                                                </li>
+                                                <li>
+                                                    @Html.ActionLink("PSUs", "Upgrade",
+                                                    new { filter = "PSUs" })
+                                                </li>
+                                                <li>
+                                                    @Html.ActionLink("Memory(RAM)", "Upgrade",
+                                                    new { filter = "Memory" })
+                                                </li>
+                                                <li>
+                                                    @Html.ActionLink("CPU Coolers", "Upgrade",
+                                                    new { filter = "CPU Coolers" })
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="/Shop/Cart"><i class="ti-shopping-cart-full" style="font-size:20px;"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="/User"><i class="ti-user" style="font-size:20px;"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+                        <!--/ End Main Menu -->
+                    </div>
+
+                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                    <script>
+                        $(document).ready(function () {
+                            // Hide the dropdown menu initially
+                            $(".dropdown").hide();
+
+                            // Toggle the dropdown menu on click
+                            $(".main-menu li a").click(function () {
+                                // Hide other open dropdown menus
+                                $(".dropdown").not($(this).siblings(".dropdown")).slideUp();
+
+                                // Toggle the clicked dropdown menu
+                                $(this).siblings(".dropdown").slideToggle();
+                            });
+
+                            // Hide the dropdown menu when the user scrolls
+                            $(window).scroll(function () {
+                                $(".dropdown").slideUp();
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

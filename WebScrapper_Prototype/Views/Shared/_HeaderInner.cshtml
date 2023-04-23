@@ -1,0 +1,60 @@
+﻿			<!-- Header Inner -->
+<div class="header-inner">
+	<div class="container">
+		<div class="cat-nav-head">
+			<div class="row">
+				<div class="col-12">
+					<div id="shopmenu" class="menu-area">
+						<!-- Main Menu -->
+						<nav class="navbar navbar-expand-lg">
+							<div class="navbar-collapse">
+								<div class="nav-inner">
+									<ul class="nav main-menu menu navbar-nav">
+										<li class="active">
+											<a href="/Shop">Shop</a>
+										</li>
+										<li>
+											<a href="#0">Upgrade Components<i class="ti-angle-down"></i><span class="new">New</span></a>
+											<ul class="dropdown">
+												<li>
+													@Html.ActionLink("Kits", "Upgrade",
+													new { filter = "Kits" })
+												</li>
+												<li>
+													@Html.ActionLink("SSDs / HDDs", "Upgrade",
+													new { filter = "SSDs" })
+												</li>
+												<li>
+													@Html.ActionLink("Case Fans", "Upgrade",
+													new { filter = "Case Fans" })
+												</li>
+												<li>
+													@Html.ActionLink("Motherboards", "Upgrade",
+													new { filter = "Motherboards" })
+												</li>
+												<li>
+													@Html.ActionLink("PSUs", "Upgrade",
+													new { filter = "PSUs" })
+												</li>
+												<li>
+													@Html.ActionLink("Memory(RAM)", "Upgrade",
+													new { filter = "Memory" })
+												</li>
+												<li>
+													@Html.ActionLink("CPU Coolers", "Upgrade",
+													new { filter = "CPU Coolers" })
+												</li>
+											</ul>
+										</li>							
+									</ul>
+								</div>
+							</div>
+						</nav>
+						<!--/ End Main Menu -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--/ End Header Inner -->

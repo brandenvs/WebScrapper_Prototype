@@ -1,0 +1,617 @@
+﻿@model wazaware.co.za.Models.UserViewModel
+@{
+	ViewData["Title"] = "Checkout";
+}
+<!DOCTYPE html>
+<configuration>
+	<system.webServer>
+		<security>
+			<dynamicIpSecurity denyAction="Forbidden">
+				<denyByConcurrentRequests enabled="true" maxConcurrentRequests="10" />
+				<denyByRequestRate enabled="true" maxRequests="30" requestIntervalInMilliseconds="300" />
+			</dynamicIpSecurity>
+		</security>
+	</system.webServer>
+</configuration>
+<html lang="zxx">
+<head>
+	<!-- Meta Tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="WaZaWare.co.za /Find the Right Price/ | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta property="og:title" content="WaZaWare">
+	<meta property="og:description" content="WaZaWare.co.za /Find the Right Price/ | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta property="og:image" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/LogoOfficialIcon.png">
+	<meta property="og:url" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com">
+	<meta property="og:type" content="website">
+	<meta name="twitter:card" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/LogoOfficialIcon.png">
+	<meta name="twitter:title" content="WaZaWare">
+	<meta name="twitter:description" content="WaZaWare.co.za /Find the Right Price/ | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta name="twitter:image" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/LogoOfficialIcon.png">
+	<!-- Logo -->
+	<link rel="shortcut icon" href="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/favicon.ico" type="image/x-icon">
+	<!-- Title Tag  -->
+	<title>Checkout</title>
+	<!-- Web Font -->
+	<link href="https://fonts.googleapis.com/css?family=Lato:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+	<!-- StyleSheet -->
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="~/css/bootstrap.css">
+	<!-- Magnific Popup -->
+	<link rel="stylesheet" href="~/css/magnific-popup.min.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="~/css/font-awesome.css">
+	<!-- Fancybox -->
+	<link rel="stylesheet" href="~/css/jquery.fancybox.min.css">
+	<!-- Themify Icons -->
+	<link rel="stylesheet" href="~/css/themify-icons.css">
+	<!-- Jquery Ui -->
+	<link rel="stylesheet" href="~/css/jquery-ui.css">
+	<!-- Nice Select CSS -->
+	<link rel="stylesheet" href="~/css/niceselect.css">
+	<!-- Animate CSS -->
+	<link rel="stylesheet" href="~/css/animate.css">
+	<!-- Flex Slider CSS -->
+	<link rel="stylesheet" href="~/css/flex-slider.min.css">
+	<!-- Owl Carousel -->
+	<link rel="stylesheet" href="~/css/owl-carousel.css">
+	<!-- Slicknav -->
+	<link rel="stylesheet" href="~/css/slicknav.min.css">
+	<!-- Alertify -->
+	<link rel="stylesheet" href="~/alertifyjs/css/alertify.min.css" />
+	<link rel="stylesheet" href="~/alertifyjs/css/themes/default.min.css" />
+	<!-- Reset CSS -->
+	<link rel="stylesheet" href="~/css/reset.css">
+	<!-- Nice Select JS -->
+	<link rel="stylesheet" href="~/css/niceselect.css">
+	<!-- Temp CSS -->
+	<link rel="stylesheet" href="~/css/style.css">
+	<!-- Responsive CSS -->
+	<link rel="stylesheet" href="~/css/responsive.css">
+	<!-- Site CSS -->
+	<link rel="stylesheet" href="~/css/site.css">
+	<style type="text/css">
+		/* hide mobile div by default */
+		.mobile {
+			display: none;
+		}
+
+		/* show desktop div on screens wider than 768px */
+		@@media (min-width: 768px) {
+			.desktop {
+				display: block;
+			}
+
+			.mobile {
+				display: none;
+			}
+		}
+
+		/* show mobile div on screens narrower than 768px */
+		@@media (max-width: 767px) {
+			.desktop {
+				display: none;
+			}
+
+			.mobile {
+				display: block;
+			}
+		}
+
+		.section-divider {
+			border-top: 1px solid black;
+			padding-top: 20px;
+			margin-top: 20px;
+		}
+
+		.div-divider {
+			border-right: 1px solid black;
+			padding-right: 10px;
+			margin-right: 10px;
+		}
+	</style>
+</head>
+<body class="js">
+	<!-- Preloader -->
+	<div class="preloader">
+		<div class="preloader-inner">
+			<div class="preloader-icon">
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+	</div>
+	<!-- // -->
+	<!-- Scroll -->
+	<div id="progressBarContainer">
+		<div id="progressBar"></div>
+	</div>
+	<!-- // -->
+	<!-- Header Shop -->
+	<div class="header shop">
+		<!-- Topbar // Desktop Only -->
+		<div class="desktop">
+			<div class="topbar">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-5 col-md-12 col-12">
+							<!-- Top Left -->
+							<div class="top-left">
+								<ul class="list-main">
+									<li>
+										<div style="display:flex;flex-direction: row;flex-wrap: wrap;">
+											<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+											<a href="tel:0815650206" alt="Call us" style="border-radius:10px; white-space: nowrap;"
+											   data-toggle="tooltip" data-placement="right" title="Got a Question that can't wait? Give us a call!">
+												<lord-icon src="https://cdn.lordicon.com/pneolqso.json"
+														   trigger="hover"
+														   colors="primary:#f7941d,secondary:#545454,tertiary:#1663c7,quaternary:#ffffff"
+														   style="width:32px;height:32px">
+												</lord-icon>
+											</a>
+										</div>
+									</li>
+									<li>
+										<div style="display:flex;flex-direction: row;flex-wrap: wrap;">
+											<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+											<a href="mailto:brandenconnected@gmail.com" alt="Call us" style="border-radius:10px; white-space: nowrap;"
+											   data-toggle="tooltip" data-placement="right" title="Send us an email">
+												<lord-icon src="https://cdn.lordicon.com/tkgyrmwc.json"
+														   trigger="hover"
+														   colors="primary:#e88c30,secondary:#e88c30"
+														   style="width:32px;height:32px">
+												</lord-icon>
+											</a>
+										</div>
+									</li>
+								</ul>
+							</div>
+							<!--/ End Top Left -->
+						</div>
+						<div class="col-lg-6 col-md-12 col-12">
+							<!-- Top Right -->
+							<div class="right-content">
+								@if (ViewBag.IsCookie)
+								{
+									<ul class="list-main">
+										<li><i class="ti-shopping-cart"></i><a href="/Shop/Cart">Cart</a></li>
+										<li><i class="ti-bag"></i><a href="/Shop">Shop</a></li>
+										<li><i class="ti-power-off"></i><a href="/User">Login/Register</a></li>
+									</ul>
+								}
+								else
+								{
+									<ul class="list-main">
+										<li><i class="ti-shopping-cart"></i><a href="/Shop/Cart">Cart</a></li>
+										<li><i class="ti-bag"></i><a href="/Shop">Shop</a></li>
+										<li><i class="ti-power-off"></i><a href="/User">Account: @ViewBag.FirstName</a></li>
+									</ul>
+								}
+							</div>
+							<!-- End Top Right -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- // -->
+			<!-- Middle Inner -->
+			<div class="middle-inner">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-3 col-md-2 col-12">
+							<div class="logo">
+								<a href="/"><img src="/Media/Logo/LogoOfficialCropped.png" alt="WaZaWare Find The Right Price!" style="border-radius:10px;"></a>
+							</div>
+						</div>
+						<div class="col-lg-7 col-md-7 col-12">
+							<div class="search-bar-top">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- // -->
+			<!-- Header Inner Partial View-->
+			<partial name="_HeaderInner" />
+			<!-- // -->
+		</div>
+		<!-- // -->
+		<!-- Header Inner // Mobile Only -->
+		<div class="mobile">
+			<!-- Header Inner Partial View-->
+			<partial name="_HeaderInnerMobile" />
+			<!-- // -->
+		</div>
+		<!-- // -->
+	</div>
+	<!-- // -->
+	<!-- Breadcrumbs -->
+	<div class="breadcrumbs">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="bread-inner">
+						<ul class="bread-list">
+							<li><a href="/Shop/Cart">Cart<i class="ti-arrow-right"></i></a></li>
+							<li class="active"><a href="/Checkout">Checkout</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Breadcrumbs -->
+	<!-- Start Checkout -->
+	<div id="loading-bar" style="display: none;">
+		<section class="shop checkout section">
+			<h4>Please wait while we process your order...</h4>
+		</section>
+	</div>
+	<section id="123Section" class="shop checkout section">
+		@if (ViewBag.Code == 200)
+		{
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<p class="fs-4 h4">Hello @Model.FirstName!</p>
+						<p class="fs-2 h2">Please Verify Your Details Below</p>
+					</div>
+				</div>
+				<div class="row section-divider">
+					<div class="col-sm-6 col-md-6 col-12">
+						<p class="fw-bolder h5"><br><span style="text-decoration:underline; text-decoration-thickness:1px; font-weight:800;">Verify Contact Details</span> <a href="#0" onclick="proceedToUser()"><i class="ti-pencil-alt" style="white-space: nowrap;" data-toggle="tooltip" data-placement="right" title="Change Contact Details"></i></a></p><br>
+						<div class="row">
+							<div class="col">
+								<p class="label-info fs-4 fw-bolder">First Name</p>
+								<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.FirstName</p>
+							</div>
+							<div class="col">
+								<p class="label-info fs-4 fw-bolder">Last Name</p>
+								<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.LastName</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<p class="label-info fs-4 fw-bolder">Email Address</p>
+								@if (Model.Email!.Length >= 15)
+								{
+									<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.Email!.Substring(0,15)...</p>
+								}
+								else
+								{
+									<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.Email</p>
+								}
+							</div>
+							<div class="col">
+								<p class="label-info fs-4 fw-bolder">Phone Number</p>
+								<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.PhoneNumber</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6 col-md-6 col-12">
+						<p class="fw-bolder h5"><br><span style="text-decoration:underline; text-decoration-thickness:1px; font-weight:800;">Verify Shipping Address</span> <a href="#" onclick="showUserUpdateShipping()"><i class="ti-pencil-alt" style="white-space: nowrap;" data-toggle="tooltip" data-placement="right" title="Change Shipping Address"></i></a></p><br>
+						<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.Unit @Model.Street</p>
+						<p class="fs-4 h6 fw-bolder" style="top:5px;">@Model.Area</p>
+						<p class="fs-4 h6 fw-bolder" style="top:5px;">@Model.City @Model.PostalCode</p>
+						<p class="fs-4 h6 fw-bolder" style="top:5px;">@Model.Province</p>
+					</div>
+				</div>
+				<div class="row section-divider">
+					<div class="col-sm-6 col-md-6 col-12 div-divider">
+						<p class="fw-bolder h5"><br><span style="text-decoration:underline; text-decoration-thickness:1px; font-weight:800;">Order Summary</span> <a href="#0" onclick="proceedToUser()"><i class="ti-shopping-cart-full" style="white-space: nowrap;" data-toggle="tooltip" data-placement="right" title="My Shopping Cart"></i></a></p><br>
+						<div class="row">
+							<div class="col">
+								<p class="label-info fs-4 fw-bolder">Total Items In Cart</p>
+								<p class="fs-4 h6 fw-bolder" style="top:0;">@ViewBag.BasketCount</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<p class="label-info fs-4 fw-bolder">Before Discount</p>
+								<p class="fs-4 h6 fw-bolder"><span style="color:red; text-decoration:line-through;">R @ViewBag.CartTotalBase.ToString("#,##0.00")</span></p>
+							</div>
+							<div class="col">
+								<p class="label-info fs-4 fw-bolder">After Discount</p>
+								<p class="fs-4 h6 fw-bolder"><span style="color:cadetblue; font-weight:700;">R @ViewBag.CartTotalSale.ToString("#,##0.00")</span></p>
+							</div>
+
+							<div class="col">
+								<p class="label-info fs-4 fw-bolder">You Save</p>
+								<p class="fs-4 h6 fw-bolder"><span style="color:forestgreen; font-weight:700;">R @ViewBag.Savings.ToString("#,##0.00")</span></p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<p class="label-info fs-4 fw-bolder">Shipping</p>
+								@if (ViewBag.GetFreeShipping > 0)
+								{
+
+									<p class="fs-4 h6 fw-bolder">
+										R @ViewBag.ShippingCost
+										<span style="font-size:10px; color:gray;">Spend R <span style="font-weight:600; color:cadetblue;">@ViewBag.GetFreeShipping</span> to get <span style="font-weight:600; color:cadetblue;">FREE</span> Shipping</span>
+									</p>
+
+								}
+								else
+								{
+									<p class="fs-4 h6 fw-bolder" style="font-weight:600; color:cadetblue;">FREE</p>
+								}
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<p class="label-info fs-4 fw-bolder">Handling Fee  <i class="fa fa-info-circle" style="white-space: nowrap;" data-toggle="tooltip" data-placement="right" title="Think of our handling fee like a secret seasoning - it's the special ingredient that adds value to your shopping experience and helps us continue providing top-notch service without sacrificing our bottom line."></i></p>
+								<p class="fs-4 h6 fw-bolder">R @ViewBag.HandlingFee</p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<p class="label-info fs-3 fw-bolder">Cart Total</p>
+								<p class="fs-3 h3 fw-bolder"><span style="text-decoration:underline; text-decoration-thickness:1px;">R @ViewBag.GrandTotal.ToString("#,##0.00")</span></p>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-4 col-md-4 col-12">
+						<p class="fw-bolder h5"><br><span style="text-decoration:underline; text-decoration-thickness:1px; font-weight:800;">Select Payment Method</span></p><br>
+						<div class="row">
+							<div class="col">
+								<form id="registerForm" asp-action="ShippingUser" class="form" method="post">
+									<div class="row">
+										<div class="col-lg-6 col-md-6 col-12">
+											<div class="form-group">
+												<label>Payment Method</label>
+												<select name="paymentMethod">
+													<option value="CC">Credit Card</option>
+													<option value="IE">Instant EFT</option>
+													<option value="FNBEBUCKS">eBucks</option>
+													<option value="SE">Standard EFT</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<a href="#0" onclick="proceedToCheckout()" class="btn btn-primary" style="color:aliceblue;">Proceed <i class="ti-arrow-right"></i></a>
+							</div>
+						</div>
+					</div>
+				</div>
+				@if (String.IsNullOrEmpty(Model.Area))
+				{
+					<div class="col-lg-8 col-12">
+						<div class="checkout-form">
+							<h2>Provide Shipping Address</h2>
+							<p>Looks like we don't have your shipping address yet.<br />We don't share any of your information with anyone.</p>
+							<!-- Form -->
+							<form id="registerForm" asp-action="ShippingUser" class="form" method="post">
+								<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+								<div class="row">
+									<div class="col-lg-6 col-md-6 col-12">
+										<div class="form-group">
+											<label>Province<span>*</span></label>
+											<select name="province" asp-for="Province">
+												<option value="WC">Western Cape</option>
+												<option value="EC">Eastern Cape</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-lg-6 col-md-6 col-12">
+										<div class="form-group">
+											<label>City<span>*</span></label>
+											<select name="city" asp-for="City">
+												<option value="CPT">Cape Town (CPT)</option>
+												<option value="PE">Port Elizabeth (PE)</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-lg-6 col-md-6 col-12">
+										<div class="form-group">
+											<label>Unit No.<span>*</span></label>
+											<input asp-for="Unit" type="text" name="unit" autocomplete="on" placeholder="213 Villa Costa" required="required">
+										</div>
+									</div>
+									<div class="col-lg-6 col-md-6 col-12">
+										<div class="form-group">
+											<label>Street Name<span>*</span></label>
+											<input asp-for="Street" type="text" name="street" autocomplete="on" placeholder="St James Road" required="required">
+										</div>
+									</div>
+									<div class="col-lg-6 col-md-6 col-12">
+										<div class="form-group">
+											<label>Area/Suburb<span>*</span></label>
+											<input asp-for="Area" type="text" name="area" autocomplete="on" placeholder="Seapoint" required="required">
+										</div>
+									</div>
+									<div class="col-lg-6 col-md-6 col-12">
+										<div class="form-group">
+											<label>Postal Code<span>*</span></label>
+											<input asp-for="PostalCode" type="number" name="postalCode" autocomplete="on" placeholder="8001" required="required">
+										</div>
+									</div>
+									<div class="col-lg-6 col-md-6 col-12">
+										<div class="form-group">
+											<label>Create a password<span>*</span></label>
+											<input asp-for="Password" type="password" name="password" autocomplete="off" placeholder="*********" required="required">
+										</div>
+									</div>
+									<div class="col-lg-6 col-md-6 col-12">
+										<div class="form-group">
+											<label>Confirm password<span>*</span></label>
+											<input asp-for="ConfirmPassword" type="password" name="confirmPassword" autocomplete="off" placeholder="*********" required="required">
+										</div>
+									</div>
+									<div class="col-12">
+										<input type="submit" value="Submit Details" class="btn btn-primary" />
+									</div>
+								</div>
+							</form>
+							<!--/ End Form -->
+						</div>
+					</div>
+				}
+			</div>
+		}
+		else
+		{
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<p class="fs-4 h4">@ViewBag.Code</p>
+						<p class="fs-2 h2">@ViewBag.Message</p>
+					</div>
+				</div>
+				<div class="row section-divider">
+					<div class="col-sm-6 col-md-6 col-12">
+						<p class="fw-bolder h5"><br><span style="text-decoration:underline; text-decoration-thickness:1px; font-weight:800;">Verify Contact Details</span> <a href="#0" onclick="proceedToUser()"><i class="ti-pencil-alt" style="white-space: nowrap;" data-toggle="tooltip" data-placement="right" title="Change Contact Details"></i></a></p><br>
+						<div class="row">
+							<div class="col">
+								<a href="/User" class="btn btn-primary" style="color:aliceblue;">Login</a>
+							</div>
+							<div class="col">
+								<a href="/Checkout/Register" class="btn btn-primary" style="color:aliceblue;">Register</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</section>
+	<!--/ End Checkout -->
+	<!-- Shop Services Partial View-->
+	<partial name="_Services" />
+	<!-- // -->
+	<!-- Footer Partial View-->
+	<partial name="_Footer" />
+	<!-- // -->
+	@section Scripts {
+		<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+	}
+	<!-- Jquery -->
+	<script src="~/js/jquery.min.js"></script>
+	<script src="~/js/jquery-migrate-3.0.0.js"></script>
+	<script src="~/s/jquery-ui.min.js"></script>
+	<!-- Popper JS -->
+	<script src="~/js/popper.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="~/js/bootstrap.min.js"></script>
+	<!-- Color JS -->
+	<script src="~/js/colors.js"></script>
+	<!-- Slicknav JS -->
+	<script src="~/js/slicknav.min.js"></script>
+	<!-- Owl Carousel JS -->
+	<script src="~/js/owl-carousel.js"></script>
+	<!-- Magnific Popup JS -->
+	<script src="~/js/magnific-popup.js"></script>
+	<!-- Waypoints JS -->
+	<script src="~/js/waypoints.min.js"></script>
+	<!-- Countdown JS -->
+	<script src="~/js/finalcountdown.min.js"></script>
+	<!-- Nice Select JS -->
+	<script src="~/js/nicesellect.js"></script>
+	<!-- Flex Slider JS -->
+	<script src="~/js/flex-slider.js"></script>
+	<!-- Alertify -->
+	<script src="~/alertifyjs/alertify.min.js"></script>
+	<!-- ScrollUp JS -->
+	<script src="~/js/scrollup.js"></script>
+	<!-- Onepage Nav JS -->
+	<script src="~/js/onepage-nav.min.js"></script>
+	<!-- Easing JS -->
+	<script src="~/js/easing.js"></script>
+	<!-- Active JS -->
+	<script src="~/js/active.js"></script>
+
+	<!-- Custom Scripts -->
+	<!--Load Scrolling Bar-->
+	<script type="text/javascript">
+		const progressBarContainer = document.querySelector("#progressBarContainer");
+		const progressBar = document.querySelector("#progressBar");
+		let totalPageHeight = document.body.scrollHeight - window.innerHeight;
+		let debounceResize;
+
+		window.addEventListener("scroll", () => {
+			let newProgressHeight = window.pageYOffset / totalPageHeight;
+			progressBar.style.transform = `scale(1,${newProgressHeight})`;
+			progressBar.style.opacity = `${newProgressHeight}`;
+		}, {
+			capture: true,
+			passive: true
+		});
+
+		window.addEventListener("resize", () => {
+			clearTimeout(debounceResize);
+			debounceResize = setTimeout(() => {
+				totalPageHeight = document.body.scrollHeight - window.innerHeight;
+			}, 250);
+		});
+
+		progressBarContainer.addEventListener("click", (e) => {
+			let newPageScroll = e.clientY / progressBarContainer.offsetHeight * totalPageHeight;
+			window.scrollTo({
+				top: newPageScroll,
+				behavior: 'smooth'
+			});
+		});
+	</script>
+	<!--Functions-->
+	<script type="text/javascript">
+		// Hide the loading bar on page load
+		$(document).ready(function () {
+			$('#loading-bar').hide();
+			$('#123Section').show();
+		});
+		function proceedToUser() {
+			window.location.href = '/User/Index';
+		}
+		// [GET]
+		// Proceed to checkout
+		function proceedToRegister() {
+			let testcode = 1;
+			// Make an Ajax call to the server to start the processing
+			$.ajax({
+				type: "GET",
+				url: '/User/Index',
+				data: { testcode: testcode },
+				success: function (r) {
+
+				},
+				error: function (e) {
+
+				}
+			});
+		}
+		// [GET]
+		// Proceed to checkout
+		function proceedToCheckout() {
+			let startPlaceOrder = 1;
+			// Show the loading bar
+			$('#loading-bar').show();
+			$('#123Section').hide();
+			// Make an Ajax call to the server to start the processing
+			$.ajax({
+				type: "GET",
+				url: '/Checkout/Index',
+				data: { startPlaceOrder: startPlaceOrder },
+				success: function (r) {
+					alertify.notify('Order Created!', 'success', 2, function () { console.log('dismissed'); });
+					// Hide the loading bar when the processing is complete
+					$('#loading-bar').hide();
+
+					// Do something with the server response, if necessary
+					alert('Thank You. Your Order has been placed. Please check your email!');
+					window.location.href = '/Orders/Index';
+				},
+				error: function (e) {
+					alertify.error('Error: You have entered some invalid information');
+					window.location.href = '/Shop/Index';
+				}
+			});
+		}
+	</script>
+</body>
+
+</html>

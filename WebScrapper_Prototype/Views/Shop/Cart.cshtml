@@ -1,0 +1,618 @@
+﻿@using wazaware.co.za.Controllers;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@model wazaware.co.za.Models.ViewModels.PrimaryModel.PrimaryViewModel
+@{
+	ViewData["Title"] = "Shopping Cart";
+}
+<!DOCTYPE html>
+<configuration>
+	<system.webServer>
+		<security>
+			<dynamicIpSecurity denyAction="Forbidden">
+				<denyByConcurrentRequests enabled="true" maxConcurrentRequests="10" />
+				<denyByRequestRate enabled="true" maxRequests="30" requestIntervalInMilliseconds="300" />
+			</dynamicIpSecurity>
+		</security>
+	</system.webServer>
+</configuration>
+<html lang="zxx">
+<head>		
+	<!-- Meta Tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="WaZaWare.co.za /Find the Right Price/ | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta property="og:title" content="WaZaWare">
+	<meta property="og:description" content="WaZaWare.co.za /Find the Right Price/ | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta property="og:image" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/LogoOfficialIcon.png">
+	<meta property="og:url" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com">
+	<meta property="og:type" content="website">
+	<meta name="twitter:card" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/LogoOfficialIcon.png">
+	<meta name="twitter:title" content="WaZaWare">
+	<meta name="twitter:description" content="WaZaWare.co.za /Find the Right Price/ | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta name="twitter:image" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/LogoOfficialIcon.png">
+	<!-- Logo -->
+	<link rel="shortcut icon" href="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/favicon.ico" type="image/x-icon">
+	<!-- Title Tag  -->
+	<title>Shopping Cart</title>
+	<!-- Web Font -->
+	<link href="https://fonts.googleapis.com/css?family=Lato:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+	<!-- StyleSheet -->
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="~/css/bootstrap.css">
+	<!-- Magnific Popup -->
+	<link rel="stylesheet" href="~/css/magnific-popup.min.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="~/css/font-awesome.css">
+	<!-- Fancybox -->
+	<link rel="stylesheet" href="~/css/jquery.fancybox.min.css">
+	<!-- Themify Icons -->
+	<link rel="stylesheet" href="~/css/themify-icons.css">
+	<!-- Jquery Ui -->
+	<link rel="stylesheet" href="~/css/jquery-ui.css">
+	<!-- Nice Select CSS -->
+	<link rel="stylesheet" href="~/css/niceselect.css">
+	<!-- Animate CSS -->
+	<link rel="stylesheet" href="~/css/animate.css">
+	<!-- Flex Slider CSS -->
+	<link rel="stylesheet" href="~/css/flex-slider.min.css">
+	<!-- Owl Carousel -->
+	<link rel="stylesheet" href="~/css/owl-carousel.css">
+	<!-- Slicknav -->
+	<link rel="stylesheet" href="~/css/slicknav.min.css">
+	<!-- Alertify -->
+	<link rel="stylesheet" href="~/alertifyjs/css/alertify.min.css" />
+	<link rel="stylesheet" href="~/alertifyjs/css/themes/default.min.css" />
+	<!-- Reset CSS -->
+	<link rel="stylesheet" href="~/css/reset.css">
+	<!-- Nice Select JS -->
+	<link rel="stylesheet" href="~/css/niceselect.css">
+	<!-- Temp CSS -->
+	<link rel="stylesheet" href="~/css/style.css">
+	<!-- Responsive CSS -->
+	<link rel="stylesheet" href="~/css/responsive.css">
+	<!-- Site CSS -->
+	<link rel="stylesheet" href="~/css/site.css">
+	<style type="text/css">
+		.cardChanges{
+			display: flex;
+			flex-wrap: wrap;
+			flex-direction: row;
+			justify-content: space-evenly;
+			margin:10px;
+		}
+		/* hide mobile div by default */
+		.mobile {
+			display: none;
+		}
+
+		/* show desktop div on screens wider than 768px */
+		@@media (min-width: 768px) {
+			.desktop {
+				display: block;
+			}
+
+			.mobile {
+				display: none;
+			}
+		}
+
+		/* show mobile div on screens narrower than 768px */
+		@@media (max-width: 767px) {
+			.desktop {
+				display: none;
+			}
+
+			.mobile {
+				display: block;
+			}
+		}
+	</style>
+</head>
+<body class="js" onload="fireOncePerSession1();">
+	<!-- Preloader -->
+	<div class="preloader">
+		<div class="preloader-inner">
+			<div class="preloader-icon">
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+	</div>
+	<!-- // -->
+	<!-- Scroller -->
+	<div id="progressBarContainer">
+		<div id="progressBar"></div>
+	</div>
+	<!-- // -->
+	<!-- Header Shop -->
+	<div class="header shop">
+		<!-- Topbar // Desktop Only -->
+		<div class="desktop">
+			<div class="topbar">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-5 col-md-12 col-12">
+							<!-- Top Left -->
+							<div class="top-left">
+								<ul class="list-main">
+									<li>
+										<div style="display:flex;flex-direction: row;flex-wrap: wrap;">
+											<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+											<a href="tel:0815650206" alt="Call us" style="border-radius:10px; white-space: nowrap;"
+											   data-toggle="tooltip" data-placement="right" title="Got a Question that can't wait? Give us a call!">
+												<lord-icon src="https://cdn.lordicon.com/pneolqso.json"
+														   trigger="hover"
+														   colors="primary:#f7941d,secondary:#545454,tertiary:#1663c7,quaternary:#ffffff"
+														   style="width:32px;height:32px">
+												</lord-icon>
+											</a>
+										</div>
+									</li>
+									<li>
+										<div style="display:flex;flex-direction: row;flex-wrap: wrap;">
+											<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+											<a href="mailto:brandenconnected@gmail.com" alt="Call us" style="border-radius:10px; white-space: nowrap;"
+											   data-toggle="tooltip" data-placement="right" title="Send us an email">
+												<lord-icon src="https://cdn.lordicon.com/tkgyrmwc.json"
+														   trigger="hover"
+														   colors="primary:#e88c30,secondary:#e88c30"
+														   style="width:32px;height:32px">
+												</lord-icon>
+											</a>
+										</div>
+									</li>
+								</ul>
+							</div>
+							<!--/ End Top Left -->
+						</div>
+						<div class="col-lg-6 col-md-12 col-12">
+							<!-- Top Right -->
+							<div class="right-content">
+								@if (ViewBag.IsCookie)
+								{
+									<ul class="list-main">
+										<li><i class="ti-shopping-cart"></i><a href="/Shop/Cart">Cart</a></li>
+										<li><i class="ti-bag"></i><a href="/Shop">Shop</a></li>
+										<li><i class="ti-power-off"></i><a href="/User">Login/Register</a></li>
+									</ul>
+								}
+								else
+								{
+									<ul class="list-main">
+										<li><i class="ti-shopping-cart"></i><a href="/Shop/Cart">Cart</a></li>
+										<li><i class="ti-bag"></i><a href="/Shop">Shop</a></li>
+										<li><i class="ti-power-off"></i><a href="/User">Account: @ViewBag.FirstName</a></li>
+									</ul>
+								}
+							</div>
+							<!-- End Top Right -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- // -->
+			<!-- Middle Inner -->
+			<div class="middle-inner">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-3 col-md-2 col-12">
+							<div class="logo">
+								<a href="/"><img src="/Media/Logo/LogoOfficialCropped.png" alt="WaZaWare Find The Right Price!" style="border-radius:10px;"></a>
+							</div>
+						</div>
+						<div class="col-lg-7 col-md-7 col-12">
+							<div class="search-bar-top">
+								<div class="search-bar" data-toggle="tooltip" data-placement="right" title="Search Bar only behaves as it should in the Shop for now">
+									<form class="form-inline my-2 my-lg-0">
+										@Html.TextBox("SearchString", ViewBag.CurrentFilter as string,
+										new {Class="form-control me-2", PlaceHolder="Search Products..." })
+										<button class="btnn" type="submit"><i class="ti-search"></i></button>
+									</form>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-2 col-md-3 col-12">
+							<div class="right-bar">
+								<div id="account" class="sinlge-bar shopping">
+									<a id="AccountHover" href="/User" onclick="loadAccount()" class="single-icon">
+										<i>
+											<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+											<lord-icon src="https://cdn.lordicon.com/dxjqoygy.json"
+													   trigger="loop-on-hover"
+													   delay="1000"
+													   colors="primary:#000000,secondary:#f7941d"
+													   style="width:50px;height:50px">
+											</lord-icon>
+										</i>
+									</a>
+									@if (ViewBag.IsCookie)
+									{
+										<div id="AccountOptions" class="shopping-item">
+											<div class="dropdown-cart-header">
+												<p>@ViewBag.FirstName</p>
+											</div>
+											<ul class="shopping-list">
+												<li>
+													<a class="h5" href="/User">Login</a>
+												</li>
+												<li>
+													<a class="h5" href="/User">Register</a>
+												</li>
+											</ul>
+										</div>
+									}
+									else
+									{
+										<div id="AccountOptions" class="shopping-item">
+											<div class="dropdown-cart-header">
+												<p>Hello <span class="font-weight-bold">@ViewBag.FirstName</span>,<br /> What would you like to do?</p>
+											</div>
+											<ul class="shopping-list">
+												<li>
+													<a class="cart-img" href="/User"><img src="#" alt="UserImage" /></a>
+												</li>
+												<li>
+													<a class="h4" href="/User">My Account</a>
+												</li>
+												<li>
+													<a class="h5" href="/User">My Orders</a>
+												</li>
+												<li>
+													<a class="h6" href="/User">Check Order Status</a>
+												</li>
+											</ul>
+											<div class="bottom">
+												<a href="#" onclick="userLogout()" class="btn animate">Logout</a>
+											</div>
+										</div>
+									}
+								</div>
+								<div id="shoppingbasket" class="sinlge-bar shopping">
+									<a id="basketHover" href="#" onclick="loadCart()" class="single-icon">
+										<i>
+											<span class="total-count">@ViewBag.ItemCount</span>
+											<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+											<lord-icon src="https://cdn.lordicon.com/ggihhudh.json"
+													   trigger="loop-on-hover"
+													   delay="1000"
+													   colors="primary:#c79816,secondary:#674e03,tertiary:#F7941D"
+													   style="width:50px;height:50px">
+											</lord-icon>
+										</i>
+									</a>
+									<!-- Shopping Item -->
+									<div class="shopping-item">
+										@if (ViewBag.BasketLoad == 1)
+										{
+											@if (Model.ShoppingCart.Count() > 0)
+											{
+												<div class="dropdown-cart-header">
+													<span>Items: @Model.ShoppingCart.Count</span>
+													<a href="/Shop/Cart">
+														View Cart
+													</a>
+												</div>
+												@foreach (var product in Model.ShoppingCart)
+												{
+													<ul class="shopping-list">
+														<li>
+															<a href="#" class="remove" title="Remove this item" onclick="loadDeleteCart('@product.ProductId')"><i class="fa fa-remove"></i></a>
+															<a class="cart-img" href="/Shop/Product/@product.ProductId">
+																<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" />
+															</a>
+															<h4><a href="/Shop/Product/@product.ProductId">@product.ProductName.Substring(0,20) ...</a></h4>
+															<p class="quantity">
+																1x - <span class="amount" style="text-decoration-line:line-through;">R @product.ProductPriceBase</span>
+																<span class="amount" style="color:red;font-weight:800;">R @product.ProductPriceSale</span>
+															</p>
+														</li>
+													</ul>
+												}
+												<div class="bottom">
+													<div class="total">
+														<span>Sub Total:</span>
+														<span class="total-amount" style="text-decoration-line:line-through; color:red;">R @ViewBag.CartTotalBase</span>
+													</div>
+													<div class="total">
+														<span>Discount:</span>
+														<span class="total-amount" style="color:red;font-weight:800;">R @ViewBag.Savings</span>
+													</div>
+													<div class="total">
+														<span>Total:</span>
+														<span class="total-amount" style="text-decoration-line:underline">R @ViewBag.CartTotalSale</span>
+													</div>
+													<a href="/Checkout" class="btn animate">Checkout</a>
+												</div>
+											}
+											else
+											{
+												<p>Your Cart is Empty</p>
+											}
+										}
+										else
+										{
+											<p onclick="loadCart()">Click to load</p>
+										}
+									</div>
+									<!--/ End Shopping Item -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- // -->
+			<!-- Header Inner Partial View-->
+			<partial name="_HeaderInner" />
+			<!-- // -->
+		</div>
+		<!-- // -->
+		<!-- Header Inner // Mobile Only -->
+		<div class="mobile">
+			<!-- Header Inner Partial View-->
+			<partial name="_HeaderInnerMobile" />
+			<!-- // -->
+		</div>
+		<!-- // -->
+	</div>
+	<!-- Breadcrumbs -->
+	<div class="breadcrumbs">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="bread-inner">
+						<ul class="bread-list">
+							<li><a href="/">Home<i class="ti-arrow-right"></i></a></li>
+							<li><a href="/Shop">Shop<i class="ti-arrow-right"></i></a></li>
+							<li class="active"><a href="/Shop/Cart">Cart</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Breadcrumbs -->
+	<!-- Shopping Cart -->
+	@if (Model.ShoppingCart.Count() > 0)
+	{
+		<div class="container">
+			<div class="row">
+				@foreach (var product in Model.ShoppingCart)
+				{
+					<div class="col cardChanges">
+						<div class="card" style="width: 18rem;">
+							<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" class="card-img-top" height="100" width="100" alt="@product.ProductName" />
+							<div class="card-body">
+								<h5 class="card-title">@product.ProductName.Substring(0,35) ...</h5>
+								<p class="card-text"><span style="text-decoration:line-through">R @product.ProductPriceBase</span> | R @product.ProductPriceSale</p>
+								<a href="/Shop/Cart" class="remove" title="Remove this item" onclick="loadDeleteCart('@product.ProductId')"><i class="fa fa-remove"></i></a>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+		<div class="container">
+			<div class="shopping-cart section" style="padding: 50px; border-radius: 10px; margin: 15px;">
+				<div class="row">
+					<div class="col-12">
+						<!-- Total Amount -->
+						<div class="total-amount">
+							<div class="row">
+								<div class="col-lg-8 col-md-5 col-12">
+									<div class="left">							
+										@if (ViewBag.GetFreeShipping > 0)
+										{
+											<label>Spend R <span style="text-decoration-line:underline;">@ViewBag.GetFreeShipping</span> to get <b>FREE</b> Shipping</label>										
+											<button class="btn">Help me choose</button>
+										}
+										else
+										{
+											<label>Don't worry we got your shipping costs covered!</label>
+										}
+									</div>
+								</div>
+								<div class="col-lg-4 col-md-7 col-12">
+									<div class="right">
+										<ul>
+											<li>Cart Subtotal<span class="text-decoration-line-through" style="color:red; text-decoration:line-through;">R @ViewBag.CartTotalBase</span></li>
+											<li>Shipping<span>Free</span></li>
+											<li style="font-weight:800;">You Save<span style="color:forestgreen;">R @ViewBag.Savings</span></li>
+											<li class="last" style="font-weight:500;">You Pay <span style="text-decoration-line:underline">R @ViewBag.CartTotalSale</span></li>
+										</ul>
+										<div class="button5">
+											<a href="/Checkout" class="btn">Checkout</a>
+											<a href="/Shop" class="btn">Continue shopping</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--/ End Total Amount -->
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+	else
+	{
+		<section class="hero-slider">
+			<!-- Single Slider -->
+			<div class="single-slider" style="background-image:url(/Media/Shop/ShoppingCart.png)">
+				<div class="container">
+					<div class="row no-gutters">
+						<div class="col-lg-9 offset-lg-3 col-12">
+							<div class="text-inner">
+								<div class="row">
+									<div class="col-lg-7 col-12" style="background-color:rgba(0, 0, 0, 0.8);">
+										<div class="hero-text">
+											<h1><span style="color:ghostwhite">Don't forget to add to cart </span>Your Cart is Currently Empty...</h1>
+											<p style="color:ghostwhite">Discover the lowest prices on hardware products with our AI-powered ecommerce store. Shop now for unbeatable deals.</p>
+											<div class="button" style="padding:25px 0;">
+												<a href="/Shop" class="btn">Shop Now!</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--/ End Single Slider -->
+		</section>
+	}
+	<!-- // -->
+	<!-- Shop Services Partial View-->
+	<partial name="_Services" />
+	<!-- // -->
+	<!-- Footer Partial View-->
+	<partial name="_Footer" />
+	<!-- // -->
+	@section Scripts {
+		<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+	}
+	<!-- Jquery -->
+	<script src="~/js/jquery.min.js"></script>
+	<script src="~/js/jquery-migrate-3.0.0.js"></script>
+	<script src="~/s/jquery-ui.min.js"></script>
+	<!-- Popper JS -->
+	<script src="~/js/popper.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="~/js/bootstrap.min.js"></script>
+	<!-- Color JS -->
+	<script src="~/js/colors.js"></script>
+	<!-- Slicknav JS -->
+	<script src="~/js/slicknav.min.js"></script>
+	<!-- Owl Carousel JS -->
+	<script src="~/js/owl-carousel.js"></script>
+	<!-- Magnific Popup JS -->
+	<script src="~/js/magnific-popup.js"></script>
+	<!-- Waypoints JS -->
+	<script src="~/js/waypoints.min.js"></script>
+	<!-- Countdown JS -->
+	<script src="~/js/finalcountdown.min.js"></script>
+	<!-- Nice Select JS -->
+	<script src="~/js/nicesellect.js"></script>
+	<!-- Flex Slider JS -->
+	<script src="~/js/flex-slider.js"></script>
+	<!-- Alertify -->
+	<script src="~/alertifyjs/alertify.min.js"></script>
+	<!-- ScrollUp JS -->
+	<script src="~/js/scrollup.js"></script>
+	<!-- Onepage Nav JS -->
+	<script src="~/js/onepage-nav.min.js"></script>
+	<!-- Easing JS -->
+	<script src="~/js/easing.js"></script>
+	<!-- Active JS -->
+	<script src="~/js/active.js"></script>
+
+	<!-- Custom Scripts -->
+	<!-- Load ProgressBar -->
+	<script type="text/javascript">
+		const progressBarContainer = document.querySelector("#progressBarContainer");
+		const progressBar = document.querySelector("#progressBar");
+		let totalPageHeight = document.body.scrollHeight - window.innerHeight;
+		let debounceResize;
+
+		window.addEventListener("scroll", () => {
+			let newProgressHeight = window.pageYOffset / totalPageHeight;
+			progressBar.style.transform = `scale(1,${newProgressHeight})`;
+			progressBar.style.opacity = `${newProgressHeight}`;
+		}, {
+			capture: true,
+			passive: true
+		});
+
+		window.addEventListener("resize", () => {
+			clearTimeout(debounceResize);
+			debounceResize = setTimeout(() => {
+				totalPageHeight = document.body.scrollHeight - window.innerHeight;
+			}, 250);
+		});
+
+		progressBarContainer.addEventListener("click", (e) => {
+			let newPageScroll = e.clientY / progressBarContainer.offsetHeight * totalPageHeight;
+			window.scrollTo({
+				top: newPageScroll,
+				behavior: 'smooth'
+			});
+		});
+	</script>
+	<!--Functions-->
+	<script type="text/javascript">
+		// [Alertify]
+		// Prompt user to accept or decline cookies
+		function fireOncePerSession1() {
+			if (!sessionStorage.getItem('hasFired1')) {
+				$(document).ready(function () {
+					alertify.confirm('DEV NOTICE!', 'Front-end is being redesigned! Back-end offers all functionality needed!',
+						function () { alertify.success('Please Continue Testing Other WebPages for Now!') },
+						function () { alertify.error('Not Cool Bro.... :(') }).set('movable', false);
+				});
+				sessionStorage.setItem('hasFired1', true);
+			}
+		}
+
+		// [Alertify] & [POST]
+		// If user is not subscribed then prompt user with pop-up (Delay: 25 secs)
+		function SendSubAlert() {
+			setTimeout(function () {
+				alertify.prompt('Subscribe to Our Weekly Newsletter and get 10% Off Your First Order!', ' Enter Your Email', ' ',
+					function (evt, value) {
+						$.ajax({
+							type: 'POST',
+							url: '/Home/UpdateSubscribedStatus',
+							data: { email: value },
+							success: function () {
+								sessionStorage.setItem('hasFired2', true);
+							},
+							error: function () {
+								console.error('Error saving email!');
+							}
+						});
+					},
+					function () { alertify.error('Cancel') });
+			}, 25000);
+		}
+		
+		// [GET]
+		// Load Shopping Cart
+		function loadCart() {
+			let basketStart = 1;
+			$.ajax({
+				type: 'GET',
+				url: '/Shop/Index',
+				data: { basketStart: basketStart },
+				success: function (r) {
+					$("#shoppingbasket").html($(r).find("#shoppingbasket").html());
+				},
+				error: function (e) {
+					alertify.error('Error: JavaScript Function (loadCart)');
+					alertify.error(e);
+				}
+			});
+		}
+
+		// [POST]
+		// Delete from Cart
+		function loadDeleteCart(productId) {
+			$.ajax({
+				type: 'POST',
+				url: '/Shop/DeleteConfirmed',
+				data: { BasketRemovePID: productId },
+				success: function (r) {
+					$("#shoppingbasket").html($(r).find("#shoppingbasket").html());
+					alertify.notify('Removed from Cart!', 'custom', 2, function () { console.log('dismissed'); });
+				},
+				error: function (e) {
+					alertify.error('Error: JavaScript Function (loadAddToCart)');
+					alertify.error(e);
+				}
+			});
+		}
+	</script>
+</body>
+</html>

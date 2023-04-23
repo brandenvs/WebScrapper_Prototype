@@ -1,0 +1,155 @@
+﻿@{
+    ViewData["Title"] = "Product Images";
+}
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+	<!-- Meta Tag -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Title Tag  -->
+	<title>Download and Save Images</title>
+	<!-- Favicon -->
+		<link rel="icon" type="image/png" href="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/favicon.ico/Media/LogoCropped.png">
+	<!-- Web Font -->
+	<link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="~/css/bootstrap.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="~/css/font-awesome.css">
+	<!-- Fancybox -->
+	<link rel="stylesheet" href="~/css/jquery.fancybox.min.css">
+	<!-- Themify Icons -->
+	<link rel="stylesheet" href="~/css/themify-icons.css">
+	<!-- Jquery Ui -->
+	<link rel="stylesheet" href="~/css/jquery-ui.css">
+	<!-- Animate CSS -->
+	<link rel="stylesheet" href="~/css/animate.css">
+	<!-- Slicknav -->
+	<link rel="stylesheet" href="~/css/slicknav.min.css">
+	<!-- Alertify -->
+	<link rel="stylesheet" href="~/alertifyjs/css/alertify.min.css" />
+	<link rel="stylesheet" href="~/alertifyjs/css/themes/default.min.css" />
+	<!-- Reset CSS -->
+	<link rel="stylesheet" href="~/css/reset.css">
+	<!-- Nice Select JS -->
+	<link rel="stylesheet" href="~/css/niceselect.css">
+	<!-- Temp CSS -->
+	<link rel="stylesheet" href="~/css/style.css">
+	<!-- Responsive CSS -->
+	<link rel="stylesheet" href="~/css/responsive.css">
+	<!-- Site CSS -->
+	<link rel="stylesheet" href="~/css/site.css">
+</head>
+<body>
+	<section class="product-area shop-sidebar shop section">
+		<div id="progressBarContainer">
+			<div id="progressBar"></div>
+		</div>
+		<div class="container" style="max-width:100%">
+			<div class="row">
+				<div class="col-lg-3 col-md-4 col-12">
+					<button class="btn" style="background-color:gray; font-size:10px;" onclick="location.href='/Shop'"><img src="/backbutton.png" height="50" width="50"/>Exit</button>
+				</div>
+				<div id="products" class="col-md-4 col-md-8 col-12">
+					<div id="row" class="row">
+						<div class="col-12">
+							<!-- Shop Top -->
+							<div id="console" class="shop-top" style="background-color:#ffdeadc1;">
+								<div class="content" style="width:100%;">
+									<h2>Start Image Download</h2>
+									<button class="btn" style="margin:10px; padding:15px; font-size:50px; font-weight:900; color:white; background-color:forestgreen;" onclick="startAutoDownload(); refreshConsole(); showMessage();">Run</button>
+									<button class="btn" style="margin:10px; padding:15px; font-size:25px; font-weight:500; color:white; background-color:red;" onclick="clearAutoDownload();">Remove Images</button>							
+							</div>
+	
+							<!--/ End Shop Top -->
+						</div>
+					</div>
+					<div id="products" class="row">						
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+	</section>
+	@section Scripts {
+		<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+	}
+	<!-- Site -->
+	<script src="~/js-site/site.js"></script>
+	<!-- Jquery -->
+	<script src="~/js/jquery.min.js"></script>
+	<script src="~/js/jquery-3.4.1.min.js"></script>
+	<script src="~/js/jquery-ui.min.js"></script>
+	<!-- Popper JS -->
+	<script src="~/js/popper.min.js"></script>
+	<!-- Nice Select JS -->
+	<script src="js/nicesellect.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="~/js/bootstrap.min.js"></script>
+	<!-- Slicknav JS -->
+	<script src="~/js/slicknav.min.js"></script>
+	<!-- Magnific Popup JS -->
+	<script src="~/js/magnific-popup.js"></script>
+	<!-- Fancybox JS -->
+	<script src="~/js/facnybox.min.js"></script>
+	<!-- Countdown JS -->
+	<script src="~/js/finalcountdown.min.js"></script>
+	<!-- Nice Select JS -->
+	<script src="~/js/nicesellect.js"></script>
+	<!-- Onepage Nav JS -->
+	<script src="~/js/onepage-nav.min.js"></script>
+	<!-- Easing JS -->
+	<script src="~/js/easing.js"></script>
+	<!-- Alertify -->
+	<script src="~/alertifyjs/alertify.min.js"></script>
+	<!-- Active JS -->
+	<script src="~/js/active.js"></script>
+
+	<script type="text/javascript">
+		function showMessage() {
+			alertify.notify('Busy Downloading and Saving Images...', 'warn', 35, function () { console.log('dismissed'); });
+		}
+		function showMessageSucess() {
+			var notification = alertify.notify('Done!', 'success', 5, function () { console.log('dismissed'); });
+		}
+		function showMessageError() {
+			var notification = alertify.notify('Something went wrong!', 'error', 5, function () { console.log('dismissed'); });
+		}
+		function startAutoDownload() {
+			let startAutoDownload = 1;
+			$.ajax({
+				type: 'GET',
+				url: '/Backend/GetImages',
+				data: { startAutoDownload: startAutoDownload },
+				success: function (r) {
+					showMessageSucess();					
+				},
+				error: function () {
+					showMessageSucess();					
+				}
+			});
+		}
+		function showMessageError() {
+			var notification = alertify.notify('Table Cleared!', 'error', 5, function () { console.log('dismissed'); });
+		}
+		function clearAutoDownload() {
+			let clear = 1;
+			$.ajax({
+				type: 'GET',
+				url: '/Backend/GetImages',
+				data: { clear: clear },
+				success: function (r) {
+					showMessageSucess();
+					location.reload();
+				},
+				error: function () {
+					showMessageSucess();
+					location.reload();
+				}
+			});
+		}
+	</script>
+
+</body>
+</html>

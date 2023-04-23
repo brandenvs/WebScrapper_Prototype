@@ -1,0 +1,131 @@
+﻿@model wazaware.co.za.Models.AddCSV
+
+@{
+    ViewData["Title"] = "AutoProductCreateTest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Swift Link</title>
+    <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="css/mdb.min.css" type="text/css" rel="stylesheet">
+    <link href="css/style.min.css" type="text/css" rel="stylesheet">
+    <link href="css/site.css" type="text/css" rel="stylesheet">
+</head>
+<h1>AutoProductCreateTest</h1>
+
+<h4>AutoProduct</h4>
+<hr />
+<body>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2 style="color:red">Beta Version</h2>
+        <p>Example text CSV Headers below:</p>
+        <table class="product-table">
+            <tbody style="background-color:antiquewhite">
+                <tr>
+                    <td>
+                        web-scraper-start-url
+                    </td>
+                    <td>
+                        ProductName
+                    </td>
+                    <td>
+                        ProductStock
+                    </td>
+                    <td>
+                        ProductBasePrice
+                    </td>
+                    <td>
+                        ProductSalePrice
+                    </td>
+                    <td>
+                        linked-href
+                    </td>
+                    <td>
+                        Cat
+                    </td>
+                    <td>
+                        Image-src
+                    </td>
+                    <td>
+                        ProductDescription
+                    </td>
+                    <td>
+                        DataBatchNumber (!=0)
+                    </td>
+                    <td>
+                        Visible (either 'Visible' or 'Hidden')
+                    </td>                     
+                </tr>
+            </tbody>
+        </table>
+        <h4>Product Map used to Map csv File:</h4>
+        <ul>
+            <li>
+                Map(x => x.VendorSite).Name("web-scraper-start-url");
+            </li>
+            <li>
+                Map(x => x.ProductName).Name("ProductName");
+            </li>
+            <li>
+                Map(x => x.ProductStock).Name("ProductStock");
+            </li>
+            <li>
+                Map(x => x.ProductBasePrice).Name("ProductBasePrice");
+            </li>
+            <li>
+                Map(x => x.ProductSalePrice).Name("ProductSalePrice");
+            </li>
+            <li>
+                Map(x => x.VendorProductURL).Name("linked-href");
+            </li>
+            <li>
+                Map(x => x.ProductCategory).Name("Cat");
+            </li>
+            <li>
+                Map(x => x.ImageURL).Name("Image-src");
+            </li>
+            <li>
+                Map(x => x.ProductDescription).Name("ProductShortDescription");
+            </li>
+            <li>
+                Map(x => x.dataBatch).Name("DataBatchNumber");
+            </li>
+            <li>
+                Map(x => x.Visible).Name("Visible");
+            </li>
+        </ul>
+  
+        <form enctype="multipart/form-data" asp-action="AutoProductCreateTest">
+            <div class="form-group">
+                <label asp-for="CSVFile" class="control-label">CSV File</label>
+                <div class="custom-file">
+                    <input asp-for="CSVFile" class="custom-file-input" id="FLFrontImage" onchange="document.getElementById('FrontImagePrv').src = window.URL.createObjectURL(this.files[0])">
+                </div>
+                <span asp-validation-for="CSVFile" class="text-danger"></span>
+                <img id="FrontImagePrv" src="" data="image" width="150" height="150" style="border:1px; margin-top:20px; margin-left:120px" alt="Nothing to show" />
+            </div>
+            <input class="btn btn-outline-white btn-lg" style="background-color: cadetblue !important; margin-top:10px;" type="submit" value="Add CSVFile" />
+
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+</body>
+</html>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
