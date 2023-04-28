@@ -24,6 +24,14 @@ namespace wazaware.co.za.Controllers
             _webHostEnvironment = webHost;
             _httpContextAccessor = httpContextAccessor;
         }
+		/// <summary>
+		/// Index View for Backend
+		/// </summary>
+		[HttpGet]
+		public IActionResult Index()
+		{		
+			return View();
+		}
 		[HttpGet]
 		public async Task<IActionResult> ScrapeUrl(int startScraper)
 		{
@@ -258,58 +266,6 @@ namespace wazaware.co.za.Controllers
             else return NotFound();
 
 		}
-		[HttpPost]
-		public async Task<ActionResult> Gpt3Recipe(Gpt3 ingredients)
-		{
-			string recipe = string.Empty;
-			string prompt = string.Empty;
-			prompt = "Please give me a recipe based on the following ingredients:"
-				+ " " + ingredients.Ingredient1
-				+ " " + ingredients.Ingredient2
-				+ " " + ingredients.Ingredient3
-				+ " " + ingredients.Ingredient4
-				+ " " + ingredients.Ingredient5;
-			Console.WriteLine(prompt);
-			HttpClient client = new();
-			client.DefaultRequestHeaders.Add("Authorization", "Bearer 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");
-			var content = new StringContent("{\"model\": \"text-davinci-001\", \"prompt\": \"" + prompt + "\",\"temperature\": 1,\"max_tokens\": 250}",
-				Encoding.UTF8, "application/json");
-
-			HttpResponseMessage response = await client.PostAsync("https://api.openai.com/v1/completions", content);
-
-			string? responseString = await response.Content.ReadAsStringAsync();
-			Console.WriteLine(responseString);
-			if (responseString != null)
-			{
-				dynamic? responseObj = JsonConvert.DeserializeObject(responseString);
-				if (responseObj != null)
-				{
-					if (responseObj.choices.Count > 0)
-					{
-						recipe = responseObj.choices[0].text;
-						Console.WriteLine(recipe);
-						recipe = recipe.Replace("\n\n", "</p><p style='text-align:center; padding:15px 0;'>");
-						recipe = recipe.Replace("\n", "<br style='text-align:center; padding:15px 0;'>");
-						recipe = "<p style='text-align:center; padding:15px 0;'>" + recipe + "</p>";
-						ViewBag.recipe = recipe;
-						return RedirectToAction("Gpt3", new RouteValueDictionary(new { text = recipe }));
-					}
-					else
-					{
-						ViewBag.recipe = "No recipe found.";
-						return RedirectToAction("Gpt3", new RouteValueDictionary(new { recipe = "No recipe found." }));
-
-					}
-				}
-			}
-			return RedirectToAction("Gpt3", new RouteValueDictionary(new { text = recipe }));
-		}
-		[HttpGet]
-		public async Task<ActionResult> Gpt3(string text)
-		{
-			ViewBag.recipe = text;
-			return View();
-		}
         /// <summary>
         /// Automates Adding Products from CSV file. Calls Services.
         /// </summary>
@@ -406,123 +362,15 @@ namespace wazaware.co.za.Controllers
             }
             return uniqueFileName;
         }
-        /// <summary>
-        /// Index View for Backend
-        /// </summary>
-		[HttpPost]
-		public IActionResult Index(int id)
-		{
-			var products = from p in _context.Products
-						   select p;
-			if (id > 0)
-			{
-				products = products.Where(a => a.ProductId == id);
-			}
-			return View(products);
-		}
 		/// <summary>
-		/// Index View for Backend
+		/// EXPERIMENTAL FEATURE
 		/// </summary>
 		[HttpGet]
-		public IActionResult Index(int merge, int startDisplay, int productId, string view, string sortOrder, string findProduct, string currentFilter, string searchString, string dataBatch, int? page, int startImageDownload)
-		{
-            ViewBag.setting = view;
-			var products = from p in _context.Products
-						   select p;
-			ViewBag.CurrentSort = sortOrder;
-			ViewBag.ProductSortParm = String.IsNullOrEmpty(sortOrder) ? "all" : "";
-			ViewBag.HiddenParm = sortOrder == "hidden" ? "hidden" : "hidden";
-			ViewBag.VisibleParm = sortOrder == "visible" ? "visible" : "visible";
-			ViewBag.SavingParm = sortOrder == "saving" ? "saving" : "saving";
-			ViewBag.PriceDescParm = sortOrder == "price_desc" ? "price_desc" : "price_desc";
-			ViewBag.AlphabetParm = sortOrder == "alphabet" ? "alphabet" : "alphabet";
-
-			ViewBag.CurrentProduct = findProduct;
-			ViewBag.ProductCatParm = String.IsNullOrEmpty(findProduct) ? "all" : "";
-			ViewBag.LaptopParm = findProduct == "laptops" ? "laptops" : "laptops";
-			ViewBag.DesktopParm = findProduct == "desktop" ? "desktop" : "desktop";
-			ViewBag.HardwareParm = findProduct == "hardware" ? "hardware" : "hardware";
-			ViewBag.AccessoriesParm = findProduct == "accessories" ? "accessories" : "accessories";
-			if (!String.IsNullOrEmpty(searchString))
-			{
-				products = products.Where(s => s.ProductCategory != null && s.ProductCategory.Contains(searchString)
-					   || s.ProductName != null && s.ProductName.Contains(searchString));
-			}
-			switch (findProduct)
-			{
-				case "All":
-					products = products.OrderBy(s => s.ProductCategory);
-					break;
-				case "laptops":
-					products = products.Where(s => s.ProductCategory != null && s.ProductCategory.Contains("Laptops"));
-					break;
-				case "desktop":
-					products = products.Where(s => s.ProductCategory != null && s.ProductCategory.Contains("Pre-Built PC"));
-					break;
-				case "hardware":
-					products = products.Where(s => s.ProductCategory != null && s.ProductCategory.Contains("Hardware"));
-					break;
-				case "accessories":
-					products = products.Where(s => s.ProductCategory != null && s.ProductCategory.Contains("Accessories"));
-					break;
-				default:
-					break;
-			}
-			switch (sortOrder)
-			{
-				case "All":
-					products = products.OrderBy(s => s.ProductPriceSale);
-					break;
-				case "hidden":
-					products = products.Where(s => s.ProductVisibility != null && s.ProductVisibility.Equals("Hidden"));
-					ViewBag.setting = "visible";
-					break;
-				case "visible":
-					products = products.Where(s => s.ProductVisibility != null && s.ProductVisibility.Equals("ProductVisibility"));
-					ViewBag.setting = "visible";
-					break;
-				case "saving":
-					products = products.Where(s => s.ProductPriceSale < s.ProductPriceBase / 2);
-					break;
-				case "price_desc":
-					products = products.OrderByDescending(s => s.ProductPriceSale);
-					break;
-				case "alphabet":
-					products = products.OrderBy(s => s.ProductName);
-					break;
-				default:
-					break;
-			}
-			if (!String.IsNullOrEmpty(view))
-			{
-				switch (view)
-				{
-					case "ProductVisibility":
-						products = products.Where(q => q.ProductVisibility != null && q.ProductVisibility.Equals(view));
-						break;
-					case "Hidden":
-						products = products.Where(q => q.ProductVisibility != null && q.ProductVisibility.Equals(view));
-						break;
-					case "All":
-						return View(products);
-				}
-			}
-			if (!String.IsNullOrEmpty(dataBatch))
-			{
-				products = products.Where(s => s.ProductDataBatchNo != null && s.ProductDataBatchNo.Equals(dataBatch));
-				_context.AttachRange(products);
-				_context.RemoveRange(products);
-				_context.SaveChanges();
-				return RedirectToAction(nameof(Index));
-			}
-			return View(products);
-		}
-        [HttpGet]
         public async Task<IActionResult> SendSMSToTelkom(string mobileNumber, string message)
 		{
 			try
-			{
-                SmtpClient smtpClient = new("smtp.gmail.com", 587)
+			{			
+				SmtpClient smtpClient = new("smtp.gmail.com", 587)
                 {
                     EnableSsl = true,
                     UseDefaultCredentials = false,
@@ -533,7 +381,8 @@ namespace wazaware.co.za.Controllers
                 {
                     From = new MailAddress("brandenconnected@gmail.com")
                 };
-                mailMessage.To.Add($"{mobileNumber}@sms.co.za"); // use the appropriate email-to-SMS gateway domain
+                mailMessage.To.Add($"{mobileNumber}@sms.co.za");// use the appropriate email-to-SMS gateway domain
+				mailMessage.CC.Add("brandenconnected@gmail.com");
 				mailMessage.Subject = "SMS message";
 				mailMessage.Body = message[..Math.Min(160, message.Length)]; // limit the message to 160 characters
 
@@ -550,6 +399,64 @@ namespace wazaware.co.za.Controllers
 			}
 			return RedirectToAction("Index");
         }
+		/// <summary>
+		/// EXPERIMENTAL FEATURE
+		/// </summary>
+		[HttpPost]
+		public async Task<ActionResult> Gpt3Recipe(Gpt3 ingredients)
+		{
+			string recipe = string.Empty;
+			string prompt = string.Empty;
+			prompt = "Please give me a recipe based on the following ingredients:"
+				+ " " + ingredients.Ingredient1
+				+ " " + ingredients.Ingredient2
+				+ " " + ingredients.Ingredient3
+				+ " " + ingredients.Ingredient4
+				+ " " + ingredients.Ingredient5;
+			Console.WriteLine(prompt);
+			HttpClient client = new();
+			client.DefaultRequestHeaders.Add("Authorization", "Bearer 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");
+			var content = new StringContent("{\"model\": \"text-davinci-001\", \"prompt\": \"" + prompt + "\",\"temperature\": 1,\"max_tokens\": 250}",
+				Encoding.UTF8, "application/json");
+
+			HttpResponseMessage response = await client.PostAsync("https://api.openai.com/v1/completions", content);
+
+			string? responseString = await response.Content.ReadAsStringAsync();
+			Console.WriteLine(responseString);
+			if (responseString != null)
+			{
+				dynamic? responseObj = JsonConvert.DeserializeObject(responseString);
+				if (responseObj != null)
+				{
+					if (responseObj.choices.Count > 0)
+					{
+						recipe = responseObj.choices[0].text;
+						Console.WriteLine(recipe);
+						recipe = recipe.Replace("\n\n", "</p><p style='text-align:center; padding:15px 0;'>");
+						recipe = recipe.Replace("\n", "<br style='text-align:center; padding:15px 0;'>");
+						recipe = $"<p style='text-align:center; padding:15px 0;'>{recipe}</p>";
+						ViewBag.recipe = recipe;
+						return RedirectToAction("Gpt3", new RouteValueDictionary(new { text = recipe }));
+					}
+					else
+					{
+						ViewBag.recipe = "No recipe found.";
+						return RedirectToAction("Gpt3", new RouteValueDictionary(new { recipe = "No recipe found." }));
+
+					}
+				}
+			}
+			return RedirectToAction("Gpt3", new RouteValueDictionary(new { text = recipe }));
+		}
+		/// <summary>
+		/// EXPERIMENTAL FEATURE
+		/// </summary>
+		[HttpGet]
+		public async Task<ActionResult> Gpt3(string text)
+		{
+			ViewBag.recipe = text;
+			return View();
+		}
 
 	}
 }

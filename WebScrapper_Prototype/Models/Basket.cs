@@ -12,7 +12,9 @@ namespace wazaware.co.za.Models
 
 		[Required]
 		public int ProductId { get; set; }
-
+		[Required]
+		public int ProductCount { get; set; }
+		public decimal? ProductTotal { get; set; }
 		[Required]
 		public DateTime CartEntryDate { get; set; }
 

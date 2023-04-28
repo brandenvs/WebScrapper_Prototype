@@ -16,14 +16,14 @@ builder.Services.AddHttpContextAccessor();
 //builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.")));
 
 //var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
-//var connectionString = builder.Configuration.GetConnectionString("wazaware.co.zaContext") ?? throw new InvalidOperationException("Connection string 'wazaware.co.zaContext' not found.");
+var connectionString = builder.Configuration.GetConnectionString("wazaware_db_context") ?? throw new InvalidOperationException("Connection string 'wazaware_db_context' not found.");
 builder.Services.AddDbContext<wazaware_db_context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("wazaware_db_context") ?? throw new InvalidOperationException("Connection string 'wazaware_db_context' not found.")));
 
 builder.Services.AddRazorPages();
 
 builder.Services.AddControllersWithViews();
 
-//AddAuthorizationPolicies(builder.Services);
+AddAuthorizationPolicies(builder.Services);
 
 AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
 

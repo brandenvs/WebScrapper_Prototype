@@ -41,7 +41,7 @@
 	<!-- StyleSheet -->
 	<!-- Bootstrap -->
 	<link rel="stylesheet" href="~/css/bootstrap.min.css">
-	<link rel="stylesheet" href="~/bootstrap/css/bootstrap.css">		
+	<link rel="stylesheet" href="~/bootstrap/css/bootstrap.css">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
 	<!-- Magnific Popup -->
 	<link rel="stylesheet" href="~/css/magnific-popup.min.css">
@@ -96,239 +96,9 @@
 	<div class="header shop" style="background-color:#FFF5E1;">
 		<!-- Topbar // Desktop Only -->
 		<div class="desktop">
-			<div class="topbar">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-5 col-md-12 col-12">
-							<!-- Top Left -->
-							<div class="top-left">
-								<ul class="list-main">
-									<li>
-										<div style="display:flex;flex-direction: row;flex-wrap: wrap;">
-											<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-											<a href="tel:0815650206" alt="Call us" style="border-radius:10px; white-space: nowrap;"
-											   data-toggle="tooltip" data-placement="right" title="Got a Question that can't wait? Give us a call!">
-												<lord-icon src="https://cdn.lordicon.com/pneolqso.json"
-														   trigger="hover"
-														   colors="primary:#f7941d,secondary:#545454,tertiary:#1663c7,quaternary:#ffffff"
-														   style="width:32px;height:32px">
-												</lord-icon>
-											</a>
-										</div>
-									</li>
-									<li>
-										<div style="display:flex;flex-direction: row;flex-wrap: wrap;">
-											<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-											<a href="mailto:brandenconnected@gmail.com" alt="Call us" style="border-radius:10px; white-space: nowrap;"
-											   data-toggle="tooltip" data-placement="right" title="Send us an email">
-												<lord-icon src="https://cdn.lordicon.com/tkgyrmwc.json"
-														   trigger="hover"
-														   colors="primary:#e88c30,secondary:#e88c30"
-														   style="width:32px;height:32px">
-												</lord-icon>
-											</a>
-										</div>
-									</li>
-								</ul>
-							</div>
-							<!--/ End Top Left -->
-						</div>
-						<div class="col-lg-6 col-md-12 col-12">
-							<!-- Top Right -->
-							<div class="right-content">
-								@if (ViewBag.isCookie)
-								{
-									<ul class="list-main">
-										<li><i class="ti-shopping-cart"></i><a href="/Shop/Cart">Cart</a></li>
-										<li><i class="ti-bag"></i><a href="/Shop">Shop</a></li>
-										<li><i class="ti-power-off"></i><a href="/User">Login/Register</a></li>
-									</ul>
-								}
-								else
-								{
-									<ul class="list-main">
-										<li><i class="ti-shopping-cart"></i><a href="/Shop/Cart">Cart</a></li>
-										<li><i class="ti-bag"></i><a href="/Shop">Shop</a></li>
-										<li><i class="ti-power-off"></i><a href="/User">Account: @ViewBag.FirstName</a></li>
-									</ul>
-								}
-							</div>
-							<!-- End Top Right -->
-						</div>
-					</div>
-				</div>
-			</div>
+			<partial name="_TopBar" />
 			<!-- Middle Inner -->
-			<div class="middle-inner">
-				<div class="container">
-					<div class="row">
-						<div class="col-lg-3 col-md-2 col-12">
-							<div class="logo">
-								<a href="/"><img src="/Media/Logo/LogoOfficialCropped.png" alt="WaZaWare Find The Right Price!" style="border-radius:10px;"></a>
-							</div>
-						</div>
-						<div class="col-lg-7 col-md-7 col-12">
-							<div class="search-bar-top">
-								<div class="search-bar">
-									<form class="form-inline my-2 my-lg-0">
-										@Html.TextBox("search", ViewBag.Search as string,
-										new {Class="form-control me-2", Style="color:black;width: 100%;", PlaceHolder="Search..." })
-										<button href="#products" class="btnn" type="submit"><i class="ti-search"></i></button>
-									</form>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-2 col-md-3 col-12">
-							<div class="right-bar">
-								<div id="account" class="sinlge-bar shopping">
-									<a id="AccountHover" href="/User" onclick="loadAccount()" class="single-icon">
-										<i>
-											<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-											<lord-icon src="https://cdn.lordicon.com/dxjqoygy.json"
-													   trigger="loop-on-hover"
-													   delay="1000"
-													   colors="primary:#000000,secondary:#f7941d"
-													   style="width:50px;height:50px">
-											</lord-icon>
-										</i>
-									</a>
-									@if (ViewBag.isCookie)
-									{
-										<div id="AccountOptions" class="shopping-item">
-											<div class="dropdown-cart-header">
-												<p>@ViewBag.FirstName</p>
-											</div>
-											<ul class="shopping-list">
-												<li>
-													<a class="h5" href="/User">Login</a>
-												</li>
-												<li>
-													<a class="h5" href="/User">Register</a>
-												</li>
-											</ul>
-										</div>
-									}
-									else
-									{
-										<div id="AccountOptions" class="shopping-item">
-											<div class="dropdown-cart-header">
-												<p>Hello <span class="font-weight-bold">@ViewBag.FirstName</span>,<br /> What would you like to do?</p>
-											</div>
-											<ul class="shopping-list">
-												<li>
-													<a class="cart-img" href="/User"><img src="" alt="UserImage" /></a>
-												</li>
-												<li>
-													<a class="h4" href="/User">My Account</a>
-												</li>
-												<li>
-													<a class="h5" href="/User">My Orders</a>
-												</li>
-												<li>
-													<a class="h6" href="/User">Check Order Status</a>
-												</li>
-											</ul>
-											<div class="bottom">
-												<a href="#" onclick="userLogout()" class="btn animate">Logout</a>
-											</div>
-										</div>
-									}
-								</div>
-								<div id="shoppingbasket" class="sinlge-bar shopping">
-									<a id="basketHover" href="#" onclick="loadCart()" class="single-icon">
-										<i>
-											<span class="total-count">@Model.Cart.Count</span>
-											<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-											<lord-icon src="https://cdn.lordicon.com/ggihhudh.json"
-													   trigger="loop-on-hover"
-													   delay="1000"
-													   colors="primary:#c79816,secondary:#674e03,tertiary:#F7941D"
-													   style="width:50px;height:50px">
-											</lord-icon>
-										</i>
-									</a>
-									@if (Model.Cart.Count > 0)
-									{
-										<!-- Shopping Item -->
-										<div class="shopping-item">
-											<div class="dropdown-cart-header">
-												<span>Items: @Model.Cart.Count</span>
-												<a href="/Shop/Cart">
-													View Cart
-												</a>
-											</div>
-											@foreach (var product in Model.Cart)
-											{
-												<ul class="shopping-list">
-													<li>
-														<a href="#" class="remove" title="Remove this item" onclick="loadDeleteCart('@product.ProductId')"><i class="fa fa-remove"></i></a>
-														<a class="cart-img" href="/Shop/Product/@product.ProductId">
-															<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" style="width: 100px; height: 100%;" />
-														</a>
-														<h4><a href="/Shop/Product/@product.ProductId">@product.ProductName!.Substring(0,20) ...</a></h4>		
-													<p class="quantity">
-														<span style="color:red; text-decoration-line:line-through;">R @product.ProductPriceBase</span>
-														<br>
-														<span class="amount" style="color:black;font-weight:800;">R @product.ProductPriceSale</span>
-													</p>
-													</li>													
-												</ul>
-											}
-											<div class="bottom">
-												<div class="total">
-													<span>Sub Total:</span>
-													<span class="total-amount" style="text-decoration-line:line-through; color:red;">R @ViewBag.CartTotalBase</span>
-												</div>
-												<div class="total">
-													<span>Discount:</span>
-													<span class="total-amount" style="color:red;font-weight:800;">R @ViewBag.Savings</span>
-												</div>
-												<div class="total">
-													<span>Total:</span>
-													<span class="total-amount" style="text-decoration-line:underline">R @ViewBag.CartTotalSale</span>
-												</div>
-												<a href="/Checkout" class="btn animate">Checkout</a>
-											</div>
-										</div>
-										<!--/ End Shopping Item -->
-									}
-									else
-									{
-										<!-- Shopping Item -->
-										<div class="shopping-item">
-											<div class="dropdown-cart-header">
-												<span>Items: 0</span>
-												<a href="/User">
-													Login?
-												</a>
-											</div>
-											<ul class="shopping-list">
-												<li>											
-													<a class="cart-img" href="#shoplatest">
-														<i>
-															<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-															<lord-icon src="https://cdn.lordicon.com/tyounuzx.json"
-																	   trigger="loop"
-																	   colors="primary:#121331,secondary:#e88c30"
-																	   style="width:35px;height:35px">
-															</lord-icon>
-														</i>
-													</a>
-													<h4>Cart is Empty...</h4>		
-												</li>
-											</ul>
-											<div class="bottom">														
-												<a href="#shoplatest" class="btn animate">Shop Latest Deals</a>
-											</div>
-										</div>
-										<!--/ End Shopping Item -->
-									}
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			<partial name="_MiddleInner" />
 			<!-- Header Inner Partial View-->
 			<partial name="_HeaderInner" />
 		</div>
@@ -348,8 +118,7 @@
 	<!-- Product Grid -->
 	<section class="product-area shop-sidebar shop section">
 		<div class="container" style="max-width:100%">
-
-			<!-- Header Cards -->		
+			<!-- Header Cards -->
 			<div class="row">
 				<div class="row">
 					<div class="col-12">
@@ -358,7 +127,7 @@
 							<span style="font-size:12px; font-weight:800;">Finding the Lowest Price by scanning Reliable & Reputable stores with our very own AI Model</span>
 						</p>
 					</div>
-				</div>				
+				</div>
 				<div class="row section-divider" sstyle="display: flex;flex-direction: row;justify-content: center;">
 					<div class="col-lg-3 col-md-4 col-12" style="margin: 15px 0;">
 						<div class="card">
@@ -372,15 +141,15 @@
 						<div class="card">
 							<a href="#0">
 								<img src="/Media/Shop/TopCards/TopMonPer.gif" class="card-img" alt="TopMonPer"
-								data-toggle="tooltip" data-placement="right" title="Durable Mouses, Mechanical Keyboards, UHD Monitors and so much more!" />
-							</a>	
+									 data-toggle="tooltip" data-placement="right" title="Durable Mouses, Mechanical Keyboards, UHD Monitors and so much more!" />
+							</a>
 						</div>
 					</div>
 					<div class="col-lg-3 col-md-4 col-12" style="margin: 15px 0;">
 						<div class="card">
-							<a data- href="#0">															
+							<a data- href="#0">
 								<img src="/Media/Shop/TopCards/TopLaptops.gif" class="card-img contain-fit" alt="TopLaptops"
-								data-toggle="tooltip" data-placement="right" title="Work or Play Trust WazaWare with Your Next Mobile Workstation" />
+									 data-toggle="tooltip" data-placement="right" title="Work or Play Trust WazaWare with Your Next Mobile Workstation" />
 							</a>
 						</div>
 					</div>
@@ -388,13 +157,13 @@
 						<div class="card">
 							<a href="#0">
 								<img src="/Media/Shop/TopCards/TopBuild.gif" class="card-img contain-fit" alt="TopBuild"
-								data-toggle="tooltip" data-placement="right" title="Build Your Next Dream PC Today!" />
+									 data-toggle="tooltip" data-placement="right" title="Build Your Next Dream PC Today!" />
 							</a>
 						</div>
 					</div>
 				</div>
-				</div>
-		
+			</div>
+
 			<!-- Shop Main -->
 			<div class="row">
 				<div class="row">
@@ -405,22 +174,14 @@
 						<p class="fs-2 h2">WazaWare Shop: <span style="color:darkgoldenrod;">Where Everything Is On Discount</span></p>
 					</div>
 				</div>
-			<div id="shopmain" class="row section-divider">
-				<!-- Side Cards -->
+				<div id="shopmain" class="row section-divider">
+					<!-- Side Cards -->
 					<div class="col-lg-3 col-md-6 col-12 text-center desktop">
 						<div class="card text-bg-dark" style="margin:10px;">
 							<a href="@Url.Action("Products", new { manufacturer = "amd" })" target="_blank">
 								<img src="/Media/Shop/SideCards/SideAMD.gif" class="card-img contain-fit" alt="SideAMD"
 									 data-toggle="tooltip" data-placement="right" title="Shop Latest AMD Radeon GPUs, Ryzen CPUs, Compatible Monitors and more!" />
 							</a>
-							@*<div class="card-img-overlay" style="display: flex; flex-direction: column; justify-content: center;">
-							<h5 class="card-title" style="background-color: #f7941db3; padding: 5px;">
-							PLACEHOLDER
-							</h5>
-							<p class="card-text" style="color: black; background-color: #f7941d75; padding: 10px; font-weight: 600; margin: 5px 0;">
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-							</p>
-							</div>	*@
 						</div>
 						<div class="card text-bg-dark" style="margin:10px;">
 							<a href="@Url.Action("Products", new { manufacturer = "intel" })" target="_blank">
@@ -435,203 +196,209 @@
 							</a>
 						</div>
 					</div>
-				<!-- Shop Product Grid -->
-				<div class="col-lg-9 col-md-6 col-12">
-					<!-- Latest Products: Header -->
-					<div id="shoplatest" class="col-12" style="padding: 0;">
-						<div class="shop-top curvedEdges">
-							<div class="content" style="width:100%;">
-								<p class="text-sm-start text-md-start text-lg-center"><span style="color:#ff6b6b; font-weight:500;">Our Latest Arrivals</span></p>
-								<h3 class="text-sm-start text-md-start text-lg-center">New Discounts & Products</h3>
-							</div>
-						</div>
-					</div>
-					<!-- Latest Products: Grid -->
-					<div class="row">
-						@foreach (var product in Model.LatestArrivals)
-						{
-							<div class="col-lg-3 col-md-6 col-12">
-								<div class="single-product contain-fit">
-										<div class="product-img contain-fit">
-										<a href="/Shop/Product/@product.ProductId">
-												<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" class="contain-fit" />
-											@if (product.ProductPriceBase * 0.65m > product.ProductPriceSale)
-											{
-												<span class="out-of-stock">Limited</span>
-											}
-											else if (product.ProductPriceBase > 9000)
-											{
-												<span class="new">New</span>
-											}
-										</a>
-										<div class="button-head">
-											<div class="product-action">
-												<a title="View Product" href="/Shop/Product/@product.ProductId">
-													<i>
-														<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-														<lord-icon src="https://cdn.lordicon.com/tyounuzx.json"
-																   trigger="hover"
-																   colors="primary:#121331,secondary:#e88c30"
-																   style="width:35px;height:35px">
-														</lord-icon>
-													</i><span>View Product</span>
-												</a>
-												<a title="Add to Cart" href="#0" onclick="loadAddToCart('@product.ProductId')">
-													<i>
-														<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-														<lord-icon src="https://cdn.lordicon.com/mecwbjnp.json"
-																   trigger="hover"
-																   style="width:35px;height:35px">
-														</lord-icon>
-													</i><span>Add to Cart</span>
-												</a>
-											</div>
-										</div>
-									</div>
-									<div class="product-content">
-										<h3><a href="/Shop/Product/@product.ProductId">@product.ProductName!.Substring(0,35) ...</a></h3>
-										<div class="product-price">
-											<span class="old" style="color:red;">R @product.ProductPriceBase</span>
-											<span style="font-weight:800;">R @product.ProductPriceSale</span>
-										</div>
-									</div>
+					<!-- Shop Product Grid -->
+					<div class="col-lg-9 col-md-6 col-12">
+						<!-- Latest Products: Header -->
+						<div class="col-12" style="padding: 0;">
+							<div class="shop-top curvedEdges">
+								<div class="content" style="width:100%;">
+									<p class="text-sm-start text-md-start text-lg-center"><span style="color:#ff6b6b; font-weight:500;">Our Latest Arrivals</span></p>
+									<h3 class="text-sm-start text-md-start text-lg-center">New Discounts & Products</h3>
 								</div>
 							</div>
-						}
-					</div>
-					<!-- // BREAK // -->
-					<br>
-					<!-- Limited Stock: Header -->
-					<div class="col-12" style="padding: 0;">
-						<div class="shop-top curvedEdges">
-							<div class="content" style="width:100%;">
-								<p class="text-sm-start text-md-start text-lg-center"><span style="color:#ff6b6b; font-weight:500;">Don't miss out!</span></p>
-								<h3 class="text-sm-start text-md-start text-lg-center">These Incredible Deals Don't Last Forever</h3>
-							</div>
 						</div>
-					</div>
-					<!-- Limited Stock: Grid -->
-					<div class="row">
-						@foreach (var product in Model.LimitedStock)
-						{
-							<div class="col-lg-3 col-md-6 col-12">
-								<div class="single-product contain-fit">
-										<div class="product-img contain-fit">
-										<a href="/Shop/Product/@product.ProductId">
-											<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" />
-											@if (product.ProductPriceBase * 0.65m > product.ProductPriceSale)
-											{
-												<span class="out-of-stock">Limited</span>
-											}
-											else if (product.ProductPriceBase > 9000)
-											{
-												<span class="new">New</span>
-											}
-										</a>
-										<div class="button-head">
-											<div class="product-action">
-												<a title="View Product" href="/Shop/Product/@product.ProductId">
-													<i>
-														<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-														<lord-icon src="https://cdn.lordicon.com/tyounuzx.json"
-																   trigger="hover"
-																   colors="primary:#121331,secondary:#e88c30"
-																   style="width:35px;height:35px">
-														</lord-icon>
-													</i><span>View Product</span>
-												</a>
-												<a title="Add to Cart" href="#0" onclick="loadAddToCart('@product.ProductId')">
-													<i>
-														<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-														<lord-icon src="https://cdn.lordicon.com/mecwbjnp.json"
-																   trigger="hover"
-																   style="width:35px;height:35px">
-														</lord-icon>
-													</i><span>Add to Cart</span>
-												</a>
-											</div>
-										</div>
-									</div>
-									<div class="product-content">
-										<h3><a href="/Shop/Product/@product.ProductId">@product.ProductName!.Substring(0,35) ...</a></h3>
-										<div class="product-price">
-											<span class="old" style="color:red;">R @product.ProductPriceBase</span>
-											<span style="font-weight:800;">R @product.ProductPriceSale</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						}
-					</div>
-					<!-- // BREAK // -->
-					<br>
-					<!-- Trending Products: Header -->
-					<div class="col-12" style="padding: 0;">
-						<div class="shop-top curvedEdges">
-							<div class="content" style="width:100%;">
-								<p class="text-sm-start text-md-start text-lg-center"><span style="color:#ff6b6b; font-weight:500;">Be Bold with Discounted Popular Hardware & Peripherals</span></p>
-								<h3 class="text-sm-start text-md-start text-lg-center">Trending Discounts & Products</h3>
-							</div>
-						</div>
-					</div>
-					<!-- Trending Products: Grid -->
-					<div class="row">
-						@foreach (var product in Model.TrendingProducts)
-						{
-							<div class="col-lg-3 col-md-6 col-12">
+						<!-- Latest Products: Grid -->
+						<div id="shoplatest"  class="row">
+							@foreach (var product in Model.LatestArrivals)
+							{
+								<div class="col-lg-3 col-md-6 col-12">
 									<div class="single-product contain-fit">
 										<div class="product-img contain-fit">
-										<a href="/Shop/Product/@product.ProductId">
-											<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" />
-											@if (product.ProductPriceBase * 0.65m > product.ProductPriceSale)
-											{
-												<span class="out-of-stock">Limited</span>
-											}
-											else if (product.ProductPriceBase > 9000)
-											{
-												<span class="new">New</span>
-											}
-										</a>
-										<div class="button-head">
-											<div class="product-action">
-												<a title="View Product" href="/Shop/Product/@product.ProductId">
-													<i>
-														<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-														<lord-icon src="https://cdn.lordicon.com/tyounuzx.json"
-																   trigger="hover"
-																   colors="primary:#121331,secondary:#e88c30"
-																   style="width:35px;height:35px">
-														</lord-icon>
-													</i><span>View Product</span>
-												</a>
-												<a title="Add to Cart" href="#0" onclick="loadAddToCart('@product.ProductId')">
-													<i>
-														<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-														<lord-icon src="https://cdn.lordicon.com/mecwbjnp.json"
-																   trigger="hover"
-																   style="width:35px;height:35px">
-														</lord-icon>
-													</i><span>Add to Cart</span>
-												</a>
+											<a href="/Shop/Product/@product.ProductId">
+												<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" class="contain-fit" />
+												@if (product.ProductPriceBase * 0.65m > product.ProductPriceSale)
+												{
+													<span class="out-of-stock">Limited</span>
+												}
+												else if (product.ProductPriceBase > 9000)
+												{
+													<span class="new">New</span>
+												}
+											</a>
+											<div class="button-head">
+												<div class="product-action">
+													<a title="View Product" href="/Shop/Product/@product.ProductId">
+														<i>
+															<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+															<lord-icon src="https://cdn.lordicon.com/tyounuzx.json"
+																	   trigger="hover"
+																	   colors="primary:#121331,secondary:#e88c30"
+																	   style="width:35px;height:35px">
+															</lord-icon>
+														</i><span>View Product</span>
+													</a>
+													<a title="Add to Cart" href="#0" onclick="loadAddToCart('@product.ProductId')">
+														<i>
+															<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+															<lord-icon src="https://cdn.lordicon.com/mecwbjnp.json"
+																	   trigger="hover"
+																	   style="width:35px;height:35px">
+															</lord-icon>
+														</i><span>Add to Cart</span>
+													</a>
+												</div>
+											</div>
+										</div>
+										<div class="product-content">
+											<h3><a href="/Shop/Product/@product.ProductId">@product.ProductName!.Substring(0,35) ...</a></h3>
+											<div class="product-price">
+												<span class="old" style="color:red;">@product.ProductPriceBaseFormatted</span>
+											</div>
+											<div class="product-price">
+												<span style="font-weight:800;">@product.ProductPriceSaleFormatted</span>
 											</div>
 										</div>
 									</div>
-									<div class="product-content">
-										<h3><a href="/Shop/Product/@product.ProductId">@product.ProductName!.Substring(0,35) ...</a></h3>
-										<div class="product-price">
-											<span class="old" style="color:red;">R @product.ProductPriceBase</span>
-											<span style="font-weight:800;">R @product.ProductPriceSale</span>
+								</div>
+							}
+						</div>
+						<!-- // BREAK // -->
+						<br>
+						<!-- Limited Stock: Header -->
+						<div class="col-12" style="padding: 0;">
+							<div class="shop-top curvedEdges">
+								<div class="content" style="width:100%;">
+									<p class="text-sm-start text-md-start text-lg-center"><span style="color:#ff6b6b; font-weight:500;">Don't miss out!</span></p>
+									<h3 class="text-sm-start text-md-start text-lg-center">These Incredible Deals Don't Last Forever</h3>
+								</div>
+							</div>
+						</div>
+						<!-- Limited Stock: Grid -->
+						<div class="row">
+							@foreach (var product in Model.LimitedStock)
+							{
+								<div class="col-lg-3 col-md-6 col-12">
+									<div class="single-product contain-fit">
+										<div class="product-img contain-fit">
+											<a href="/Shop/Product/@product.ProductId">
+												<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" />
+												@if (product.ProductPriceBase * 0.65m > product.ProductPriceSale)
+												{
+													<span class="out-of-stock">Limited</span>
+												}
+												else if (product.ProductPriceBase > 9000)
+												{
+													<span class="new">New</span>
+												}
+											</a>
+											<div class="button-head">
+												<div class="product-action">
+													<a title="View Product" href="/Shop/Product/@product.ProductId">
+														<i>
+															<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+															<lord-icon src="https://cdn.lordicon.com/tyounuzx.json"
+																	   trigger="hover"
+																	   colors="primary:#121331,secondary:#e88c30"
+																	   style="width:35px;height:35px">
+															</lord-icon>
+														</i><span>View Product</span>
+													</a>
+													<a title="Add to Cart" href="#0" onclick="loadAddToCart('@product.ProductId')">
+														<i>
+															<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+															<lord-icon src="https://cdn.lordicon.com/mecwbjnp.json"
+																	   trigger="hover"
+																	   style="width:35px;height:35px">
+															</lord-icon>
+														</i><span>Add to Cart</span>
+													</a>
+												</div>
+											</div>
+										</div>
+										<div class="product-content">
+											<h3><a href="/Shop/Product/@product.ProductId">@product.ProductName!.Substring(0,35) ...</a></h3>
+											<div class="product-price">
+												<span class="old" style="color:red;">@product.ProductPriceBaseFormatted</span>
+											</div>
+											<div class="product-price">
+												<span style="font-weight:800;">@product.ProductPriceSaleFormatted</span>
+											</div>
 										</div>
 									</div>
 								</div>
+							}
+						</div>
+						<!-- // BREAK // -->
+						<br>
+						<!-- Trending Products: Header -->
+						<div class="col-12" style="padding: 0;">
+							<div class="shop-top curvedEdges">
+								<div class="content" style="width:100%;">
+									<p class="text-sm-start text-md-start text-lg-center"><span style="color:#ff6b6b; font-weight:500;">Be Bold with Discounted Popular Hardware & Peripherals</span></p>
+									<h3 class="text-sm-start text-md-start text-lg-center">Trending Discounts & Products</h3>
+								</div>
 							</div>
-						}
+						</div>
+						<!-- Trending Products: Grid -->
+						<div class="row">
+							@foreach (var product in Model.TrendingProducts)
+							{
+								<div class="col-lg-3 col-md-6 col-12">
+									<div class="single-product contain-fit">
+										<div class="product-img contain-fit">
+											<a href="/Shop/Product/@product.ProductId">
+												<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" />
+												@if (product.ProductPriceBase * 0.65m > product.ProductPriceSale)
+												{
+													<span class="out-of-stock">Limited</span>
+												}
+												else if (product.ProductPriceBase > 9000)
+												{
+													<span class="new">New</span>
+												}
+											</a>
+											<div class="button-head">
+												<div class="product-action">
+													<a title="View Product" href="/Shop/Product/@product.ProductId">
+														<i>
+															<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+															<lord-icon src="https://cdn.lordicon.com/tyounuzx.json"
+																	   trigger="hover"
+																	   colors="primary:#121331,secondary:#e88c30"
+																	   style="width:35px;height:35px">
+															</lord-icon>
+														</i><span>View Product</span>
+													</a>
+													<a title="Add to Cart" href="#0" onclick="loadAddToCart('@product.ProductId')">
+														<i>
+															<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+															<lord-icon src="https://cdn.lordicon.com/mecwbjnp.json"
+																	   trigger="hover"
+																	   style="width:35px;height:35px">
+															</lord-icon>
+														</i><span>Add to Cart</span>
+													</a>
+												</div>
+											</div>
+										</div>
+										<div class="product-content">
+											<h3><a href="/Shop/Product/@product.ProductId">@product.ProductName!.Substring(0,35) ...</a></h3>
+											<div class="product-price">
+												<span class="old" style="color:red;">@product.ProductPriceBaseFormatted</span>
+											</div>
+											<div class="product-price">
+												<span style="font-weight:800;">@product.ProductPriceSaleFormatted</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							}
+						</div>
+						<!-- // BREAK // -->
+						<br>
 					</div>
-					<!-- // BREAK // -->
-					<br>
 				</div>
 			</div>
-		</div>
 		</div>
 	</section>
 	<!-- // -->
@@ -648,7 +415,7 @@
 	<!-- Popper JS -->
 	<script src="~/js/popper.min.js"></script>
 	<!-- Bootstrap JS -->
-	<script src="~/js/bootstrap.min.js"></script>		
+	<script src="~/js/bootstrap.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
 	<!-- Slicknav JS -->
 	<script src="~/js/slicknav.min.js"></script>
@@ -723,7 +490,7 @@
 			const distanceFromBottom = documentHeight - (scrollTop + windowHeight);
 			if (scrollTop > topOfProducts && scrollTop < topOfFooter) {
 				sidebarDiv.classList.add('fixed');
-				sidebarDiv1.classList.remove('contracting');			
+				sidebarDiv1.classList.remove('contracting');
 				productsIntial.classList.remove('expanding');
 
 				if (distanceFromBottom <= 0) {
@@ -732,7 +499,7 @@
 
 			} else {
 				sidebarDiv.classList.remove('fixed');
-				sidebarDiv1.classList.add('contracting');			
+				sidebarDiv1.classList.add('contracting');
 				productsIntial.classList.add('expanding');
 			}
 		});
@@ -780,7 +547,7 @@
 		}
 		// [GET]
 		// Add to Cart
-		function loadAddToCart(productId) {								
+		function loadAddToCart(productId) {
 			alertify.notify('Please Wait: Adding...', 'custom', 3, function () { console.log('dismissed'); });
 			actionCode = 5;
 			$.ajax({
@@ -809,7 +576,7 @@
 					$("#shoppingbasket").html($(r).find("#shoppingbasket").html());
 					alertify.notify('Removed from Cart!', 'success', 3, function () { console.log('dismissed'); });
 				},
-				error: function (e) {										
+				error: function (e) {
 					alertify.error('Oops, Something went wrong... :(');
 				}
 			});
@@ -899,7 +666,7 @@
 					function () { alertify.error('Cancel') });
 			}, 25000);
 		}
-		// ---------------------------------
+				// ---------------------------------
 	</script>
 </body>
 </html>

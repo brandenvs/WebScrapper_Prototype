@@ -25,6 +25,7 @@ namespace wazaware.co.za.Models.ViewModels
 			public string? ProductName { get; set; }
 			public decimal? ProductPriceBase { get; set; }
 			public decimal? ProductPriceSale { get; set; }
+			public int? BasketProductCount{ get; set; }
 			public IFormFile ProductPic { get; set; }
 
 		}

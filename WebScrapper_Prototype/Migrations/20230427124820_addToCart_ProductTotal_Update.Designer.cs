@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using wazaware.co.za.DAL;
 
@@ -11,9 +12,10 @@ using wazaware.co.za.DAL;
 namespace wazaware.co.za.Migrations
 {
     [DbContext(typeof(wazaware_db_context))]
-    partial class wazaware_db_contextModelSnapshot : ModelSnapshot
+    [Migration("20230427124820_addToCart_ProductTotal_Update")]
+    partial class addToCart_ProductTotal_Update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

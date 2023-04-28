@@ -1,0 +1,62 @@
+﻿<div class="topbar">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-5 col-md-12 col-12">
+				<!-- Top Left -->
+				<div class="top-left">
+					<ul class="list-main">
+						<li>
+							<div style="display:flex;flex-direction: row;flex-wrap: wrap;">
+								<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+								<a href="tel:0815650206" alt="Call us" style="border-radius:10px; white-space: nowrap;"
+								   data-toggle="tooltip" data-placement="right" title="Got a Question that can't wait? Give us a call!">
+									<lord-icon src="https://cdn.lordicon.com/pneolqso.json"
+											   trigger="hover"
+											   colors="primary:#f7941d,secondary:#545454,tertiary:#1663c7,quaternary:#ffffff"
+											   style="width:32px;height:32px">
+									</lord-icon>
+								</a>
+							</div>
+						</li>
+						<li>
+							<div style="display:flex;flex-direction: row;flex-wrap: wrap;">
+								<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+								<a href="mailto:brandenconnected@gmail.com" alt="Call us" style="border-radius:10px; white-space: nowrap;"
+								   data-toggle="tooltip" data-placement="right" title="Send us an email">
+									<lord-icon src="https://cdn.lordicon.com/tkgyrmwc.json"
+											   trigger="hover"
+											   colors="primary:#e88c30,secondary:#e88c30"
+											   style="width:32px;height:32px">
+									</lord-icon>
+								</a>
+							</div>
+						</li>
+					</ul>
+				</div>
+				<!--/ End Top Left -->
+			</div>
+			<div class="col-lg-6 col-md-12 col-12">
+				<!-- Top Right -->
+				<div class="right-content">
+					@if (ViewBag.isCookie)
+					{
+						<ul class="list-main">
+							<li><i class="ti-shopping-cart"></i><a href="/Shop/Cart">Cart</a></li>
+							<li><i class="ti-bag"></i><a href="/Shop">Shop</a></li>
+							<li><i class="ti-power-off"></i><a href="/User">Login/Register</a></li>
+						</ul>
+					}
+					else
+					{
+						<ul class="list-main">
+							<li><i class="ti-shopping-cart"></i><a href="/Shop/Cart">Cart</a></li>
+							<li><i class="ti-bag"></i><a href="/Shop">Shop</a></li>
+							<li><i class="ti-power-off"></i><a href="/User">Account: @ViewBag.FirstName</a></li>
+						</ul>
+					}
+				</div>
+				<!-- End Top Right -->
+			</div>
+		</div>
+	</div>
+</div>
