@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col" style="display: flex;align-items: center;flex-direction: row;background-color: #ffc10766;padding: 10px;">
             <div class="logo">
-                <a href="/"><img src="/Media/Logo/LogoOfficialCropped.png" alt="WaZaWare Find The Right Price!" style="border-radius:10px;"></a>
+                <a href="/"><img src="/Media/Logo/LogoOfficialCropped.png" alt="WazaWare Find The Right Price!" style="border-radius:10px;"></a>
             </div>
         </div>
     </div>
@@ -91,28 +91,6 @@
                         </nav>
                         <!--/ End Main Menu -->
                     </div>
-
-                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                    <script>
-                        $(document).ready(function () {
-                            // Hide the dropdown menu initially
-                            $(".dropdown").hide();
-
-                            // Toggle the dropdown menu on click
-                            $(".main-menu li a").click(function () {
-                                // Hide other open dropdown menus
-                                $(".dropdown").not($(this).siblings(".dropdown")).slideUp();
-
-                                // Toggle the clicked dropdown menu
-                                $(this).siblings(".dropdown").slideToggle();
-                            });
-
-                            // Hide the dropdown menu when the user scrolls
-                            $(window).scroll(function () {
-                                $(".dropdown").slideUp();
-                            });
-                        });
-                    </script>
                 </div>
             </div>
         </div>

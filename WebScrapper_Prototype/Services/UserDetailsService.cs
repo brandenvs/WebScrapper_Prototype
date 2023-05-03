@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using wazaware.co.za.DAL;
-using wazaware.co.za.Models;
+using WazaWare.co.za.DAL;
+using WazaWare.co.za.Models;
 
-namespace wazaware.co.za.Services
+namespace WazaWare.co.za.Services
 {
 	public class UserDetailsService
 	{
-		private readonly wazaware_db_context? _context;
+		private readonly WazaWare_db_context? _context;
 		private readonly IHttpContextAccessor? _httpContextAccessor;
 		private string emailPersis = string.Empty;
 
-		public UserDetailsService(wazaware_db_context context, IHttpContextAccessor httpContextAccessor)
+		public UserDetailsService(WazaWare_db_context context, IHttpContextAccessor httpContextAccessor)
 		{
 			_context = context;
 			_httpContextAccessor = httpContextAccessor;

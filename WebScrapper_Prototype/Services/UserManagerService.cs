@@ -1,23 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using wazaware.co.za.DAL;
-using wazaware.co.za.Models;
+using WazaWare.co.za.DAL;
+using WazaWare.co.za.Models;
 
-namespace wazaware.co.za.Services
+namespace WazaWare.co.za.Services
 {
 	public class UserManagerService
 	{
-		private readonly wazaware_db_context _context;
+		private readonly WazaWare_db_context _context;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public UserManagerService(wazaware_db_context context, IHttpContextAccessor httpContextAccessor)
+		public UserManagerService(WazaWare_db_context context, IHttpContextAccessor httpContextAccessor)
 		{
 			_context = context;
 			_httpContextAccessor = httpContextAccessor;
 		}
 		public async Task<int> CreateCookieReferance()
 		{
-			string generatedName = "wazawareCookie6.542-FirstName";
-			string generatedEmail = "wazawareCookie6.542-Email" + Guid.NewGuid().ToString() + "@wazaware.co.za";
+			string generatedName = "WazaWareCookie6.542-FirstName";
+			string generatedEmail = "WazaWareCookie6.542-Email" + Guid.NewGuid().ToString() + "@WazaWare.co.za";
 			string generatedPhone = "1234567890";
 			string generatedPwd = "3%@D8Iy2?Kt7*ceK";
 

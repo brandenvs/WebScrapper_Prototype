@@ -2,7 +2,7 @@
   "dependencies": {
     "mssql2": {
       "type": "mssql.local",
-      "connectionId": "ConnectionStrings:wazaware_db_context"
+      "connectionId": "ConnectionStrings:WazaWare_db_context"
     },
     "secrets1": {
       "type": "secrets.user"

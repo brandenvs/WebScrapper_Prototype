@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using wazaware.co.za.Models;
+using WazaWare.co.za.Models;
 
-namespace wazaware.co.za.DAL
+namespace WazaWare.co.za.DAL
 {
-	public class wazaware_db_context : DbContext
+	public class WazaWare_db_context : DbContext
 	{
-		public wazaware_db_context(DbContextOptions<wazaware_db_context> options)
+		public WazaWare_db_context(DbContextOptions<WazaWare_db_context> options)
 			: base(options) { }
 		public DbSet<Orders> Orders { get; set; }
 		public DbSet<ProductImage> ProductImages { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace wazaware.co.za.Models
+﻿namespace WazaWare.co.za.Models
 {
 	public class EmailModel
 	{

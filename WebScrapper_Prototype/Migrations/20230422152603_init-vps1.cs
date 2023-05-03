@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace wazaware.co.za.Migrations
+namespace WazaWare.co.za.Migrations
 {
     public partial class initvps1 : Migration
     {

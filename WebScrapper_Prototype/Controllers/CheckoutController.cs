@@ -2,22 +2,22 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mail;
 using System.Net;
-using wazaware.co.za.Models;
+using WazaWare.co.za.Models;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using Microsoft.EntityFrameworkCore;
-using wazaware.co.za.DAL;
+using WazaWare.co.za.DAL;
 
-namespace wazaware.co.za.Controllers
+namespace WazaWare.co.za.Controllers
 {
 	public class CheckoutController : Controller
 	{
 		private readonly ILogger<ShopController> _logger;
-		private readonly wazaware_db_context _context;
+		private readonly WazaWare_db_context _context;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private string userEmail = string.Empty;
 		private string userFirstName = string.Empty;
 
-		public CheckoutController(ILogger<ShopController> logger, wazaware_db_context context, IHttpContextAccessor httpContextAccessor)
+		public CheckoutController(ILogger<ShopController> logger, WazaWare_db_context context, IHttpContextAccessor httpContextAccessor)
 		{
 			_logger = logger;
 			_context = context;
@@ -394,7 +394,7 @@ namespace wazaware.co.za.Controllers
 			//		Expires = DateTimeOffset.Now.AddDays(7),
 			//		IsEssential = true
 			//	};
-			//	const string cookieName = "wazawarecookie6";
+			//	const string cookieName = "WazaWarecookie6";
 			//	var requestCookies = HttpContext.Request.Cookies;
 			//	HttpContext.Response.Cookies.Append(cookieName, model.Email!, cookieOptions);
 
@@ -420,7 +420,7 @@ namespace wazaware.co.za.Controllers
 		}
 		public void getUserCookie() 
 		{
-			const string cookieName = "wazawarecookie6";
+			const string cookieName = "WazaWarecookie6";
 			var requestCookies = HttpContext.Request.Cookies;
 			var intialRequest = requestCookies[cookieName];
 			if (intialRequest != null)
@@ -434,7 +434,7 @@ namespace wazaware.co.za.Controllers
 		}
 		//private async Task<string> CheckUserCookie()
 		//{
-		//	const string cookieName = "wazawarecookie6";
+		//	const string cookieName = "WazaWarecookie6";
 		//	var requestCookies = HttpContext.Request.Cookies;
 		//	var firstRequest = requestCookies[cookieName];
 		//	// If user is not authenticated

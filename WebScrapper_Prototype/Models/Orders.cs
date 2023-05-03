@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace wazaware.co.za.Models
+namespace WazaWare.co.za.Models
 {
 	public class Orders
 	{

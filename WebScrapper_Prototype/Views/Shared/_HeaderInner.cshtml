@@ -1,4 +1,4 @@
-﻿@model wazaware.co.za.Models.ProductsViewModel
+﻿@model WazaWare.co.za.Models.ProductsViewModel
 <!-- Header Inner -->
 <div class="header-inner">
 	<div class="container">
@@ -15,58 +15,45 @@
 											<a href="/Shop">Shop</a>
 										</li>
 										<li>
-											<a href="#0">Laptops<i class="ti-angle-down"></i><span class="new">New</span></a>
-											<ul class="dropdown">
+											<a href="@Url.Action("Products", "Shop", new { category = "hardware_parent" })">
+												Essential Hardware<i class="ti-arrow-top-right"></i>
+												@*<span class="new">New</span>*@
+											</a>
+												@*<ul class="dropdown">
 												<li>
-													@Html.ActionLink("Coming Soon!", "Products",
-													new { category = "non", filter = "non" })
+													@Html.ActionLink("Latest Hardware", "Products",
+													new { category = "hardware_parent" })
 												</li>
-											</ul>
+												<li>
+													@Html.ActionLink("Latest Hardware", "Products",
+													new { category = "hardware_parent" })
+												</li>
+											</ul>*@
 										</li>
 										<li>
-											<a href="#0">Graphic Cards<i class="ti-angle-down"></i><span class="new">New</span></a>
-											<ul class="dropdown">
-												<li>
-													@Html.ActionLink("Coming Soon!", "Products",
-													new { category = "non", filter = "non" })
-												</li>
-											</ul>
+											<a href="@Url.Action("Products", "Shop", new { category = "gpus_parent" })">
+												Latest GPUS<i class="ti-arrow-top-right"></i>
+											</a>
 										</li>
 										<li>
-											<a href="#0">CPUs & Motherboards<i class="ti-angle-down"></i></a>
-											<ul class="dropdown">
-												<li>
-													@Html.ActionLink("Coming Soon!", "Products",
-													new { category = "non", filter = "non" })
-												</li>
-											</ul>
+											<a href="@Url.Action("Products", "Shop", new { category = "deals_parent" })">
+												Great Deals<i class="ti-arrow-top-right"></i>
+												</a>
 										</li>
 										<li>
-											<a href="#0">PC Chassis<i class="ti-angle-down"></i></a>
-											<ul class="dropdown">
-												<li>
-													@Html.ActionLink("Coming Soon!", "Products",
-													new { category = "non", filter = "non" })
-												</li>
-											</ul>
+											<a href="@Url.Action("Products", "Shop", new { category = "pc_parent" })">
+												PC Chassis<i class="ti-arrow-top-right"></i>
+												</a>
 										</li>
 										<li>
-											<a href="#0">Data Storage<i class="ti-angle-down"></i></a>
-											<ul class="dropdown">
-												<li>
-													@Html.ActionLink("Coming Soon!", "Products",
-													new { category = "non", filter = "non" })
-												</li>
-											</ul>
+											<a href="@Url.Action("Products", "Shop", new { category = "storage_parent" })">
+												Data Storage<i class="ti-arrow-top-right"></i>
+												</a>
 										</li>
 										<li>
-											<a href="#0">Aftermarket Components<i class="ti-angle-down"></i></a>
-											<ul class="dropdown">
-												<li>
-													@Html.ActionLink("Coming Soon!", "Products",
-													new { category = "non", filter = "non" })
-												</li>
-											</ul>
+											<a href="@Url.Action("Products", "Shop", new { category = "laptops_parent" })">
+												Performance Laptops<i class="ti-arrow-top-right"></i>
+												</a>
 										</li>
 									</ul>
 								</div>
@@ -79,4 +66,5 @@
 		</div>
 	</div>
 </div>
+<script src="https://cdn.lordicon.com/bhenfmcm.js"></script>
 <!--/ End Header Inner -->

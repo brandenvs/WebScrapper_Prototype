@@ -1,14 +1,14 @@
 ﻿using HtmlAgilityPack;
 using System.Web;
-using wazaware.co.za.Models;
+using WazaWare.co.za.Models;
 using Microsoft.EntityFrameworkCore;
-using wazaware.co.za.DAL;
+using WazaWare.co.za.DAL;
 
-namespace wazaware.co.za.Services
+namespace WazaWare.co.za.Services
 {
 	public class WebscrapperIoApiClient
 	{
-		private readonly wazaware_db_context _context;
+		private readonly WazaWare_db_context _context;
 		Dictionary<int, string?> VendorSite = new();
 		Dictionary<int, string?> VendorProductURL = new();
 		Dictionary<int, string?> ProductKey = new();
@@ -25,7 +25,7 @@ namespace wazaware.co.za.Services
 		private readonly string url = "https://proxy.scrapeops.io/v1/";
 		private readonly string targetUrl = "https://www.wootware.co.za/sale";
 		private readonly string apiKey = "b4798a48-3db7-4bfd-8cdf-7e1d4dde5ed2";
-		public WebscrapperIoApiClient(wazaware_db_context context)
+		public WebscrapperIoApiClient(WazaWare_db_context context)
 		{
 			_context = context;
 		}

@@ -3,7 +3,7 @@
     "mssql2": {
       "ignored": "true",
       "type": "mssql",
-      "connectionId": "ConnectionStrings:wazaware_db_context"
+      "connectionId": "ConnectionStrings:WazaWare_db_context"
     },
     "secrets1": {
       "type": "secrets"

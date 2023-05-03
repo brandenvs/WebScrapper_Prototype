@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using wazaware.co.za.DAL;
+using WazaWare.co.za.DAL;
 
 #nullable disable
 
-namespace wazaware.co.za.Migrations
+namespace WazaWare.co.za.Migrations
 {
-    [DbContext(typeof(wazaware_db_context))]
-    partial class wazaware_db_contextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(WazaWare_db_context))]
+    partial class WazaWare_db_contextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -22,7 +22,7 @@ namespace wazaware.co.za.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("wazaware.co.za.Models.OrderProducts", b =>
+            modelBuilder.Entity("WazaWare.co.za.Models.OrderProducts", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -41,7 +41,7 @@ namespace wazaware.co.za.Migrations
                     b.ToTable("OrderProducts");
                 });
 
-            modelBuilder.Entity("wazaware.co.za.Models.Orders", b =>
+            modelBuilder.Entity("WazaWare.co.za.Models.Orders", b =>
                 {
                     b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd()
@@ -74,7 +74,7 @@ namespace wazaware.co.za.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("wazaware.co.za.Models.Product", b =>
+            modelBuilder.Entity("WazaWare.co.za.Models.Product", b =>
                 {
                     b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
@@ -131,7 +131,7 @@ namespace wazaware.co.za.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("wazaware.co.za.Models.ProductImage", b =>
+            modelBuilder.Entity("WazaWare.co.za.Models.ProductImage", b =>
                 {
                     b.Property<int>("ImageId")
                         .ValueGeneratedOnAdd()
@@ -159,7 +159,7 @@ namespace wazaware.co.za.Migrations
                     b.ToTable("ProductImages");
                 });
 
-            modelBuilder.Entity("wazaware.co.za.Models.UserModel", b =>
+            modelBuilder.Entity("WazaWare.co.za.Models.UserModel", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
@@ -196,7 +196,7 @@ namespace wazaware.co.za.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("wazaware.co.za.Models.UserShipping", b =>
+            modelBuilder.Entity("WazaWare.co.za.Models.UserShipping", b =>
                 {
                     b.Property<int>("UserShippingId")
                         .ValueGeneratedOnAdd()
@@ -265,7 +265,7 @@ namespace wazaware.co.za.Migrations
                     b.ToTable("UserShippings");
                 });
 
-            modelBuilder.Entity("wazaware.co.za.Models.UserShoppingCart", b =>
+            modelBuilder.Entity("WazaWare.co.za.Models.UserShoppingCart", b =>
                 {
                     b.Property<int>("CartId")
                         .ValueGeneratedOnAdd()

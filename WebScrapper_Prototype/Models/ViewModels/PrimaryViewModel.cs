@@ -1,6 +1,6 @@
 ﻿using X.PagedList;
 
-namespace wazaware.co.za.Models.ViewModels
+namespace WazaWare.co.za.Models.ViewModels
 {
 	public class PrimaryModel
 	{

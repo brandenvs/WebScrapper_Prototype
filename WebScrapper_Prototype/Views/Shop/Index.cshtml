@@ -1,7 +1,7 @@
-﻿@using wazaware.co.za.Controllers;
+﻿@using WazaWare.co.za.Controllers;
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
-@model wazaware.co.za.Models.ProductsViewModel
+@model WazaWare.co.za.Models.ProductsViewModel
 @{
 	ViewData["Title"] = "Shop";
 }
@@ -21,19 +21,19 @@
 	<!-- Meta Tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="WaZaWare.co.za /Find the Right Price/ | Gaming | PC | Laptops | Monitors | PC Builder">
-	<meta property="og:title" content="WaZaWare">
-	<meta property="og:description" content="WaZaWare.co.za /Find the Right Price/ | Gaming | PC | Laptops | Monitors | PC Builder">
-	<meta property="og:image" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/LogoOfficialIcon.png">
-	<meta property="og:url" content="https://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com">
+	<meta name="description" content="WazaWare.co.za | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta property="og:title" content="WazaWare">
+	<meta property="og:description" content="WazaWare.co.za | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta property="og:image" content="https://wazaware.co.za/Media/Logo/LogoOfficialIcon.png">
+	<meta property="og:url" content="https://WazaWare.co.za">
 	<meta property="og:type" content="website">
-	<meta name="twitter:card" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/LogoOfficialIcon.png">
-	<meta name="twitter:title" content="WaZaWare">
-	<meta name="twitter:description" content="WaZaWare.co.za /Find the Right Price/ | Gaming | PC | Laptops | Monitors | PC Builder">
-	<meta name="twitter:image" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/LogoOfficialIcon.png">
+	<meta name="twitter:card" content="https://wazaware.co.za/Media/Logo/LogoOfficialIcon.png">
+	<meta name="twitter:title" content="WazaWare">
+	<meta name="twitter:description" content="WazaWare.co.za | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta name="twitter:image" content="https://wazaware.co.za/Media/Logo/LogoOfficialIcon.png">
 	<!-- Logo -->
-	<link rel="shortcut icon" href="/Media/Logo/favicon.ico" type="image/x-icon">
-	<link rel="icon" href="/Media/Logo/favicon.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="https://WazaWare.co.zahttps://wazaware.co.za/Media/Logo/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="https://wazaware.co.za/Media/Logo/favicon.ico" type="image/x-icon">
 	<!-- Title Tag  -->
 	<title>Shop</title>
 	<!-- Web Font -->
@@ -216,14 +216,6 @@
 										<div class="product-img contain-fit">
 											<a href="/Shop/Product/@product.ProductId">
 												<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" class="contain-fit" />
-												@if (product.ProductPriceBase * 0.65m > product.ProductPriceSale)
-												{
-													<span class="out-of-stock">Limited</span>
-												}
-												else if (product.ProductPriceBase > 9000)
-												{
-													<span class="new">New</span>
-												}
 											</a>
 											<div class="button-head">
 												<div class="product-action">
@@ -282,14 +274,6 @@
 										<div class="product-img contain-fit">
 											<a href="/Shop/Product/@product.ProductId">
 												<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" />
-												@if (product.ProductPriceBase * 0.65m > product.ProductPriceSale)
-												{
-													<span class="out-of-stock">Limited</span>
-												}
-												else if (product.ProductPriceBase > 9000)
-												{
-													<span class="new">New</span>
-												}
 											</a>
 											<div class="button-head">
 												<div class="product-action">
@@ -348,14 +332,6 @@
 										<div class="product-img contain-fit">
 											<a href="/Shop/Product/@product.ProductId">
 												<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" />
-												@if (product.ProductPriceBase * 0.65m > product.ProductPriceSale)
-												{
-													<span class="out-of-stock">Limited</span>
-												}
-												else if (product.ProductPriceBase > 9000)
-												{
-													<span class="new">New</span>
-												}
 											</a>
 											<div class="button-head">
 												<div class="product-action">
@@ -473,37 +449,6 @@
 			});
 		});
 	</script>
-	<!-- Load Fixed Items (Deprecated) -->
-	<script type="text/javascript">
-		const productsDiv = document.getElementById('top');
-		const footerDiv = document.getElementById('bottom');
-		const sidebarDiv = document.getElementById('list');
-		const sidebarDiv1 = document.getElementById('list1');
-		const productsIntial = document.getElementById('productsIntial');
-		const topOfProducts = productsDiv.offsetTop;
-		const topOfFooter = footerDiv.offsetTop;
-
-		window.addEventListener('scroll', function () {
-			const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-			const windowHeight = window.innerHeight;
-			const documentHeight = document.documentElement.scrollHeight;
-			const distanceFromBottom = documentHeight - (scrollTop + windowHeight);
-			if (scrollTop > topOfProducts && scrollTop < topOfFooter) {
-				sidebarDiv.classList.add('fixed');
-				sidebarDiv1.classList.remove('contracting');
-				productsIntial.classList.remove('expanding');
-
-				if (distanceFromBottom <= 0) {
-					sidebarDiv.classList.remove('fixed');
-				}
-
-			} else {
-				sidebarDiv.classList.remove('fixed');
-				sidebarDiv1.classList.add('contracting');
-				productsIntial.classList.add('expanding');
-			}
-		});
-	</script>
 	<!--Functions-->
 	<script type="text/javascript">
 		// [GET]
@@ -581,92 +526,6 @@
 				}
 			});
 		}
-
-		// ---------------------------------
-		// DEPRECATED: Archiving...
-		$(document).ready(function () {
-			// Apply Category and Price filter for product grid
-			var lastChecked;
-			var selectedCategory;
-			var selectedPriceRange;
-			$("input[type='checkbox']").change(function () {
-				if (lastChecked && lastChecked != this) {
-					lastChecked.checked = false;
-				}
-				lastChecked = this;
-				selectedPriceRange = $(this).parent().text();
-				filterProducts(selectedCategory, selectedPriceRange);
-			});
-			$(".categor-list a").click(function () {
-				selectedCategory = $(this).text();
-				filterProducts(selectedCategory, selectedPriceRange);
-
-			});
-			function filterProducts(category, priceRange) {
-				var data = {};
-				if (category) {
-					data.category = category;
-				}
-				if (priceRange) {
-					data.priceRange = priceRange;
-				}
-				$.ajax({
-					type: "GET",
-					url: "/Shop/Index",
-					data: data,
-					success: function (r) {
-						$("#products").html($(r).find("#products").html());
-						$("#priceRng1").html($(r).find("#priceRng1").html());
-						$("#priceRng2").html($(r).find("#priceRng2").html());
-						$("#priceRng3").html($(r).find("#priceRng3").html());
-						$("#priceRng4").html($(r).find("#priceRng4").html());
-					}
-				});
-			}
-		});
-		// DEPRECATED: Archiving...
-		function fireOncePerSession2() {
-			if (!sessionStorage.getItem('hasFired3')) {
-				$(document).ready(function () {
-					alertify.confirm('Notice!', 'The website its hitting the database alot on every reload of Shop Page... Use sparingly!',
-						function () { alertify.success('Accepted') },
-						function () { alertify.error('Declined') }).set('movable', false);
-				});
-				sessionStorage.setItem('hasFired3', true);
-			}
-		}
-		// DEPRECATED: Archiving...
-		function fireOncePerSession1() {
-			if (!sessionStorage.getItem('hasFired1')) {
-				$(document).ready(function () {
-					alertify.confirm('Cookies', 'We use Cookies to Enhance Your Experience!',
-						function () { alertify.success('Accepted') },
-						function () { alertify.error('Declined') }).set('movable', false);
-				});
-				sessionStorage.setItem('hasFired1', true);
-			}
-		}
-		// DEPRECATED: Archiving...
-		function SendSubAlert() {
-			setTimeout(function () {
-				alertify.prompt('Subscribe to Our Weekly Newsletter and get 10% Off Your First Order!', ' Enter Your Email', ' ',
-					function (evt, value) {
-						$.ajax({
-							type: 'POST',
-							url: '/Home/UpdateSubscribedStatus',
-							data: { email: value },
-							success: function () {
-								sessionStorage.setItem('hasFired2', true);
-							},
-							error: function () {
-								console.error('Error saving email!');
-							}
-						});
-					},
-					function () { alertify.error('Cancel') });
-			}, 25000);
-		}
-				// ---------------------------------
 	</script>
 </body>
 </html>

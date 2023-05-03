@@ -1,7 +1,7 @@
-﻿@using wazaware.co.za.Controllers;
+﻿@using WazaWare.co.za.Controllers;
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
-@model wazaware.co.za.Models.ProductsViewModel
+@model WazaWare.co.za.Models.ProductsViewModel
 @{
 	ViewData["Title"] = "Products";
 }
@@ -21,19 +21,19 @@
 	<!-- Meta Tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="WaZaWare.co.za /Find the Right Price/ | Gaming | PC | Laptops | Monitors | PC Builder">
-	<meta property="og:title" content="WaZaWare">
-	<meta property="og:description" content="WaZaWare.co.za /Find the Right Price/ | Gaming | PC | Laptops | Monitors | PC Builder">
-	<meta property="og:image" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/LogoOfficialIcon.png">
-	<meta property="og:url" content="https://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com">
+	<meta name="description" content="WazaWare.co.za | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta property="og:title" content="WazaWare">
+	<meta property="og:description" content="WazaWare.co.za | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta property="og:image" content="https://wazaware.co.za/Media/Logo/LogoOfficialIcon.png">
+	<meta property="og:url" content="https://WazaWare.co.za">
 	<meta property="og:type" content="website">
-	<meta name="twitter:card" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/LogoOfficialIcon.png">
-	<meta name="twitter:title" content="WaZaWare">
-	<meta name="twitter:description" content="WaZaWare.co.za /Find the Right Price/ | Gaming | PC | Laptops | Monitors | PC Builder">
-	<meta name="twitter:image" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com/Media/Logo/LogoOfficialIcon.png">
+	<meta name="twitter:card" content="https://wazaware.co.za/Media/Logo/LogoOfficialIcon.png">
+	<meta name="twitter:title" content="WazaWare">
+	<meta name="twitter:description" content="WazaWare.co.za | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta name="twitter:image" content="https://wazaware.co.za/Media/Logo/LogoOfficialIcon.png">
 	<!-- Logo -->
-	<link rel="shortcut icon" href="/Media/Logo/favicon.ico" type="image/x-icon">
-	<link rel="icon" href="/Media/Logo/favicon.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="https://wazaware.co.za/Media/Logo/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="https://wazaware.co.za/Media/Logo/favicon.ico" type="image/x-icon">
 	<!-- Title Tag  -->
 	<title>Products</title>
 	<!-- Web Font -->
@@ -75,6 +75,17 @@
 	<!-- Site CSS -->
 	<link rel="stylesheet" href="~/css/site.css">
 	<!-- Custom (TESTING) CSS -->
+	<style>
+		.dropdown-menu li:hover em {
+			background-color: yellow;
+		}
+
+		.header.sticky .header-inner1 {
+			position: relative;
+			top: 0;
+			left: 0;
+		}
+	</style>
 </head>
 <body class="js">
 	<!-- Preloader -->
@@ -168,14 +179,6 @@
 											<div class="product-img contain-fit">
 												<a href="/Shop/Product/@product.ProductId">
 													<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" />
-													@if (product.ProductPriceBase * 0.65m > product.ProductPriceSale)
-													{
-														<span class="out-of-stock">Limited</span>
-													}
-													else if (product.ProductPriceBase > 9000)
-													{
-														<span class="new">New</span>
-													}
 												</a>
 												<div class="button-head">
 													<div class="product-action">
@@ -205,6 +208,8 @@
 												<h3><a href="/Shop/Product/@product.ProductId">@product.ProductName!.Substring(0,35) ...</a></h3>
 												<div class="product-price">
 													<span class="old" style="color:red;">R @product.ProductPriceBase</span>
+												</div>
+												<div class="product-price">
 													<span style="font-weight:800;">R @product.ProductPriceSale</span>
 												</div>
 											</div>
@@ -251,7 +256,7 @@
 							<p class="fs-4 h4">
 								Obviously Everything Is On Discount!
 							</p>
-							<p class="fs-2 h2"><span style="color:darkgoldenrod;">Shop The Latest: @ViewBag.Manufacturer Products</span></p>
+							<p class="fs-2 h2"><span style="color:darkgoldenrod;">@ViewBag.Title</span></p>
 						</div>
 					</div>
 					<div id="shopmain" class="row section-divider">
@@ -297,14 +302,14 @@
 											<div class="product-img contain-fit">
 												<a href="/Shop/Product/@product.ProductId">
 													<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" />
-													@if (product.ProductPriceBase * 0.65m > product.ProductPriceSale)
+@*													@if (product.ProductPriceBase * 0.65m > product.ProductPriceSale)
 													{
 														<span class="out-of-stock">Limited</span>
 													}
 													else if (product.ProductPriceBase > 9000)
 													{
 														<span class="new">New</span>
-													}
+													}*@
 												</a>
 												<div class="button-head">
 													<div class="product-action">
@@ -334,6 +339,8 @@
 												<h3><a href="/Shop/Product/@product.ProductId">@product.ProductName!.Substring(0,35) ...</a></h3>
 												<div class="product-price">
 													<span class="old" style="color:red;">R @product.ProductPriceBase</span>
+												</div>
+												<div class="product-price">
 													<span style="font-weight:800;">R @product.ProductPriceSale</span>
 												</div>
 											</div>
@@ -372,6 +379,290 @@
 						<!-- // END Shop // -->
 					</div>
 				}
+				@if (ViewBag.Category != null)
+				{
+					<!-- Shop Title -->
+					<div class="row">
+						<div class="col-12">
+							<p class="fs-4 h4">
+								Obviously Everything Is On Discount!
+							</p>
+							<p class="fs-2 h2"><span style="color:darkgoldenrod;">@ViewBag.Title</span></p>
+						</div>
+					</div>
+					<div id="shopmain" class="row section-divider">
+						<!-- Side Cards -->
+						<div class="col-lg-3 col-md-6 col-12 text-center desktop">
+							<div class="card text-bg-dark" style="margin:10px;">
+								<a href="@Url.Action("Products", new { manufacturer = "amd" })" target="_blank">
+									<img src="/Media/Shop/SideCards/SideAMD.gif" class="card-img contain-fit" alt="SideAMD"
+										 data-toggle="tooltip" data-placement="right" title="Shop Latest AMD Radeon GPUs, Ryzen CPUs, Compatible Monitors and more!" />
+								</a>
+							</div>
+							<div class="card text-bg-dark" style="margin:10px;">
+								<a href="@Url.Action("Products", new { manufacturer = "intel" })" target="_blank">
+									<img src="/Media/Shop/SideCards/SideIntel.gif" class="card-img contain-fit" alt="SideIntel"
+										 data-toggle="tooltip" data-placement="right" title="Shop The Latest Intel i9 i7 & i5 CPUs, Laptops, NUC's and more!" />
+								</a>
+							</div>
+							<div class="card text-bg-dark" style="margin:10px;">
+								<a href="@Url.Action("Products", new { manufacturer = "nvidia" })" target="_blank">
+									<img src="/Media/Shop/SideCards/SideNvidia.gif" class="card-img contain-fit" alt="SideNvidia"
+										 data-toggle="tooltip" data-placement="right" title="Shop Latest Nvidia RTX GPUs, Compatible G-Sync Monitors and more!" />
+								</a>
+							</div>
+						</div>
+						<!-- // END Side Cards // -->
+						<!-- Start Shop -->
+						<div class="col-lg-9 col-md-6 col-12">
+							<!-- Search Products: Header -->
+							<div class="col-12">
+								<div class="shop-top curvedEdges">
+									<p class="fs-5 h5 fw-bolder" style="margin:15px;margin-bottom:0;">Find Exactly What You Need...</p>
+									<ul>
+										@if (ViewBag.FilterOtherTitle != null)
+										{
+											<li>
+												<a style="margin:15px;margin-bottom:0;" href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filter = true, filterSort = ViewBag.FilterSortTitle })"><i class="ti-close"></i> @ViewBag.FilterOtherTitle</a>
+											</li>
+										}
+										@if (ViewBag.FilterSortTitle != null)
+										{
+											<li>
+												<a style="margin:15px;margin-bottom:0;" href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filter = true, filterOther = ViewBag.FilterOtherTitle })"><i class="ti-close"></i>  @ViewBag.FilterSortTitle</a>
+											</li>
+										}
+									</ul>									
+									<div class="content desktop">
+										<div class="header shop" style="background-color:#FFF5E1;">
+											<div class="header-inner1" style="display:block;background-color:transparent;position:relative;">
+												<div class="container">
+													<div class="cat-nav-head">
+														<div class="menu-area">
+															<nav class="navbar navbar-expand-lg">
+																<div class="navbar-collapse">
+																	<div class="nav-inner">
+																		<ul class="nav main-menu menu navbar-nav" style="display: flex; flex-direction: row;">
+																			<li>
+																				<a href="#0" style="color:black">Sort By<i class="ti-filter"></i></a>
+																				<ul class="dropdown">
+																					@foreach (var filter in Model.FilterSortBy)
+																					{
+																						<li><a href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filter = true, filterSort = filter.FilterId, filterOther = ViewBag.FilterOtherTitle })"><em>@filter.FilterName</em></a></li>
+																					}
+																				</ul>
+																			</li>
+																			<li>
+																				<a href="#0" style="color:black">Select Manufacturer<i class="ti-filter"></i></a>
+																				<ul class="dropdown">
+																					@foreach (var filter in Model.FilterManufacturer)
+																					{
+																						<li><a href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filter = true, filterOther = filter.FilterId, filterSort = ViewBag.FilterSortTitle })"><em>@filter.FilterName</em></a></li>
+																					}
+																				</ul>
+																			</li>
+																			<li>
+																				<a href="#0" style="color:black">Categories(not accurate right now)<i class="ti-filter"></i></a>
+																				<ul class="dropdown">
+																					@foreach (var filter in Model.FilterCategory)
+																					{
+																						<li><a href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filter = true, filterOther = filter.FilterId, filterSort = ViewBag.FilterSortTitle })"><em>@filter.FilterName</em></a></li>
+																					}
+																				</ul>
+																			</li>
+																		</ul>
+																	</div>
+																</div>
+															</nav>
+															<!--/ End Main Menu -->
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="mobile">
+										<div class="modal fade" id="filterfilter" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="row" style="margin-right: 0;">
+														<div class="col-9" style="padding: 10px 50px;">
+															<p class="fs-4 h4 aligncenter">Sort By</p>
+														</div>
+														<div class="col-3" style="display: flex; flex-direction: row-reverse; padding: 10px; align-content: center; flex-wrap: wrap;">
+															<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+														<div class="col-12" style="display: flex; flex-direction: row; justify-content: center; padding: 10px;">
+															<ul class="center">
+																@foreach (var filter in Model.FilterSortBy)
+																{
+																	<li>
+																		<a href="#0" style="color:black">@filter.FilterName<i class="ti-angle-down"></i></a>
+																	</li>
+																}
+															</ul>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="modal fade" id="filterManufacturer" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="row" style="margin-right: 0;">
+														<div class="col-9" style="padding: 10px 50px;">
+															<p class="fs-4 h4 aligncenter">Sort By</p>
+														</div>
+														<div class="col-3" style="display: flex; flex-direction: row-reverse; padding: 10px; align-content: center; flex-wrap: wrap;">
+															<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+														<div class="col-12" style="display: flex; flex-direction: row; justify-content: center; padding: 10px;">
+															<ul class="center">
+																@foreach (var filter in Model.FilterManufacturer)
+																{
+																	<li>
+																		<a href="#0" style="color:black">@filter.FilterName<i class="ti-angle-down"></i></a>
+																	</li>
+																}
+															</ul>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="modal fade" id="filterCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="row" style="margin-right: 0;">
+														<div class="col-9" style="padding: 10px 50px;">
+															<p class="fs-4 h4 aligncenter">Sort By</p>
+														</div>
+														<div class="col-3" style="display: flex; flex-direction: row-reverse; padding: 10px; align-content: center; flex-wrap: wrap;">
+															<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+														</div>
+														<div class="col-12" style="display: flex; flex-direction: row; justify-content: center; padding: 10px;">
+															<ul class="center">
+																@foreach (var filter in Model.FilterCategory)
+																{
+																	<li>
+																		<a href="#0" style="color:black">@filter.FilterName<i class="ti-angle-down"></i></a>
+																	</li>
+																}
+															</ul>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="header shop" style="background-color:#FFF5E1;">
+											<div class="header-inner1" style="display:block;background-color:transparent;position:relative;">
+												<div class="container">
+													<div class="cat-nav-head">
+														<div class="menu-area">
+															<nav class="navbar navbar-expand-lg">
+																<div class="navbar-collapse">
+																	<div class="nav-inner">
+																		<ul class="nav main-menu menu navbar-nav" style="display: flex; flex-direction: row;">
+																			<li>
+																				<a href="#0" style="color:black">Select Filter<i class="ti-angle-down"></i></a>
+																				<ul class="dropdown">
+																					<li><a style="color:black" data-bs-toggle="modal" data-bs-target="#filterSortBy"><em>Sort By</em></a></li>
+																					<li><a style="color:black" data-bs-toggle="modal" data-bs-target="#filterManufacturer"><em>Select Manufacturer</em></a></li>
+																					<li><a style="color:black" data-bs-toggle="modal" data-bs-target="#filterCategory"><em>Select Category</em></a></li>
+																				</ul>
+																			</li>
+																		</ul>
+																	</div>
+																</div>
+															</nav>
+															<!--/ End Main Menu -->
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>					
+							<!-- Search Products: Grid -->
+							<div class="row">
+								@foreach (var product in Model.Products)
+								{
+									<div class="col-lg-3 col-md-6 col-12">
+										<div class="single-product contain-fit">
+											<div class="product-img contain-fit">
+												<a href="/Shop/Product/@product.ProductId">
+													<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" />
+												</a>
+												<div class="button-head">
+													<div class="product-action">
+														<a title="View Product" href="/Shop/Product/@product.ProductId">
+															<i>
+																<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+																<lord-icon src="https://cdn.lordicon.com/tyounuzx.json"
+																		   trigger="hover"
+																		   colors="primary:#121331,secondary:#e88c30"
+																		   style="width:35px;height:35px">
+																</lord-icon>
+															</i><span>View Product</span>
+														</a>
+														<a title="Add to Cart" href="#0" onclick="loadAddToCart('@product.ProductId')">
+															<i>
+																<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+																<lord-icon src="https://cdn.lordicon.com/mecwbjnp.json"
+																		   trigger="hover"
+																		   style="width:35px;height:35px">
+																</lord-icon>
+															</i><span>Add to Cart</span>
+														</a>
+													</div>
+												</div>
+											</div>
+											<div class="product-content">
+												<h3><a href="/Shop/Product/@product.ProductId">@product.ProductName!.Substring(0,35) ...</a></h3>
+												<div class="product-price">
+													<span class="old" style="color:red;">R @product.ProductPriceBase</span>
+												</div>
+												<div class="product-price">
+													<span style="font-weight:800;">R @product.ProductPriceSale</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								}
+								<div class="container">
+									<div class="row justify-content-center">
+										<div class="col-auto">
+											<nav aria-label="Products navigation">
+												<ul class="pagination">
+													<li class="page-item @(!Model.Products.HasPreviousPage ? "disabled" : "")">
+														<a class="page-link" href="@Url.Action("Products", new { category = ViewBag.Category, page = Model.Products.PageNumber - 1 })" aria-label="Previous">
+															<span aria-hidden="true">&laquo;</span>
+															<span class="sr-only">Previous</span>
+														</a>
+													</li>
+													@for (int i = 1; i <= Model.Products.PageCount; i++)
+													{
+														<li class="page-item @(i == Model.Products.PageNumber ? "active" : "")"><a class="page-link" href="@Url.Action("Products", new { category = ViewBag.Manufacturer, page = i })">@i</a></li>
+													}
+													<li class="page-item @(!Model.Products.HasNextPage ? "disabled" : "")">
+														<a class="page-link" href="@Url.Action("Products", new { category = ViewBag.Manufacturer, page = Model.Products.PageNumber + 1 })" aria-label="Next">
+															<span aria-hidden="true">&raquo;</span>
+															<span class="sr-only">Next</span>
+														</a>
+													</li>
+												</ul>
+											</nav>
+										</div>
+									</div>
+								</div>
+							</div>
+							<br>
+						</div>
+						<!-- // END Shop // -->
+					</div>
+				}
+
 			</div>
 		</div>
 	</section>
@@ -449,6 +740,34 @@
 	</script>
 	<!--Functions-->
 	<script type="text/javascript">
+		const myModal = document.getElementById('filterCategory')
+		const myInput = document.getElementById('filterCategory')
+
+		myModal.addEventListener('shown.bs.modal', () => {
+			myInput.focus()
+		})
+		// Wrap the code in a self-executing function to prevent global namespace pollution
+		(function () {
+			// Cache the selectors for improved performance
+			const $dropdowns = $(".dropdown");
+			const $menuLinks = $(".main-menu li a");
+
+			// Toggle the dropdown menu on click
+			$menuLinks.click(function (e) {
+				e.preventDefault();
+				// Hide other open dropdown menus
+				$dropdowns.not($(this).siblings(".dropdown")).slideUp();
+
+				// Toggle the clicked dropdown menu
+				$(this).siblings(".dropdown").slideToggle();
+			});
+
+			// Hide the dropdown menu when the user scrolls
+			$(window).scroll(function () {
+				$dropdowns.slideUp();
+			});
+		})();
+
 		function userLogout() {
 			alertify.notify('Logging out', 'custom', 2, function () { console.log('dismissed'); });
 			$.ajax({

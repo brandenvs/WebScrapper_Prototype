@@ -4,21 +4,21 @@ using Newtonsoft.Json;
 using System.Net.Mail;
 using System.Net;
 using System.Text;
-using wazaware.co.za.DAL;
-using wazaware.co.za.Models;
-using wazaware.co.za.Services;
+using WazaWare.co.za.DAL;
+using WazaWare.co.za.Models;
+using WazaWare.co.za.Services;
 using X.PagedList;
 
-namespace wazaware.co.za.Controllers
+namespace WazaWare.co.za.Controllers
 {
     public class BackendController : Controller
     {
-        private readonly wazaware_db_context _context;
+        private readonly WazaWare_db_context _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private const string API_KEY = "b4798a48-3db7-4bfd-8cdf-7e1d4dde5ed2";
         private static readonly HttpClient client = new();
-        public BackendController(wazaware_db_context context, IWebHostEnvironment webHost, IHttpContextAccessor httpContextAccessor)
+        public BackendController(WazaWare_db_context context, IWebHostEnvironment webHost, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _webHostEnvironment = webHost;

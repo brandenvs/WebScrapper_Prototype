@@ -1,19 +1,19 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using wazaware.co.za.DAL;
-using wazaware.co.za.Models;
+using WazaWare.co.za.DAL;
+using WazaWare.co.za.Models;
 
-namespace wazaware.co.za.Controllers
+namespace WazaWare.co.za.Controllers
 {
 	public class UserController : Controller
 	{
-		private readonly wazaware_db_context _context;
+		private readonly WazaWare_db_context _context;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private string userEmail = string.Empty;
 		private static string userFirstName;
 
-		public UserController(wazaware_db_context context, IHttpContextAccessor httpContextAccessor)
+		public UserController(WazaWare_db_context context, IHttpContextAccessor httpContextAccessor)
 		{
 			_context = context;
 			_httpContextAccessor = httpContextAccessor;
@@ -91,7 +91,7 @@ namespace wazaware.co.za.Controllers
 		//{
 		//	UserDetailsService service = new(_context, _httpContextAccessor, _app, _userManager, _signInManager);
 		//	int result = 0;
-		//	const string cookieName = "wazawarecookie6";
+		//	const string cookieName = "WazaWarecookie6";
 		//	var requestCookies = HttpContext.Request.Cookies;
 		//	var cookieOptions = new CookieOptions
 		//	{
@@ -170,7 +170,7 @@ namespace wazaware.co.za.Controllers
 		//	switch (result)
 		//	{					
 		//		case 200:
-		//			const string cookieName = "wazawarecookie6";
+		//			const string cookieName = "WazaWarecookie6";
 		//			var requestCookies = HttpContext.Request.Cookies;
 		//			var firstRequest = requestCookies[cookieName];
 		//			var cookieOptions = new CookieOptions
@@ -200,7 +200,7 @@ namespace wazaware.co.za.Controllers
 		/// </summary>
 		public void getUserCookie()
 		{
-			const string cookieName = "wazawarecookie6";
+			const string cookieName = "WazaWarecookie6";
 			var requestCookies = HttpContext.Request.Cookies;
 			var intialRequest = requestCookies[cookieName];
 			if (intialRequest != null)

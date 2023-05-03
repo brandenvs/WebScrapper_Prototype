@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "wazaware.co.za": {
+    "WazaWare.co.za": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

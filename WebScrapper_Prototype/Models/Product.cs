@@ -2,8 +2,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using X.PagedList;
+using static NuGet.Packaging.PackagingConstants;
 
-namespace wazaware.co.za.Models
+namespace WazaWare.co.za.Models
 {
     public class Product
     {
@@ -131,14 +132,32 @@ namespace wazaware.co.za.Models
 		public string? ProductPriceBaseFormatted => ProductPriceBase?.ToString("C", CultureInfo.CreateSpecificCulture("en-ZA"));
 		public string? ProductPriceSaleFormatted => ProductPriceSale?.ToString("C", CultureInfo.CreateSpecificCulture("en-ZA"));
 	}
-	public class dropDown
+	public class Filter_Sortby
 	{
-		public string ProductKeyWord { get; set; }
+		public string FilterId { get; set; }
+		public string FilterName { get; set; }
+	}
+	public class Filter_Manufacturer
+	{
+		public string FilterId { get; set; }
+		public string FilterName { get; set; }
+	}
+	public class Filter_Category
+	{
+		public string FilterId { get; set; }
+		public string FilterName { get; set; }
+	}
+	public class Filter_Active
+	{
+		public string FilterId { get; set; }
+		public string FilterName { get; set; }
 	}
 	public class ProductsViewModel
 	{
 		public IPagedList<Product> Products { get; set; }
-		public IList<dropDown> dropDown { get; set; }
+		public IList<Filter_Sortby> FilterSortBy { get; set; }
+		public IList<Filter_Manufacturer> FilterManufacturer { get; set; }
+		public IList<Filter_Category> FilterCategory { get; set; }
 		public Product Product { get; set; }
 		public IPagedList<LatestArrivalModel> LatestArrivals { get; set; }
 		public IPagedList<LimitedStockModel> LimitedStock { get; set; }
