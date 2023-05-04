@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
+using WazaWare.co.za.Services;
 using X.PagedList;
 using static NuGet.Packaging.PackagingConstants;
 

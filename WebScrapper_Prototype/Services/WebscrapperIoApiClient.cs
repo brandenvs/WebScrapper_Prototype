@@ -501,7 +501,7 @@ namespace WazaWare.co.za.Services
 				Console.BackgroundColor = ConsoleColor.Blue;
 				Console.WriteLine();
 				Console.WriteLine($"Preparing Database:\n" +
-					$"Checking {productSample.Count} products...");
+					$"Checking {productSample.Count} Products...");
 				foreach (var item in productSample)
 				{
 					Console.WriteLine("\n------------------------------------------------------------->>");

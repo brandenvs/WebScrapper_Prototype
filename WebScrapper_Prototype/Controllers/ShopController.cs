@@ -25,7 +25,8 @@ namespace WazaWare.co.za.Controllers
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private static int basketCounter;
 		private static UserModel? _user;
-		private static Boolean _isCookieUser;	
+		private static Boolean _isCookieUser;
+		private static List<Product> products;
 
 		public ShopController(ILogger<ShopController> logger, WazaWare_db_context context, IHttpContextAccessor httpContextAccessor)
 		{
@@ -215,12 +216,12 @@ namespace WazaWare.co.za.Controllers
 		/// </summary>
 		/// <returns></returns>
 		[HttpGet]
-		public async Task<IActionResult> Products(string search, string manufacturer, int page, string category, bool filter, string filterSort, string filterOther)
+		public async Task<IActionResult> Products(string search, string category, string manufacturer, int page, string filterSort, string filterMan)
 		{
 			var cookieResponse = await SyncUserCookieAsync();
 			if (cookieResponse != null)
 				await SetUserModel(int.Parse(cookieResponse)); // Sets User Model so that {_user} can be called				
-			// Check if user is a Cookie or Registered
+															   // Check if user is a Cookie or Registered
 			if (!_user!.Email!.Contains("WazaWareCookie6.542-Email"))
 				_isCookieUser = false;
 			else
@@ -228,12 +229,12 @@ namespace WazaWare.co.za.Controllers
 			ViewBag.isCookie = _isCookieUser;
 			if (!_isCookieUser)
 				ViewBag.FirstName = _user.FirstName;
-			// Load Products
-			var products = new List<Product>();
+			var viewproducts = new List<Product>();
 			// Load Filters
 			var viewSortBy = new List<Filter_Sortby>();
 			var viewManufacturers = new List<Filter_Manufacturer>();
 			var viewSubCategories = new List<Filter_Category>();
+			Dictionary<string, string> manufactorsDict = new();
 			// Load Shopping Cart
 			var userShoppingCart = LoadShoppingCart(_user.UserId).ToList();
 			// Handles Search Directs & Results
@@ -243,7 +244,7 @@ namespace WazaWare.co.za.Controllers
 					page = 1;
 				products = SearchProducts(search).ToList();
 				ViewBag.CountProducts = products.Count();
-				ViewBag.Search = search;				
+				ViewBag.Search = search;
 			}
 			// Handles Directs for Shop Side Cards
 			if (manufacturer != null)
@@ -256,7 +257,7 @@ namespace WazaWare.co.za.Controllers
 							page = 1;
 						products = _context.Products
 							.Where(s => s.ProductName!.ToLower()
-							.Contains("amd") ||	s.ProductName!.ToLower()
+							.Contains("amd") || s.ProductName!.ToLower()
 							.Contains("ryzen")).ToList();
 						break;
 					case "intel":
@@ -281,204 +282,202 @@ namespace WazaWare.co.za.Controllers
 					default:
 						Console.Write("404");
 						break;
-				}					
-
+				}
 			}
 			// Handles Nav-bar Directs & Drop-down Directs
 			if (category != null)
 			{
-				//	Populate sub Sort By for sub nav-bar
-				Dictionary<string, string> sortBy = new()
-						{
-							{ "sort_best_deals", "Best Discounts" },
-							{ "sort_low_high_price", "Lowest Price" },
-							{ "sort_high_low_price", "Highest Price" },
-							{ "sort_new_deals", "New Deals" }
-						};
-				viewSortBy = sortBy.Select(r => new Filter_Sortby
+				Dictionary<string, string> sortByDict = new()
 				{
-					FilterId = r.Key,
-					FilterName = r.Value
-				}).ToList();
+					{ "price_high_low", "Highest Price" },
+					{ "price_low_high", "Lowest Price" },
+					{ "deals", "Best Deals" },
+					{ "new", "Latest Arrivals" }
+				};
+					viewSortBy = sortByDict.Select(s => new Filter_Sortby
+					{
+						FilterId = s.Key,
+						FilterName = s.Value
+					}).ToList();
 
 				ViewBag.Category = category;
-				Dictionary<string, string> manufacturers = new();
-				Dictionary<string, string> subCategories = new();
-
-				switch (category.ToLower())
+				switch (category)
 				{
-					/// Category = HARDWARE
-					case "hardware_parent":
-
-						ViewBag.Title = "Hardware";
-						products = _context.Products.ToList();
-						//	IF Hardware : Populate sub Manufacturers in sub nav-bar
-						manufacturers = new Dictionary<string, string>
+					case "essential_hardware":
+						ViewBag.PageTitle = "Essential Hardware";
+						products = _context.Products.Where(p =>
+						p.ProductName!.ToLower().Contains("memory") ||
+						p.ProductName!.ToLower().Contains("ram") ||
+						p.ProductName!.ToLower().Contains("cpu cooler") ||
+						p.ProductName!.ToLower().Contains("psu") ||
+						p.ProductName!.ToLower().Contains("power supply") ||
+						p.ProductName!.ToLower().Contains("ddr4") ||
+						p.ProductName!.ToLower().Contains("ddr5") ||
+						p.ProductName!.ToLower().Contains("ddr5") ||
+						p.ProductName!.ToLower().Contains("intel") ||
+						p.ProductName!.ToLower().Contains("amd") ||
+						p.ProductDescription!.ToLower().Contains("rgb") ||
+						p.ProductDescription!.ToLower().Contains("led") ||
+						p.ProductDescription!.ToLower().Contains("graphic card"))
+							.OrderBy(p => p.ProductPriceSale).ToList();
+						manufactorsDict = new()
 						{
 							{ "intel", "Intel" },
 							{ "amd", "AMD" },
-							{ "gigabyte", "Gigabyte" }
+							{ "nvidia", "Nvidia" },
+							{ "msi", "MSI" },
+							{ "samsung", "Samsung" }
 						};
-						// Generate View Model Key, Value
-						viewManufacturers = manufacturers.Select(r => new Filter_Manufacturer
+						foreach (KeyValuePair<string, string> ks in manufactorsDict)
+							viewManufacturers = manufactorsDict.Select(s => new Filter_Manufacturer
+							{
+								FilterId = s.Key,
+								FilterName = s.Value
+							}).ToList();						
+						break;
+					case "latest_gpus":
+						ViewBag.PageTitle = "Latest GPUs";
+						products = _context.Products.Where(p =>
+						p.ProductName!.ToLower().Contains("rtx") ||
+						p.ProductName!.ToLower().Contains("amd") ||
+						p.ProductName!.ToLower().Contains("nvidia") ||
+						p.ProductName!.ToLower().Contains("gtx") ||
+						p.ProductName!.ToLower().Contains("radeon")).ToList();
+						products = products.Where(p => p.ProductName!.ToLower().Contains("graphics card"))
+						.OrderByDescending(p => p.ProductPriceSale).ToList();
+						manufactorsDict = new()
 						{
-							FilterId = r.Key,
-							FilterName = r.Value
-						}).ToList();
-						//	IF Hardware : Populate sub Categories in sub nav-bar
-						subCategories = new Dictionary<string, string>
-						{
-							{ "memory", "Memory" },
-							{ "psus", "PSUs" },
-							{ "case fans", "Case Fans" },
-							{ "motherboards", "Motherboards" },
-							{ "cpu coolers", "CPU Coolers" }
+							{ "amd", "AMD" },
+							{ "nvidia", "Nvidia" },
+							{ "rtx", "RTX" },
+							{ "gtx", "GTX" },
+							{ "radeon", "Radeon" },
+							{ "palit", "Palit" },
+							{ "zotac","Zotac" }
 						};
-						// Generate View Model Key, Value
-						viewSubCategories = subCategories.Select(r => new Filter_Category
+						foreach (KeyValuePair<string, string> ks in manufactorsDict)
+							viewManufacturers = manufactorsDict.Select(s => new Filter_Manufacturer
+							{
+								FilterId = s.Key,
+								FilterName = s.Value
+							}).ToList();
+						break;
+					case "great_deals":
+						ViewBag.PageTitle = "Great Deals";
+						products = _context.Products.Where(p => p.ProductPriceSale / 2 >= p.ProductPriceBase).OrderByDescending(p => p.ProductPriceSale).ToList();
+						manufactorsDict = new()
 						{
-							FilterId = r.Key,
-							FilterName = r.Value
-						}).ToList();
+							{ "amd", "AMD" },
+							{ "nvidia", "Nvidia" },
+							{ "samsung", "Samsung" },
+							{ "gigabyte", "Gigabyte" },
+							{ "dell", "Dell" }
+						};
+						foreach (KeyValuePair<string, string> ks in manufactorsDict)
+							viewManufacturers = manufactorsDict.Select(s => new Filter_Manufacturer
+							{
+								FilterId = s.Key,
+								FilterName = s.Value
+							}).ToList();
 						break;
-					/// </category>
-					/// ---------------------------------------------------------
-					/// Category = GPUS
-					case "gpus_parent":
-						products = _context.Products
-							.Where(p => p.ProductCategory!.ToLower()
-							.Equals("gpus")).ToList();
+					case "pc_chassis":
+						ViewBag.PageTitle = "ATX & ITX Chassis";
+						products = _context.Products.Where(p =>
+						p.ProductName!.ToLower().Contains("chassis") ||
+						p.ProductName!.ToLower().Contains("pc chassis") ||
+						p.ProductName!.ToLower().Contains("pc case") ||
+						p.ProductDescription!.ToLower().Contains("chassis") ||
+						p.ProductDescription!.ToLower().Contains("atx") ||
+						p.ProductDescription!.ToLower().Contains("itx") ||
+						p.ProductDescription!.ToLower().Contains("pc chassis") ||
+						p.ProductDescription!.ToLower().Contains("pc case"))
+						.OrderByDescending(p => p.ProductPriceSale).ToList();
+						manufactorsDict = new()
+						{
+							{ "phanteks", "Phanteks" },
+							{ "fractel design", "Fractel Design" },
+							{ "super flow", "Super Flow" },
+							{ "EVGA", "EVGA" },
+							{ "thermaltake", "Thermaltake" },
+							{ "montech", "Montech" },
+							{ "corsair", "Corsair" }
+						};
+						foreach (KeyValuePair<string, string> ks in manufactorsDict)
+							viewManufacturers = manufactorsDict.Select(s => new Filter_Manufacturer
+							{
+								FilterId = s.Key,
+								FilterName = s.Value
+							}).ToList();
 						break;
-					/// </category>
-					/// ---------------------------------------------------------
-					/// Category = GPUS
-					case "deals_parent":
-						products = _context.Products.ToList();
+					case "data_storage":
+						ViewBag.PageTitle = "HDD, SSD & RAM";
+						products = _context.Products.Where(p =>
+						p.ProductName!.ToLower().Contains("internal hard drive") ||
+						p.ProductName!.ToLower().Contains("hard drive") ||
+						p.ProductName!.ToLower().Contains("portal hard drive") ||
+						p.ProductName!.ToLower().Contains("solid state drive") ||
+						p.ProductName!.ToLower().Contains("portal hard drive"))
+						.OrderByDescending(p => p.ProductPriceSale).ToList();
+						manufactorsDict = new()
+						{
+							{ "samsung", "Samsung" },
+							{ "seagate", "Seagate" },
+							{ "mushkin", "Mushkin" }
+						};
+						foreach (KeyValuePair<string, string> ks in manufactorsDict)
+							viewManufacturers = manufactorsDict.Select(s => new Filter_Manufacturer
+							{
+								FilterId = s.Key,
+								FilterName = s.Value
+							}).ToList();
 						break;
-					/// </category>
-					/// ---------------------------------------------------------
-					/// Category = GPUS
-					case "pc_parent":
-						products = _context.Products
-							.Where(p => p.ProductCategory!.ToLower()
-							.Equals("SSD")).ToList();
+					case "performace_laptops":
+						ViewBag.PageTitle = "High-end Laptops & Accessories";
+						products = _context.Products.Where(p =>
+						p.ProductName!.ToLower().Contains("gaming laptop") ||
+						p.ProductName!.ToLower().Contains("notebook"))
+						.OrderByDescending(p => p.ProductPriceSale).ToList();
+						manufactorsDict = new()
+						{
+							{ "msi", "MSI" },
+							{ "asus", "ASUS" },
+							{ "hp", "HP" },
+							{ "dell", "Dell" },
+							{ "gigabyte", "Gigabyte" },
+						};
+						foreach (KeyValuePair<string, string> ks in manufactorsDict)
+							viewManufacturers = manufactorsDict.Select(s => new Filter_Manufacturer
+							{
+								FilterId = s.Key,
+								FilterName = s.Value
+							}).ToList();
 						break;
-					/// </category>
-					/// ---------------------------------------------------------
-					/// Category = GPUS
-					case "laptops_parent":
-						products = _context.Products
-							.Where(p => p.ProductCategory!.ToLower()
-							.Equals("notebooks")).ToList();
-						break;
-					/// </category>
 				}
-				if (filter)
+			}
+			if (filterSort != null)
+			{
+				ViewBag.filterSort = filterSort;
+				switch(filterSort)
 				{
-					if(filterOther != null)
-					{
-						bool isManufactor = manufacturers.TryGetValue(filterOther.ToLower(), out string? manufactor);
-						bool isCategory = subCategories.TryGetValue(filterOther.ToLower(), out string? cat);
-						if(isManufactor)
-						{
-							products = products.Where(p => p.ProductName!.ToLower()
-							.Contains(manufactor.ToLower())).ToList();
-							ViewBag.FilterOtherTitle = manufactor;
-						}
-						else
-						{
-							products = products.Where(p => p.ProductCategory!.ToLower()
-							.Equals(cat.ToLower())).ToList();
-							ViewBag.FilterOtherTitle = cat;
-						}
-					}
-					if (filterSort != null)
-					{
-						bool isSortBy = sortBy.TryGetValue(filterSort, out string? item);
-						if (isSortBy)
-						{							
-							products = filterSort switch
-							{
-								"sort_best_deals" => products
-								.Where(p =>
-								p.ProductPriceBase / 2m < p.ProductPriceSale)
-								.OrderByDescending(p => p.ProductPriceSale).ToList(),
-								"sort_low_high_price" => products
-								.OrderBy(p => p.ProductPriceSale).ToList(),
-								"sort_high_low_price" => products
-								.OrderByDescending(p => p.ProductPriceSale).ToList(),
-								"sort_price" => products
-								.OrderBy(p => p.ProductPriceSale).ToList(),
-								_ => throw new NotImplementedException()
-							};
-							ViewBag.FilterSortTitle = item;
-						}
-						else
-						{
-							var a = sortBy.Where(s => s.Value.Equals(filterSort)).First().Key;							
-							products = a switch
-							{
-								"sort_best_deals" => products
-								.Where(p =>
-								p.ProductPriceBase / 2m < p.ProductPriceSale)
-								.OrderByDescending(p => p.ProductPriceSale).ToList(),
-								"sort_low_high_price" => products
-								.OrderBy(p => p.ProductPriceSale).ToList(),
-								"sort_high_low_price" => products
-								.OrderByDescending(p => p.ProductPriceSale).ToList(),
-								"sort_price" => products
-								.OrderBy(p => p.ProductPriceSale).ToList(),
-								_ => throw new NotImplementedException()
-							};
-							ViewBag.FilterSortTitle = filterSort;
-						}
-					}
-
-					//switch (filter)
-					//{						
-					//	case "sort_best_deals":
-					//		if (ViewBag.FilterTitle0 != null)
-
-					//		else if (ViewBag.FilterTitle1 != null)
-					//			ViewBag.FilterTitle1 = "Sort By: Best Deals";
-					//		else
-					//			ViewBag.FilterTitle2 = "Sort By: Best Deals";
-					//		break;
-					//	case "sort_new_deals":
-					//		if (ViewBag.FilterTitle0 != null)
-					//			ViewBag.FilterTitle0 = "Sort By: New Deals";
-					//		else if (ViewBag.FilterTitle1 != null)
-					//			ViewBag.FilterTitle1 = "Sort By: New Deals";
-					//		else
-					//			ViewBag.FilterTitle2 = "Sort By: New Deals";
-					//		break;
-					//	case "sort_low_high_price":
-					//		if (ViewBag.FilterTitle0 != null)
-					//			ViewBag.FilterTitle0 = "Sort By: Best Deals";
-					//		else if (ViewBag.FilterTitle1 != null)
-					//			ViewBag.FilterTitle1 = "Sort By: New Deals";
-					//		else
-					//			ViewBag.FilterTitle2 = "Sort By: Best Deals";
-					//		break;
-					//	case "sort_high_low_price":
-					//		if (ViewBag.FilterTitle0 != null)
-					//			ViewBag.FilterTitle0 = "Sort By: Best Deals";
-					//		else if (ViewBag.FilterTitle1 != null)
-					//			ViewBag.FilterTitle1 = "Sort By: Best Deals";
-					//		else
-					//			ViewBag.FilterTitle2 = "Sort By: Best Deals";
-					//		break;
-					//	default:
-					//		if (ViewBag.FilterTitle0 != null)
-					//			ViewBag.FilterTitle0 = "Sort By: Best Deals";
-					//		else if (ViewBag.FilterTitle1 != null)
-					//			ViewBag.FilterTitle1 = "Sort By: Best Deals";
-					//		else
-					//			ViewBag.FilterTitle2 = "Sort By: Best Deals";
-					//		break;
-					//}
-
+					case "price_high_low":
+						products = products.OrderByDescending(p => p.ProductPriceSale).ToList(); 
+						break;
+					case "price_low_high":
+						products = products.OrderBy(p => p.ProductPriceSale).ToList();
+						break;
+					case "deals":
+						products = products.OrderByDescending(p => p.ProductPriceBase / 2 > p.ProductPriceSale).ToList();
+						break;
+					case "new":
+						products = products.OrderByDescending(p => p.ProductPriceBase / 2 < p.ProductPriceSale).ToList();
+					break;
 				}
+			}
+			if (filterMan != null)
+			{
+				ViewBag.filterMan = filterMan;
+				products = products.Where(p =>
+				p.ProductName!.ToLower().Contains(filterMan.ToLower())).ToList();
 			}
 			// Cast Products to Paged AND prepare ViewModel
 			if (page < 1)
@@ -495,8 +494,8 @@ namespace WazaWare.co.za.Controllers
 				Products = viewProducts,
 				Cart = userShoppingCart,
 				FilterSortBy = viewSortBy,
-				FilterManufacturer = viewManufacturers,
-				FilterCategory = viewSubCategories
+				FilterManufacturer = viewManufacturers
+				//FilterCategory = viewSubCategories
 			};
 			return View(viewModel);
 		}
@@ -764,22 +763,12 @@ namespace WazaWare.co.za.Controllers
 		public IPagedList<Product> SearchProducts(string search)
 		{
 			//
-			search = search.ToLower();
+			var products = _context.Products;
+			var normalSearch = products.Where(p => p.ProductName!.Contains(search));
+			var caseSensitiveSearch = products.Where(p => p.ProductName!.ToLower().Contains(search.ToLower()));
+			var deeperSearch = products.Where(p => p.ProductDescription!.ToLower().Contains(search.ToLower()));
 			//
-			var splitSearch = search.Split(' ');
-			//
-			var products = _context.Products.ToList();
-			//
-			var productsSearchString = products.Where(p => p.ProductName!.ToLower().Contains(search));
-			//
-			var productSearchNoWhiteSpaceString = products.Where(p => p.ProductName!.ToLower().Replace(" ", "").Contains(search.Replace(" ", "")));
-			//
-			var productsSearchCategories = products.Where(p => p.ProductCategory!.ToLower().Contains(search));
-			//
-			var productsJoined = productsSearchString
-				.Concat(productsSearchCategories)
-				.Concat(productSearchNoWhiteSpaceString)
-				.Distinct();
+			var productsJoined = normalSearch.Union(caseSensitiveSearch).Union(deeperSearch).ToList();
 			//
 			return productsJoined.ToPagedList();
 		}

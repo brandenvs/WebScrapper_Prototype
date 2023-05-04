@@ -110,7 +110,7 @@
 		}
 	</style>
 </head>
-<body class="js" onload="fireOncePerSession1();">
+<body class="js">
 	<!-- Preloader -->
 	<div class="preloader">
 		<div class="preloader-inner">
@@ -490,9 +490,6 @@
 		function fireOncePerSession1() {
 			if (!sessionStorage.getItem('hasFired1')) {
 				$(document).ready(function () {
-					alertify.confirm('DEV NOTICE!', 'Front-end is being redesigned! Back-end offers all functionality needed!',
-						function () { alertify.success('Please Continue Testing Other WebPages for Now!') },
-						function () { alertify.error('Not Cool Bro.... :(') }).set('movable', false);
 				});
 				sessionStorage.setItem('hasFired1', true);
 			}

@@ -256,7 +256,7 @@
 							<p class="fs-4 h4">
 								Obviously Everything Is On Discount!
 							</p>
-							<p class="fs-2 h2"><span style="color:darkgoldenrod;">@ViewBag.Title</span></p>
+							<p class="fs-2 h2"><span style="color:darkgoldenrod;">@ViewBag.PageTitle</span></p>
 						</div>
 					</div>
 					<div id="shopmain" class="row section-divider">
@@ -387,7 +387,7 @@
 							<p class="fs-4 h4">
 								Obviously Everything Is On Discount!
 							</p>
-							<p class="fs-2 h2"><span style="color:darkgoldenrod;">@ViewBag.Title</span></p>
+							<p class="fs-2 h2"><span style="color:darkgoldenrod;">@ViewBag.PageTitle</span></p>
 						</div>
 					</div>
 					<div id="shopmain" class="row section-divider">
@@ -420,16 +420,16 @@
 								<div class="shop-top curvedEdges">
 									<p class="fs-5 h5 fw-bolder" style="margin:15px;margin-bottom:0;">Find Exactly What You Need...</p>
 									<ul>
-										@if (ViewBag.FilterOtherTitle != null)
+										@if (ViewBag.filterMan != null)
 										{
 											<li>
-												<a style="margin:15px;margin-bottom:0;" href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filter = true, filterSort = ViewBag.FilterSortTitle })"><i class="ti-close"></i> @ViewBag.FilterOtherTitle</a>
+												<a style="margin:15px;margin-bottom:0;" href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filterSort = ViewBag.filterSort })"><i class="ti-close"></i> @ViewBag.filterMan</a>
 											</li>
 										}
-										@if (ViewBag.FilterSortTitle != null)
+										@if (ViewBag.filterSort != null)
 										{
 											<li>
-												<a style="margin:15px;margin-bottom:0;" href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filter = true, filterOther = ViewBag.FilterOtherTitle })"><i class="ti-close"></i>  @ViewBag.FilterSortTitle</a>
+												<a style="margin:15px;margin-bottom:0;" href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filterMan = ViewBag.filterMan })"><i class="ti-close"></i>  @ViewBag.filterSort</a>
 											</li>
 										}
 									</ul>									
@@ -448,7 +448,7 @@
 																				<ul class="dropdown">
 																					@foreach (var filter in Model.FilterSortBy)
 																					{
-																						<li><a href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filter = true, filterSort = filter.FilterId, filterOther = ViewBag.FilterOtherTitle })"><em>@filter.FilterName</em></a></li>
+																						<li><a href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filterSort = filter.FilterId, filterMan = ViewBag.filterMan })"><em>@filter.FilterName</em></a></li>
 																					}
 																				</ul>
 																			</li>
@@ -457,11 +457,11 @@
 																				<ul class="dropdown">
 																					@foreach (var filter in Model.FilterManufacturer)
 																					{
-																						<li><a href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filter = true, filterOther = filter.FilterId, filterSort = ViewBag.FilterSortTitle })"><em>@filter.FilterName</em></a></li>
+																						<li><a href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filterMan = filter.FilterId, filterSort = ViewBag.filterSort })"><em>@filter.FilterName</em></a></li>
 																					}
 																				</ul>
 																			</li>
-																			<li>
+																			@*<li>
 																				<a href="#0" style="color:black">Categories(not accurate right now)<i class="ti-filter"></i></a>
 																				<ul class="dropdown">
 																					@foreach (var filter in Model.FilterCategory)
@@ -469,7 +469,7 @@
 																						<li><a href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filter = true, filterOther = filter.FilterId, filterSort = ViewBag.FilterSortTitle })"><em>@filter.FilterName</em></a></li>
 																					}
 																				</ul>
-																			</li>
+																			</li>*@
 																		</ul>
 																	</div>
 																</div>
@@ -482,7 +482,7 @@
 										</div>
 									</div>
 									<div class="mobile">
-										<div class="modal fade" id="filterfilter" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+										<div class="modal fade" id="filterSortBy" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 											<div class="modal-dialog">
 												<div class="modal-content">
 													<div class="row" style="margin-right: 0;">
@@ -497,7 +497,7 @@
 																@foreach (var filter in Model.FilterSortBy)
 																{
 																	<li>
-																		<a href="#0" style="color:black">@filter.FilterName<i class="ti-angle-down"></i></a>
+																		<a href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filterSort = filter.FilterId, filterMan = ViewBag.filterMan })" style="color:black"><i class="ti-plus"></i> @filter.FilterName</a>
 																	</li>
 																}
 															</ul>
@@ -521,31 +521,7 @@
 																@foreach (var filter in Model.FilterManufacturer)
 																{
 																	<li>
-																		<a href="#0" style="color:black">@filter.FilterName<i class="ti-angle-down"></i></a>
-																	</li>
-																}
-															</ul>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="modal fade" id="filterCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-											<div class="modal-dialog">
-												<div class="modal-content">
-													<div class="row" style="margin-right: 0;">
-														<div class="col-9" style="padding: 10px 50px;">
-															<p class="fs-4 h4 aligncenter">Sort By</p>
-														</div>
-														<div class="col-3" style="display: flex; flex-direction: row-reverse; padding: 10px; align-content: center; flex-wrap: wrap;">
-															<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-														</div>
-														<div class="col-12" style="display: flex; flex-direction: row; justify-content: center; padding: 10px;">
-															<ul class="center">
-																@foreach (var filter in Model.FilterCategory)
-																{
-																	<li>
-																		<a href="#0" style="color:black">@filter.FilterName<i class="ti-angle-down"></i></a>
+																		<a href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filterMan = filter.FilterId, filterSort = ViewBag.filterSort })" style="color:black"><i class="ti-plus"></i> @filter.FilterName</a>
 																	</li>
 																}
 															</ul>
@@ -564,11 +540,10 @@
 																	<div class="nav-inner">
 																		<ul class="nav main-menu menu navbar-nav" style="display: flex; flex-direction: row;">
 																			<li>
-																				<a href="#0" style="color:black">Select Filter<i class="ti-angle-down"></i></a>
+																				<a href="#0" style="color:black">Select Filter<i class="ti-filter"></i></a>
 																				<ul class="dropdown">
 																					<li><a style="color:black" data-bs-toggle="modal" data-bs-target="#filterSortBy"><em>Sort By</em></a></li>
 																					<li><a style="color:black" data-bs-toggle="modal" data-bs-target="#filterManufacturer"><em>Select Manufacturer</em></a></li>
-																					<li><a style="color:black" data-bs-toggle="modal" data-bs-target="#filterCategory"><em>Select Category</em></a></li>
 																				</ul>
 																			</li>
 																		</ul>
@@ -587,7 +562,7 @@
 							<!-- Search Products: Grid -->
 							<div class="row">
 								@foreach (var product in Model.Products)
-								{
+								{									
 									<div class="col-lg-3 col-md-6 col-12">
 										<div class="single-product contain-fit">
 											<div class="product-img contain-fit">
@@ -619,7 +594,7 @@
 												</div>
 											</div>
 											<div class="product-content">
-												<h3><a href="/Shop/Product/@product.ProductId">@product.ProductName!.Substring(0,35) ...</a></h3>
+												<h3><a href="/Shop/Product/@product.ProductId">@if (product.ProductName!.Length > 35) { @product.ProductName!.Substring(0, 35) } ...</a></h3>
 												<div class="product-price">
 													<span class="old" style="color:red;">R @product.ProductPriceBase</span>
 												</div>
@@ -643,10 +618,10 @@
 													</li>
 													@for (int i = 1; i <= Model.Products.PageCount; i++)
 													{
-														<li class="page-item @(i == Model.Products.PageNumber ? "active" : "")"><a class="page-link" href="@Url.Action("Products", new { category = ViewBag.Manufacturer, page = i })">@i</a></li>
+														<li class="page-item @(i == Model.Products.PageNumber ? "active" : "")"><a class="page-link" href="@Url.Action("Products", new { category = ViewBag.Category, page = i })">@i</a></li>
 													}
 													<li class="page-item @(!Model.Products.HasNextPage ? "disabled" : "")">
-														<a class="page-link" href="@Url.Action("Products", new { category = ViewBag.Manufacturer, page = Model.Products.PageNumber + 1 })" aria-label="Next">
+														<a class="page-link" href="@Url.Action("Products", new { category = ViewBag.Category, page = Model.Products.PageNumber + 1 })" aria-label="Next">
 															<span aria-hidden="true">&raquo;</span>
 															<span class="sr-only">Next</span>
 														</a>
