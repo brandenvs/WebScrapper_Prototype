@@ -1,7 +1,7 @@
 ﻿@using WazaWare.co.za.Controllers;
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
-@model WazaWare.co.za.Models.ProductsViewModel
+@model WazaWare.co.za.Models.ViewModels
 @{
 	ViewData["Title"] = "Shop";
 }
@@ -76,7 +76,7 @@
 	<link rel="stylesheet" href="~/css/site.css">
 	<!-- Custom (TESTING) CSS -->
 </head>
-<body class="js">
+<body class="js" onload="redirectReason()">
 	<!-- Preloader -->
 	<div class="preloader">
 		<div class="preloader-inner">
@@ -128,7 +128,7 @@
 						</p>
 					</div>
 				</div>
-				<div class="row section-divider" sstyle="display: flex;flex-direction: row;justify-content: center;">
+				<div class="row section-divider" style="display: flex;flex-direction: row;justify-content: center;">
 					<div class="col-lg-3 col-md-4 col-12" style="margin: 15px 0;">
 						<div class="card">
 							<a href="#0">
@@ -468,6 +468,14 @@
 				}
 			});
 			window.location.href = '/Shop/Index';
+		}
+
+		function redirectReason() {
+			var message = '@ViewBag.Message'
+			if(message != '')
+			{
+				alertify.notify(message, 'success', 3, function () { console.log('dismissed'); });
+			}
 		}
 		// Plug and Play Notice Popup if Necessary
 		function inDevNotice() {

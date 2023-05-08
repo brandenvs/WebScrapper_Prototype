@@ -28,54 +28,47 @@
                                     <ul class="nav main-menu menu navbar-nav" style="display: flex; flex-direction: row;">
                                         <li>
                                             <a href="#0">Shop<i class="ti-angle-down"></i></a>
-                                            <ul class="dropdown">                                               
+                                            <ul class="dropdown">
                                                 <li>
-                                                    @Html.ActionLink("Laptops", "Upgrade",
-                                                    new { filter = "Notebooks" })
+                                                    <a href="@Url.Action("Products", "Shop", new { category = "essential_hardware" })">
+                                                        Essential Hardware<i class="ti-arrow-top-right"></i>
+                                                        @*<span class="new">New</span>*@
+                                                    </a>
+                                                    @*<ul class="dropdown">
+                                                    <li>
+                                                    @Html.ActionLink("Latest Hardware", "Products",
+                                                    new { category = "hardware_parent" })
+                                                    </li>
+                                                    <li>
+                                                    @Html.ActionLink("Latest Hardware", "Products",
+                                                    new { category = "hardware_parent" })
+                                                    </li>
+                                                    </ul>*@
                                                 </li>
                                                 <li>
-                                                    @Html.ActionLink("Monitors", "Upgrade",
-                                                    new { filter = "Monitors" })
+                                                    <a href="@Url.Action("Products", "Shop", new { category = "latest_gpus" })">
+                                                        Latest GPUS<i class="ti-arrow-top-right"></i>
+                                                    </a>
                                                 </li>
                                                 <li>
-                                                    @Html.ActionLink("Peripherals", "Upgrade",
-                                                    new { filter = "Peripherals" })
+                                                    <a href="@Url.Action("Products", "Shop", new { category = "great_deals" })">
+                                                        Great Deals<i class="ti-arrow-top-right"></i>
+                                                    </a>
                                                 </li>
                                                 <li>
-                                                    @Html.ActionLink("Chassis", "Upgrade",
-                                                    new { filter = "Chassis" })
+                                                    <a href="@Url.Action("Products", "Shop", new { category = "pc_chassis" })">
+                                                        PC Chassis<i class="ti-arrow-top-right"></i>
+                                                    </a>
                                                 </li>
                                                 <li>
-                                                    @Html.ActionLink("GPUs", "Upgrade",
-                                                    new { filter = "GPUS" })
+                                                    <a href="@Url.Action("Products", "Shop", new { category = "data_storage" })">
+                                                        Data Storage<i class="ti-arrow-top-right"></i>
+                                                    </a>
                                                 </li>
                                                 <li>
-                                                    @Html.ActionLink("CPUs", "Upgrade",
-                                                    new { filter = "CPUS" })
-                                                </li>
-                                                <li>
-                                                    @Html.ActionLink("SSDs / HDDs", "Upgrade",
-                                                    new { filter = "SSDs" })
-                                                </li>
-                                                <li>
-                                                    @Html.ActionLink("Case Fans", "Upgrade",
-                                                    new { filter = "Case Fans" })
-                                                </li>
-                                                <li>
-                                                    @Html.ActionLink("Motherboards", "Upgrade",
-                                                    new { filter = "Motherboards" })
-                                                </li>
-                                                <li>
-                                                    @Html.ActionLink("PSUs", "Upgrade",
-                                                    new { filter = "PSUs" })
-                                                </li>
-                                                <li>
-                                                    @Html.ActionLink("Memory(RAM)", "Upgrade",
-                                                    new { filter = "Memory" })
-                                                </li>
-                                                <li>
-                                                    @Html.ActionLink("CPU Coolers", "Upgrade",
-                                                    new { filter = "CPU Coolers" })
+                                                    <a href="@Url.Action("Products", "Shop", new { category = "performace_laptops" })">
+                                                        Performance Laptops<i class="ti-arrow-top-right"></i>
+                                                    </a>
                                                 </li>
                                             </ul>
                                         </li>

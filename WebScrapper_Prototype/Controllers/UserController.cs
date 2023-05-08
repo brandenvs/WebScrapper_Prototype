@@ -1,8 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Web.Helpers;
+using wazaware.co.za.Services;
 using WazaWare.co.za.DAL;
 using WazaWare.co.za.Models;
+using WazaWare.co.za.Services;
+using static WazaWare.co.za.Models.UserManagerViewModels;
 
 namespace WazaWare.co.za.Controllers
 {
@@ -10,8 +15,6 @@ namespace WazaWare.co.za.Controllers
 	{
 		private readonly WazaWare_db_context _context;
 		private readonly IHttpContextAccessor _httpContextAccessor;
-		private string userEmail = string.Empty;
-		private static string userFirstName;
 
 		public UserController(WazaWare_db_context context, IHttpContextAccessor httpContextAccessor)
 		{
@@ -19,198 +22,285 @@ namespace WazaWare.co.za.Controllers
 			_httpContextAccessor = httpContextAccessor;
 		}
 		[HttpGet]
-		public async Task<IActionResult> Index(string email, int result, string test)
+		public IActionResult Index()
 		{
-			getUserCookie();
-			if(result > 0)
-				ViewBag.Result = result;
-			if (!userEmail!.Contains("cookie") && email == null)
+			WebServices services = new(_context, _httpContextAccessor);
+			var user = CookieTime();
+			if(user == null)
 			{
-				ViewBag.UserLayer = 0;
-				ViewBag.IsCookie = false;
-				var user = _context.Users.FirstOrDefault(u => u.Email!.Equals(userEmail));
-				var userShipping = _context.UserShippings.FirstOrDefault(u => u.UserId!.Equals(userEmail));
-				userFirstName = user!.FirstName!;
-				ViewBag.FirstName = userFirstName;
-
-				if (userShipping != null)
+				ViewBag.isCookie = true;
+			}
+			else
+			{
+				if (user.Email!.Contains("@wazaware.co.za"))
 				{
-					var view = new UserViewModel
-					{
-						FirstName = user.FirstName,
-						LastName = user.LastName,
-						Email = user.Email,
-						PhoneNumber = user.Phone,
-						Unit = userShipping.UnitNo,
-						Street = userShipping.StreetAddress,
-						Area = userShipping.Suburb,
-						City = userShipping.City,
-						Province = userShipping.Province,
-						PostalCode = userShipping.PostalCode
-					};
-					return View(view);
+					ViewBag.isCookie = true;
 				}
 				else
 				{
-					var view = new UserViewModel
-					{
-						FirstName = user!.FirstName,
-						LastName = user.LastName,
-						Email = user.Email,
-						PhoneNumber = user.Phone,
-						Province = "No Information",
-						City = "No Information",
-						PostalCode = "No Information",
-						Unit = "No Information",
-						Street = "No Information",
-						Area = "No Information"
-
-					};
-					return View(view);
+					ViewBag.isCookie = false;
+					return RedirectToAction(nameof(User));
 				}
 			}
-			else if (userEmail!.Contains("cookie") && email == null)
+			return RedirectToAction(nameof(Login));
+		}
+		[HttpGet]
+		public IActionResult Login()
+		{
+			ViewBag.IsCookie = true;
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			var cartModel = services.LoadCart(userModel!.UserId);
+			var viewModel = new ViewModels
 			{
-				ViewBag.UserLayer = 1;
-				ViewBag.IsCookie = true;
-				ViewBag.FirstName = "Please Login or Register";
-				return View();
-			}				
-			else if(email != null)
+				Cart = cartModel
+			};
+			return View(viewModel);
+		}
+		[HttpPost]
+		public IActionResult Login(UserLoginViewModel loginModel)
+		{
+			ViewBag.IsCookie = true;
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			var cartModel = services.LoadCart(userModel!.UserId);
+			if (TryValidateModel(loginModel))
 			{
-				ViewBag.UserLayer = 2;
-				ViewBag.IsCookie = true;
-				ViewBag.Result = email;
-				return View();
+				if (_context.Users.Any(u => u.Email == loginModel.Email))
+				{
+					var user = _context.Users.Where(u => u.Email == loginModel.Email).First();
+					if (loginModel.Password != null)
+					{
+						if (loginModel.Password == user.Password)
+						{
+							UpdateUserCookie(user);
+							return RedirectToAction(nameof(Index));
+						}
+						else
+						{
+							ViewBag.InvalidCredentials = "Invalid Credentials... Please Try Again!";
+						}
+					}
+				}
+				else
+				{
+					ViewBag.InvalidCredentials = "Invalid Email... Please Register!";
+				}
+			}			
+			var viewModel = new ViewModels
+			{
+				Cart = cartModel
+			};
+			return View(viewModel);
+		}
+		[HttpGet]
+		public IActionResult Register()
+		{
+			ViewBag.IsCookie = true;
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			var cartModel = services.LoadCart(userModel!.UserId);
+			var viewModel = new ViewModels
+			{
+				Cart = cartModel
+			};
+			return View(viewModel);
+		}
+		[HttpPost]
+		public async Task<IActionResult> Register(UserRegisterViewModel registerModel)
+		{
+			ViewBag.IsCookie = true;
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			var cartModel = services.LoadCart(userModel!.UserId);
+
+			if (_context.Users.Any(u => u.Email!.Equals(registerModel.Email)))
+			{
+				ViewBag.Message = "'" + registerModel.Email + "'" + " is Already Taken!";
 			}
 			else
-				return View();
+			{
+				var user = new UserModel
+				{
+					FirstName = registerModel.FirstName,
+					LastName = registerModel.LastName,
+					Email = registerModel.Email,
+					Phone = registerModel.Phone,
+					Password = registerModel.Password,
+					Joined = DateTime.Now
+				};
+				_context.Attach(user);
+				_context.Users.Add(user);
+				await _context.SaveChangesAsync();
+				UpdateUserCookie(user);
+				return RedirectToAction(nameof(Index));
+			}
+			var viewModel = new ViewModels
+			{
+				Cart = cartModel
+			};
+			return View(viewModel);
 		}
-		//[HttpPost]
-		//public async Task<ActionResult> Register(UserModel model)
-		//{
-		//	UserDetailsService service = new(_context, _httpContextAccessor, _app, _userManager, _signInManager);
-		//	int result = 0;
-		//	const string cookieName = "WazaWarecookie6";
-		//	var requestCookies = HttpContext.Request.Cookies;
-		//	var cookieOptions = new CookieOptions
-		//	{
-		//		Expires = DateTimeOffset.Now.AddDays(7),
-		//		IsEssential = true
-		//	};
-		//	var firstRequest = requestCookies[cookieName];
-		//	if (ModelState.IsValid)
-		//	{
-		//		result = await service.Register(model, userEmail);
-		//		if (result.Equals(100))
-		//			return RedirectToAction("Index", new { email = model.Email });
-
-		//		await CheckUserCookie();
-		//	}
-		//	else
-		//		Console.WriteLine("ERROR!");
-		//	return RedirectToAction(nameof(Index));
-		//}
-		//[HttpPost]
-		//public async Task<ActionResult> UserUpdateContact(UserModel model)
-		//{
-		//	userEmail = await CheckUserCookie();
-		//	var dbModel = _context.Users.FirstOrDefault(s => s.Email!.Equals(userEmail));
-		//	if (dbModel != null)
-		//	{
-		//		// check if the model contains changes
-		//		if (model.FirstName != dbModel.FirstName || model.LastName != dbModel.LastName
-		//			|| model.Phone != dbModel.Phone)
-		//		{
-		//			// update only the changed columns
-		//			dbModel.FirstName = model.FirstName ?? dbModel.FirstName;
-		//			dbModel.LastName = model.LastName ?? dbModel.LastName;
-		//			dbModel.Phone = model.Phone ?? dbModel.Phone;
-
-		//			// save changes to database
-		//			_context.Update(dbModel);
-		//			await _context.SaveChangesAsync();
-		//		}
-		//	}
-		//	return RedirectToAction(nameof(Index));
-		//}
-		//[HttpPost]
-		//public async Task<ActionResult> UserUpdateShipping(UserShipping model)
-		//{
-		//	userEmail = await CheckUserCookie();
-		//	var dbModel = _context.UserShippings.FirstOrDefault(s => s.UserId!.Equals(userEmail));
-		//	if (dbModel != null)
-		//	{
-		//		// check if the model contains changes
-		//		if (model.Province != dbModel.Province || model.City != dbModel.City
-		//			|| model.PostalCode != dbModel.PostalCode || model.Unit != dbModel.Unit
-		//			|| model.Street != dbModel.Street || model.Area != dbModel.Area)
-		//		{
-		//			// update only the changed columns
-		//			dbModel.Province = model.Province ?? dbModel.Province;
-		//			dbModel.City = model.City ?? dbModel.City;
-		//			dbModel.PostalCode = model.PostalCode ?? dbModel.PostalCode;
-		//			dbModel.Unit = model.Unit ?? dbModel.Unit;
-		//			dbModel.Street = model.Street ?? dbModel.Street;
-		//			dbModel.Area = model.Area ?? dbModel.Area;
-
-		//			// save changes to database
-		//			_context.Update(dbModel);
-		//			await _context.SaveChangesAsync();
-		//		}
-		//	}
-		//	return RedirectToAction(nameof(Index));
-		//}		
-		//public async Task<IActionResult> Login(LoginViewModel model)
-		//{
-		//	UserDetailsService service = new(_context, _httpContextAccessor, _app, _userManager, _signInManager);
-		//	int result = 0;
-		//	if (!String.IsNullOrEmpty(model.Password))
-		//		result = await service.Login(model);
-		//	switch (result)
-		//	{					
-		//		case 200:
-		//			const string cookieName = "WazaWarecookie6";
-		//			var requestCookies = HttpContext.Request.Cookies;
-		//			var firstRequest = requestCookies[cookieName];
-		//			var cookieOptions = new CookieOptions
-		//			{
-		//				Expires = DateTimeOffset.Now.AddDays(7),
-		//				IsEssential = true
-		//			};
-		//			HttpContext.Response.Cookies.Append(cookieName, model.Email, cookieOptions);
-		//			ViewBag.Result = "Successfully Logged In!";
-		//			return RedirectToAction(nameof(Index), new { result});
-		//		case 500:
-		//			return RedirectToAction(nameof(Index), new { result });
-		//		case 404:					
-		//			return RedirectToAction(nameof(Index), new { result });
-		//		default: return RedirectToAction(nameof(Index));
-		//	}			
-		//}
-		//[HttpGet]
-		//public async Task<IActionResult> Logout()
-		//{
-		//	await _signInManager.SignOutAsync();
-		//	ViewBag.IsCookie = true;
-		//	return RedirectToAction(nameof(Index));
-		//}
-		/// <summary>
-		/// Responsible for Cookies
-		/// </summary>
-		public void getUserCookie()
+		[HttpGet]
+		public IActionResult UpdateUser()
 		{
-			const string cookieName = "WazaWarecookie6";
+			ViewBag.IsCookie = false;
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			var cartModel = services.LoadCart(userModel!.UserId);
+			var userView = new UserModelView
+			{
+				FirstName = userModel.FirstName,
+				LastName = userModel.LastName,
+				Email = userModel.Email,
+				Phone = userModel.Phone
+			};
+			var viewModel = new ViewModels
+			{
+				Cart = cartModel,
+				userView = userView
+			};
+			return View(viewModel);
+		}
+		[HttpPost]
+		public IActionResult UpdateUser(UserRegisterViewModel registerModel)
+		{
+			ViewBag.IsCookie = false;
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			var updatedUser = new UserModel();
+			bool changed = false;
+			if (userModel.FirstName != registerModel.FirstName)
+			{
+				changed = true;
+				userModel.FirstName = registerModel.FirstName;
+			}
+			if (userModel.LastName != registerModel.LastName)
+			{
+				changed = true;
+				userModel.LastName = registerModel.LastName;
+			}
+			if (userModel.Email != registerModel.Email)
+			{
+				changed = true;
+				userModel.Email = registerModel.Email;
+			}
+			if (userModel.Phone != registerModel.Phone)
+			{
+				changed = true;
+				userModel.Phone = registerModel.Phone;
+			}
+			if (userModel.Password != registerModel.Password)
+			{
+				changed = true;
+				userModel.Password = registerModel.Password;
+			}
+			if (changed)
+			{
+				_context.Users.Attach(userModel);
+				_context.Users.Update(userModel);
+				_context.SaveChanges();
+				UpdateUserCookie(userModel);
+			}
+			return RedirectToAction(nameof(Index));
+		}
+		public IActionResult User()
+		{
+			ViewBag.IsCookie = false;
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			var cartModel = services.LoadCart(userModel!.UserId);
+			var userView = new UserModelView
+			{
+				FirstName = userModel.FirstName,
+				LastName = userModel.LastName,
+				Email = userModel.Email,
+				Phone = userModel.Phone
+			};
+			var viewModel = new ViewModels
+			{
+				Cart = cartModel,
+				userView = userView
+			};
+			return View(viewModel);
+		}
+		public IActionResult UserShipping(UserShippingViewModel userModel, List<ProductsInCartModel> cartModel)
+		{
+			return RedirectToAction(nameof(Index));
+		}
+		public IActionResult Logout()
+		{
+			WebServices services = new(_context, _httpContextAccessor);
+			const string cookieName = "wazaware.co.za-auto-sign-in";
 			var requestCookies = HttpContext.Request.Cookies;
 			var intialRequest = requestCookies[cookieName];
+			var cookieOptions = new CookieOptions
+			{
+				Expires = DateTimeOffset.Now.AddDays(7),
+				IsEssential = true
+			};
 			if (intialRequest != null)
 			{
-				foreach (var cookie in intialRequest)
+				HttpContext.Response.Cookies.Delete(cookieName);
+			}
+			return RedirectToAction(nameof(Index));
+		}
+		public void UpdateUserCookie(UserModel userModel)
+		{
+			const string cookieName = "wazaware.co.za-auto-sign-in";
+			var requestCookies = HttpContext.Request.Cookies;
+			var intialRequest = requestCookies[cookieName];
+			var cookieOptions = new CookieOptions
+			{
+				Expires = DateTimeOffset.Now.AddDays(7),
+				IsEssential = true
+			};
+			if (!requestCookies.ContainsKey(cookieName))
+			{
+				HttpContext.Response.Cookies.Append(cookieName, userModel.Email!, cookieOptions);
+			}
+			else
+			{
+				HttpContext.Response.Cookies.Delete(cookieName);
+				HttpContext.Response.Cookies.Append(cookieName, userModel.Email!, cookieOptions);
+			}
+		}
+		public UserModel? CookieTime()
+		{
+			WebServices services = new(_context, _httpContextAccessor);
+			UserModel? model = null;
+			const string cookieName = "wazaware.co.za-auto-sign-in";
+			var requestCookies = HttpContext.Request.Cookies;
+			var intialRequest = requestCookies[cookieName];
+			var cookieOptions = new CookieOptions
+			{
+				Expires = DateTimeOffset.Now.AddDays(7),
+				IsEssential = true
+			};
+			if (intialRequest != null)
+			{
+				if (_context.Users.Any(u => u.Email == intialRequest))
 				{
-					Console.WriteLine("COOKIE!!!!!!!!!!!!!!!\n\n" + cookie + "\n\n");
-					userEmail = intialRequest;
+					model = _context.Users.Where(x => x.Email == intialRequest).FirstOrDefault();
+				}
+				else
+				{
+					var email = services.CreateCookieReferance().Result;
+					HttpContext.Response.Cookies
+						.Append(cookieName, email, cookieOptions);
+					model = _context.Users
+						.Where(x => x.Email == email).FirstOrDefault();
 				}
 			}
+			else
+			{
+				var email = services.CreateCookieReferance().Result;
+				HttpContext.Response.Cookies
+					.Append(cookieName, email, cookieOptions);
+				model = _context.Users
+					.Where(x => x.Email == email).FirstOrDefault();
+			}
+			return model;
 		}
 	}
 }

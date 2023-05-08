@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using wazaware.co.za.Models;
 using WazaWare.co.za.Models;
 
 namespace WazaWare.co.za.DAL
@@ -14,5 +15,6 @@ namespace WazaWare.co.za.DAL
 		public DbSet<UserShipping> UserShippings { get; set; }
 		public DbSet<UserShoppingCart> UsersShoppingCarts { get; set; }
 		public DbSet<OrderProducts> OrderProducts { get; set; }
+		public DbSet<PaymentModel> PaymentModels { get; set; }
 	}
 }

@@ -15,15 +15,19 @@ namespace WazaWare.co.za.Models
 		[MaxLength(50)]
 		public string FirstName { get; set; }
 
-		[MaxLength(50)]
-		public string MiddleName { get; set; }
-
 		[Required]
 		[MaxLength(50)]
 		public string LastName { get; set; }
+		[Required]
+		[Phone]
+		public string Phone { get; set; }
+
+		[Required]
+		[EmailAddress]
+		public string Email { get; set; }
 
 		[MaxLength(50)]
-		public string UnitNo { get; set; }
+		public int UnitNo { get; set; }
 
 		[Required]
 		[MaxLength(100)]
@@ -42,14 +46,8 @@ namespace WazaWare.co.za.Models
 		public string Province { get; set; }
 		[Required]
 		[MaxLength(50)]
-		public string PostalCode { get; set; }
+		public int PostalCode { get; set; }
+		public string Notes { get; set; }
 
-		[Required]
-		[Phone]
-		public string Phone { get; set; }
-
-		[Required]
-		[EmailAddress]
-		public string Email { get; set; }
 	}
 }

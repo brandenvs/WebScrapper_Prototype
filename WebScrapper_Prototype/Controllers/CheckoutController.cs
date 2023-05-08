@@ -7,6 +7,13 @@ using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using Microsoft.EntityFrameworkCore;
 using WazaWare.co.za.DAL;
 using WazaWare.co.za.Services;
+using wazaware.co.za.Services;
+using static WazaWare.co.za.Models.UserManagerViewModels;
+using Microsoft.AspNetCore.Http;
+using System.Web.Helpers;
+using wazaware.co.za.Models;
+using System.Linq;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace WazaWare.co.za.Controllers
 {
@@ -25,450 +32,336 @@ namespace WazaWare.co.za.Controllers
 			_httpContextAccessor = httpContextAccessor;
 		}
 		[HttpGet]
-		public async Task<IActionResult> Index(int startPlaceOrder, int code, string message)
+		public async Task<IActionResult> Index()
 		{
-			var cookieResponse = await SyncUserCookieAsync();
-			if (cookieResponse != null)
-				// Sets User Model so that {_user} can be called
-				await SetUserModel(int.Parse(cookieResponse));
-			/// Update ViewBags Appropriately ///				
-			// Check if user is a Cookie or Registered
-			if (!_user!.Email!.Contains("WazaWareCookie6.542-Email"))
-				_isCookieUser = false;
-			else
-				_isCookieUser = true;
-			ViewBag.isCookie = _isCookieUser;
-			if (!_isCookieUser)
-				ViewBag.FirstName = _user.FirstName;
-			return View();
-		}
-		[HttpGet]
-		//public async Task<IActionResult> Index(int startPlaceOrder, int code, string message)
-		//{
-
-		//	if (!string.IsNullOrEmpty(message) && code != 0) 
-		//	{				
-		//		ViewBag.Code = code;
-		//		ViewBag.Message = message;
-		//	}
-
-		//	///// Cookies ///
-		//	//if (userEmail.Contains("cookie"))
-		//	//{
-		//	//	ViewBag.IsCookie = true;
-		//	//	return RedirectToAction("Register");		
-		//	//}
-		//	//else
-		//	//{
-		//	//	ViewBag.IsCookie = false;
-		//	//	ViewBag.Code = 200;
-		//	//	userFirstName = _context.Users.FirstOrDefault(s => s.Email.Equals(userEmail)).FirstName;
-		//	//	ViewBag.FirstName = userFirstName;
-		//	//}
-		//	var view = new UserViewModel
-		//	{
-		//		FirstName = string.Empty,
-		//		LastName = string.Empty,
-		//		Email = string.Empty,
-		//		PhoneNumber = string.Empty,
-		//		Province = string.Empty,
-		//		City = string.Empty,
-		//		PostalCode = string.Empty,
-		//		Unit = string.Empty,
-		//		Street = string.Empty,
-		//		Area = string.Empty
-		//	};
-		//	// Place Order
-		//	decimal orderSubTotal = 0;
-		//	decimal shippingTotal = 0;
-		//	decimal fee = 0;
-		//	decimal orderGrandTotal = 0;
-		//	var products = from p in _context.Products
-		//				   join b in _context.UsersShoppingCarts
-		//				   on p.ProductId equals b.ProductId
-		//				   where b.UserId.Equals(userEmail)
-		//				   select p;
-		//	var salePriceSum = products.Sum(p => p.ProductPriceSale);
-		//	ViewBag.BasketCount = products.Count();
-		//	ViewBag.Savings = products.Sum(p => p.ProductPriceBase - p.ProductPriceSale);
-		//	ViewBag.CartTotalBase = products.Sum(p => p.ProductPriceBase);
-		//	if (salePriceSum > 1500 && salePriceSum != null)
-		//	{
-		//		ViewBag.ShippingCost = "FREE";
-		//		ViewBag.CartTotalSale = salePriceSum;
-		//		shippingTotal = 0;
-		//	}
-		//	else
-		//	{
-		//		ViewBag.ShippingCost = 300;
-		//		shippingTotal = 300;
-		//		ViewBag.GetFreeShipping = 1500 - salePriceSum;
-		//		ViewBag.CartTotalSale = salePriceSum + 300;
-		//	}	
-		//	/// --------HandlingFee----------
-		//	/// ↓SUMMARY↓: First Iteration
-		//	/// ↓----------------------------
-		//	decimal handlingFee = 0;
-		//	decimal cartAverage = 0;
-		//	int productCount = products.Count();
-		//	if (salePriceSum > 0)
-		//		cartAverage = (decimal)(salePriceSum / productCount);
-		//	/// -------HandlingFee-----------
-		//	/// ↓SUMMARY↓: First Iteration
-		//	/// ↓----------------------------
-		//	if (productCount > 0)
-		//		switch (productCount)
-		//		{
-		//			/// -----------------------------
-		//			/// ↓SUMMARY↓:
-		//			/// ShoppingCart has (1) Product,
-		//			/// +R50 Handling Fee
-		//			/// ↓----------------------------
-		//			case 1:
-		//				handlingFee = 50;
-		//				break;
-		//			/// -----------------------------
-		//			/// ↓SUMMARY↓:
-		//			/// ShoppingCart has (2) Products,
-		//			/// ShoppingCart Average is LESS / MORE than R1500?
-		//			/// LESS: +R50 Handling Fee || MORE: +R100 Handling Fee
-		//			/// ↓----------------------------
-		//			case 2:
-		//				handlingFee = cartAverage < 1500 ? 50 : 100;
-		//				break;
-		//			/// -----------------------------
-		//			/// ↓SUMMARY↓:
-		//			/// ShoppingCart has (3) Products,
-		//			/// ShoppingCart Average is LESS / MORE than R1500?
-		//			/// LESS: +R80 Handling Fee || MORE: +R100 Handling Fee
-		//			/// ↓----------------------------
-		//			case 3:
-		//				handlingFee = cartAverage < 1500 ? 80 : 100;
-		//				break;
-		//			/// -----------------------------
-		//			/// ↓SUMMARY↓:
-		//			/// ShoppingCart has (4) Products,
-		//			/// ShoppingCart Average is LESS / MORE than R1500?
-		//			/// LESS: +R100 Handling Fee || MORE: +R120 Handling Fee
-		//			/// ↓----------------------------
-		//			case 4:
-		//				handlingFee = cartAverage < 1500 ? 100 : 120;
-		//				break;
-		//			/// -----------------------------
-		//			/// ↓SUMMARY↓:
-		//			/// ShoppingCart has (5) Products,
-		//			/// ShoppingCart Average is LESS / MORE than R1500?
-		//			/// LESS: +R120 Handling Fee || MORE: +R150 Handling Fee
-		//			/// ↓----------------------------
-		//			case 5:
-		//				handlingFee = cartAverage < 1500 ? 120 : 150;
-		//				break;
-		//			/// -----------------------------
-		//			/// ↓SUMMARY↓:
-		//			/// ShoppingCart has More than (5) Products,
-		//			/// ShoppingCart Average is LESS / MORE than R1500?
-		//			/// LESS: +R150 Handling Fee || MORE: +R200 Handling Fee
-		//			/// ↓----------------------------
-		//			default:
-		//				handlingFee = cartAverage < 1500 ? 150 : 200;
-		//				break;
-		//		}
-		//	/// -------ViewBag---------------
-		//	/// ↓SUMMARY↓: First Iteration
-		//	/// ↓----------------------------
-		//	ViewBag.HandlingFee = handlingFee;
-		//	ViewBag.GrandTotal = handlingFee + ViewBag.CartTotalSale;
-		//	orderSubTotal = ViewBag.CartTotalSale;
-		//	fee = handlingFee;
-		//	orderGrandTotal = ViewBag.GrandTotal;
-		//	ViewBag.Items = products;
-		//	var user = _context!.Users.FirstOrDefault(u => u.Email == userEmail);
-		//	if (userEmail.Contains("cookie"))
-		//		ViewBag.userIsCookie = true;
-		//	else
-		//	{
-		//		ViewBag.userIsCookie = false;
-		//		var userShipping = _context.UserShippings.FirstOrDefault(u => u.UserId == 0);
-		//		if (userShipping != null)
-		//		{
-		//			view = new UserViewModel
-		//			{
-		//				FirstName = user.FirstName,
-		//				LastName = user.LastName,
-		//				Email = user.Email,
-		//				PhoneNumber = user.Phone,
-		//				Unit = userShipping.UnitNo,
-		//				Street = userShipping.StreetAddress,
-		//				Area = userShipping.Suburb,
-		//				City = userShipping.City,
-		//				Province = userShipping.Province,
-		//				PostalCode = userShipping.PostalCode
-		//			};
-		//		}
-		//		else
-		//		{
-		//			view = new UserViewModel
-		//			{
-		//				FirstName = user.FirstName,
-		//				Email = user.Email,
-		//				PhoneNumber = user.Phone
-		//			};
-		//		}
-		//	}
-		//	if (startPlaceOrder > 0)
-		//		await Proceed(orderSubTotal, shippingTotal, fee, orderGrandTotal, userEmail, user!.FirstName!, null);
-		//	return View(view);
-		//}
-		[HttpGet]
-		public ActionResult Register()
-		{
-			ViewBag.IsCookie = true;
-			return View();
-		}
-		[HttpGet]
-		public async Task<IActionResult> Login(int startPlaceOrder)
-		{
-			return View();
-		}
-		//public async Task<IActionResult> Login(int startPlaceOrder)
-		//{
-		//	/// Cookies ///
-		//	if (userEmail.Contains("cookie"))
-		//	{
-		//		ViewBag.IsCookie = true;
-		//		ViewBag.FirstName = "Please Login or Register";
-		//	}
-		//	else
-		//	{
-		//		ViewBag.IsCookie = false;
-		//		userFirstName = _context.Users.FirstOrDefault(s => s.Email.Equals(userEmail)).FirstName;
-		//		ViewBag.FirstName = userFirstName;
-		//	}
-		//	var view = new UserViewModel
-		//	{
-		//		FirstName = string.Empty,
-		//		LastName = string.Empty,
-		//		Email = string.Empty,
-		//		PhoneNumber = string.Empty,
-		//		Province = string.Empty,
-		//		City = string.Empty,
-		//		PostalCode = string.Empty,
-		//		Unit = string.Empty,
-		//		Street = string.Empty,
-		//		Area = string.Empty
-		//	};
-		//	// Place Order
-		//	decimal orderSubTotal = 0;
-		//	decimal shippingTotal = 0;
-		//	decimal fee = 0;
-		//	decimal orderGrandTotal = 0;
-		//	var products = from p in _context.Products
-		//				   join b in _context.UsersShoppingCarts
-		//				   on p.ProductId equals b.ProductId
-		//				   where b.UserId.Equals(userEmail)
-		//				   select p;
-		//	var salePriceSum = products.Sum(p => p.ProductPriceSale);
-		//	ViewBag.BasketCount = products.Count();
-		//	ViewBag.Savings = products.Sum(p => p.ProductPriceBase - p.ProductPriceSale);
-		//	ViewBag.CartTotalBase = products.Sum(p => p.ProductPriceBase);
-		//	if (salePriceSum > 1500 && salePriceSum != null)
-		//	{
-		//		ViewBag.ShippingCost = "FREE";
-		//		ViewBag.CartTotalSale = salePriceSum;
-		//		shippingTotal = 0;
-		//	}
-		//	else
-		//	{
-		//		ViewBag.ShippingCost = 300;
-		//		shippingTotal = 300;
-		//		ViewBag.GetFreeShipping = 1500 - salePriceSum;
-		//		ViewBag.CartTotalSale = salePriceSum + 300;
-		//	}
-		//	/// --------HandlingFee----------
-		//	/// ↓SUMMARY↓: First Iteration
-		//	/// ↓----------------------------
-		//	decimal handlingFee = 0;
-		//	decimal cartAverage = 0;
-		//	int productCount = products.Count();
-		//	if (salePriceSum > 0)
-		//		cartAverage = (decimal)(salePriceSum / productCount);
-		//	/// -------HandlingFee-----------
-		//	/// ↓SUMMARY↓: First Iteration
-		//	/// ↓----------------------------
-		//	if (productCount > 0)
-		//		switch (productCount)
-		//		{
-		//			/// -----------------------------
-		//			/// ↓SUMMARY↓:
-		//			/// ShoppingCart has (1) Product,
-		//			/// +R50 Handling Fee
-		//			/// ↓----------------------------
-		//			case 1:
-		//				handlingFee = 50;
-		//				break;
-		//			/// -----------------------------
-		//			/// ↓SUMMARY↓:
-		//			/// ShoppingCart has (2) Products,
-		//			/// ShoppingCart Average is LESS / MORE than R1500?
-		//			/// LESS: +R50 Handling Fee || MORE: +R100 Handling Fee
-		//			/// ↓----------------------------
-		//			case 2:
-		//				handlingFee = cartAverage < 1500 ? 50 : 100;
-		//				break;
-		//			/// -----------------------------
-		//			/// ↓SUMMARY↓:
-		//			/// ShoppingCart has (3) Products,
-		//			/// ShoppingCart Average is LESS / MORE than R1500?
-		//			/// LESS: +R80 Handling Fee || MORE: +R100 Handling Fee
-		//			/// ↓----------------------------
-		//			case 3:
-		//				handlingFee = cartAverage < 1500 ? 80 : 100;
-		//				break;
-		//			/// -----------------------------
-		//			/// ↓SUMMARY↓:
-		//			/// ShoppingCart has (4) Products,
-		//			/// ShoppingCart Average is LESS / MORE than R1500?
-		//			/// LESS: +R100 Handling Fee || MORE: +R120 Handling Fee
-		//			/// ↓----------------------------
-		//			case 4:
-		//				handlingFee = cartAverage < 1500 ? 100 : 120;
-		//				break;
-		//			/// -----------------------------
-		//			/// ↓SUMMARY↓:
-		//			/// ShoppingCart has (5) Products,
-		//			/// ShoppingCart Average is LESS / MORE than R1500?
-		//			/// LESS: +R120 Handling Fee || MORE: +R150 Handling Fee
-		//			/// ↓----------------------------
-		//			case 5:
-		//				handlingFee = cartAverage < 1500 ? 120 : 150;
-		//				break;
-		//			/// -----------------------------
-		//			/// ↓SUMMARY↓:
-		//			/// ShoppingCart has More than (5) Products,
-		//			/// ShoppingCart Average is LESS / MORE than R1500?
-		//			/// LESS: +R150 Handling Fee || MORE: +R200 Handling Fee
-		//			/// ↓----------------------------
-		//			default:
-		//				handlingFee = cartAverage < 1500 ? 150 : 200;
-		//				break;
-		//		}
-		//	/// -------ViewBag---------------
-		//	/// ↓SUMMARY↓: First Iteration
-		//	/// ↓----------------------------
-		//	ViewBag.HandlingFee = handlingFee;
-		//	ViewBag.GrandTotal = handlingFee + ViewBag.CartTotalSale;
-		//	orderSubTotal = ViewBag.CartTotalSale;
-		//	fee = handlingFee;
-		//	orderGrandTotal = ViewBag.GrandTotal;
-		//	ViewBag.Items = products;
-		//	var user = _context!.Users.FirstOrDefault(u => u.Email == userEmail);
-		//	if (userEmail.Contains("cookie"))
-		//		ViewBag.userIsCookie = true;
-		//	else
-		//	{
-		//		ViewBag.userIsCookie = false;
-		//		var userShipping = _context.UserShippings.FirstOrDefault(u => u.UserId == 0);
-		//		if (userShipping != null)
-		//		{
-		//			view = new UserViewModel
-		//			{
-		//				FirstName = user.FirstName,
-		//				LastName = user.LastName,
-		//				Email = user.Email,
-		//				PhoneNumber = user.Phone,
-		//				Unit = userShipping.UnitNo,
-		//				Street = userShipping.StreetAddress,
-		//				Area = userShipping.Suburb,
-		//				City = userShipping.City,
-		//				Province = userShipping.Province,
-		//				PostalCode = userShipping.PostalCode
-		//			};
-		//		}
-		//		else
-		//		{
-		//			view = new UserViewModel
-		//			{
-		//				FirstName = user!.FirstName,
-		//				LastName = user.LastName,
-		//				Email = user.Email,
-		//				PhoneNumber = user.Phone
-		//			};
-		//		}
-		//	}
-		//	if (startPlaceOrder > 0)
-		//		await Proceed(orderSubTotal, shippingTotal, fee, orderGrandTotal, userEmail, user!.FirstName!, user!.LastName);
-		//	return View(view);
-		//}
-		[HttpPost]
-		public async Task<ActionResult> EntireUser(UserViewModel model)
-		{
-			int code = 0;
-			string message = string.Empty;
-			//foreach(var item in result)
-			//{
-			//	code = item.Key;
-			//	message = item.Value;
-			//}
-
-			//if(code == 200)
-			//{
-			//	var cookieOptions = new CookieOptions
-			//	{
-			//		Expires = DateTimeOffset.Now.AddDays(7),
-			//		IsEssential = true
-			//	};
-			//	const string cookieName = "WazaWarecookie6";
-			//	var requestCookies = HttpContext.Request.Cookies;
-			//	HttpContext.Response.Cookies.Append(cookieName, model.Email!, cookieOptions);
-
-			//}
-			return RedirectToAction("Index", new { code, message });			
-		}
-		public ActionResult Edit()
-		{
-			return RedirectToAction("Index", "User");
-		}
-		public async Task Proceed(decimal orderSubTotal, decimal shippingTotal, decimal fee, decimal orderGrandTotal, string userEmail, string firstName, string lastName)
-		{
-			Console.WriteLine("------------------------------------------------------------------------------------->>\n" +
-					"Placing New Order ------------------------------------------>>\n" +
-					"Email: " + userEmail);
-			int orderId = await PlaceOrder(orderSubTotal, shippingTotal, fee, orderGrandTotal);
-			Console.WriteLine("Order Placed" + "<<-------------------------------------------------------------------------------------\n");
-			Console.WriteLine("------------------------------------------------------------------------------------->>\n" +
-				"Sending New User an Email ------------------------------------------>>\n" +
-				"Email: " + userEmail);
-			await SendEmail(userEmail, firstName + " " + lastName, orderSubTotal, shippingTotal, fee, orderGrandTotal, orderId);
-			Console.WriteLine("Email Sent" + "<<-------------------------------------------------------------------------------------\n");
-		}
-		[HttpPost]
-		public async Task<int> PlaceOrder(decimal orderSubTotal, decimal shippingTotal, decimal fee, decimal orderGrandTotal)
-		{
-			var basketItems = _context.UsersShoppingCarts
-				.Where(s => s.UserId == 0);
-			var order = new Orders
+			
+			var userModel = CookieTime();
+			if (userModel!.Email!.Contains("@wazaware.co.za"))
 			{
-				UserId = 0,
-				OrderTotalShipping = shippingTotal,
-				OrderTotalHandlingFee = fee,
-				OrderGrandTotal = orderGrandTotal,
-			};
-			_context.Orders.Attach(order);
-			_context.Entry(order).State = EntityState.Added;
-			foreach (var basketItem in basketItems)
-			{
-				var orderProducts = new OrderProducts
+				if(_context.UsersShoppingCarts.Any(s => s.UserId == userModel.UserId))
 				{
-					OrderId = order.OrderId,
-					ProductId = basketItem.ProductId
-				};
-				_context.OrderProducts.Attach(orderProducts);
-				_context.Entry(orderProducts).State = EntityState.Added;
+					return RedirectToAction(nameof(CheckoutNewUser));
+				}
+				else
+				{
+					return RedirectToAction("Index", "Shop", new { message = "Your Shopping Cart is Empty!" });
+				}
 			}
-			_context.UsersShoppingCarts.AttachRange(basketItems);			
-			_context.UsersShoppingCarts.RemoveRange(basketItems);
+			else
+			{
+				return RedirectToAction(nameof(CheckoutCurrentUser));
+			}
+		}
+		[HttpGet]
+		public IActionResult CheckoutNewUser(string message)
+		{
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			var cartModel = services.LoadCart(userModel!.UserId);
+			if (userModel == null)
+			{
+				ViewBag.isCookie = true;
+			}
+			else
+			{
+				if (userModel.Email!.Contains("@wazaware.co.za"))
+				{
+					ViewBag.isCookie = true;
+				}
+				else
+				{
+					ViewBag.isCookie = false;
+				}
+			}
+			var viewModel = new ViewModels
+			{
+				Cart = cartModel
+			};
+			ViewBag.Message = message;
+			return View(viewModel);
+		}
+		[HttpPost]
+		public async Task<IActionResult> CheckoutNewUser(UserShippingViewModel model)
+		{
+			var userModel = CookieTime();
+			if (userModel == null)
+			{
+				ViewBag.isCookie = true;
+			}
+			else
+			{
+				if (userModel.Email!.Contains("@wazaware.co.za"))
+				{
+					ViewBag.isCookie = true;
+				}
+				else
+				{
+					ViewBag.isCookie = false;
+				}
+			}
+			string notes = "No Instructions Given";
+			if(model.Notes != null)
+				notes = model.Notes;
+			string password = "AccountWasNotMade!";
+			if (model.Password != null)
+				password = model.Password;
+			var newUserShipping = new UserShipping
+			{
+				UserId = userModel!.UserId,
+				FirstName = model.FirstName,
+				LastName = model.LastName,
+				Email = model.Email,
+				Phone = model.Phone,
+				UnitNo = model.UnitNo,
+				StreetAddress = model.StreetAddress,
+				Suburb = model.Suburb,
+				City = model.City,
+				Province = model.Province,
+				PostalCode = model.PostalCode,
+				Notes = notes
+			};
+			_context.UserShippings.Attach(newUserShipping);
+			_context.UserShippings.Add(newUserShipping);
+			var userToUpdate = _context.Users.FirstOrDefault(u => u.UserId == userModel.UserId);
+
+			if (userToUpdate != null)
+			{
+				userToUpdate.FirstName = model.FirstName;
+				userToUpdate.LastName = model.LastName;
+				userToUpdate.Email = model.Email;
+				userToUpdate.Phone = model.Phone;
+				userToUpdate.Password = password;
+
+				_context.Users.Update(userToUpdate);				
+			}
 			await _context.SaveChangesAsync();
-			return order.OrderId;
+
+			const string cookieName = "wazaware.co.za-auto-sign-in";
+			var cookieOptions = new CookieOptions
+			{
+				Expires = DateTimeOffset.Now.AddDays(7),
+				IsEssential = true
+			};
+			HttpContext.Response.Cookies.Append(cookieName, userToUpdate!.Email!, cookieOptions);
+
+			return RedirectToAction(nameof(PlaceOrder));
+		}
+		[HttpGet]
+		public async Task<IActionResult> CheckoutCurrentUser()
+		{
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			var cartModel = services.LoadCart(userModel!.UserId);
+			if (userModel == null)
+			{
+				ViewBag.isCookie = true;
+			}
+			else
+			{
+				if (userModel.Email!.Contains("@wazaware.co.za"))
+				{
+					ViewBag.isCookie = true;
+				}
+				else
+				{
+					ViewBag.isCookie = false;
+				}
+			}
+			var userView = new UserModelView
+			{
+				FirstName = userModel.FirstName,
+				LastName = userModel.LastName,
+				Email = userModel.Email,
+				Phone = userModel.Phone
+			};
+			var viewModel = new ViewModels
+			{
+				Cart = cartModel,
+				userView = userView
+			};
+			return View(viewModel);
+		}
+		[HttpGet]
+		public async Task<IActionResult> PlaceOrder()
+		{
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			var cartModel = services.LoadCart(userModel!.UserId);
+			if (userModel == null)
+			{
+				ViewBag.isCookie = true;
+			}
+			else
+			{
+				if (userModel.Email!.Contains("@wazaware.co.za"))
+				{
+					ViewBag.isCookie = true;
+				}
+				else
+				{
+					ViewBag.isCookie = false;
+				}
+			}
+			var userView = new UserModelView
+			{
+				FirstName = userModel.FirstName,
+				LastName = userModel.LastName,
+				Email = userModel.Email,
+				Phone = userModel.Phone
+			};
+			var viewModel = new ViewModels
+			{
+				Cart = cartModel,
+				userView = userView
+			};
+			return View(viewModel);
+		}
+		[HttpGet]
+		public IActionResult Payment(string message)
+		{
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			if (userModel == null)
+			{
+				ViewBag.isCookie = true;
+			}
+			else
+			{
+				if (userModel.Email!.Contains("@wazaware.co.za"))
+				{
+					ViewBag.isCookie = true;
+				}
+				else
+				{
+					ViewBag.isCookie = false;
+				}
+			}
+			if (userModel != null && !userModel.Email!.Contains("@wazaware.co.za"))
+			{
+				if(message != null) 
+				{
+					var paymentModel = _context.PaymentModels.Where(s => s.UserId == userModel.UserId).First();
+					var shippingModel = _context.UserShippings.Where(s => s.UserId == userModel.UserId).First();
+					var cartModel = services.LoadCart(userModel!.UserId);
+					var order = _context.Orders.Where(s => s.UserId == userModel.UserId).First();
+					var orderSummary = new OrderSummary
+					{
+						OrderId = order.OrderId,
+						PaymentMethod = paymentModel!.PaymentMethod,
+						OrderTotal = cartModel!.Select(s => s.CartSaleTotalFormatted!).First()
+					};
+					var userView = new UserModelView
+					{
+						FirstName = userModel.FirstName,
+						LastName = userModel.LastName,
+						Email = userModel.Email,
+						Phone = userModel.Phone
+					};
+					string notes = "No Instructions Provided";
+					if (shippingModel.Notes != null)
+						notes = shippingModel.Notes;
+					var shippingView = new UserShippingViewModel
+					{
+						FirstName = shippingModel.FirstName,
+						LastName = shippingModel.LastName,
+						Email = shippingModel.Email,
+						Phone = shippingModel.Phone,
+						UnitNo = shippingModel.UnitNo,
+						StreetAddress = shippingModel.StreetAddress,
+						Suburb = shippingModel.Suburb,
+						City = shippingModel.City,
+						Province = shippingModel.Province,
+						PostalCode = shippingModel.PostalCode,
+						Notes = notes
+					};
+					var view = new ViewModels
+					{
+						userShippingView = shippingView,
+						Payment = paymentModel,
+						Cart = cartModel,
+						Summary = orderSummary,
+						userView = userView
+					};
+					ViewBag.Message = "hasBilling";
+					return View(view);
+				}
+				else
+				{
+					var cartModel = services.LoadCart(userModel!.UserId);
+					var shippingModel = _context.UserShippings.Where(s => s.UserId == userModel.UserId).First();
+					var userView = new UserModelView
+					{
+						FirstName = userModel.FirstName,
+						LastName = userModel.LastName,
+						Email = userModel.Email,
+						Phone = userModel.Phone
+					};
+					string notes = "No Instructions Provided";
+					if (shippingModel.Notes != null)
+						notes = shippingModel.Notes;
+					var shippingView = new UserShippingViewModel
+					{
+						FirstName = shippingModel.FirstName,
+						LastName = shippingModel.LastName,
+						Email = shippingModel.Email,
+						Phone = shippingModel.Phone,
+						UnitNo = shippingModel.UnitNo,
+						StreetAddress = shippingModel.StreetAddress,
+						Suburb = shippingModel.Suburb,
+						City = shippingModel.City,
+						Province = shippingModel.Province,
+						PostalCode = shippingModel.PostalCode,
+						Notes = notes
+					};
+					var view = new ViewModels
+					{
+						Cart = cartModel,
+						userView = userView,
+						userShippingView = shippingView
+					};
+					ViewBag.Message = "noBilling";
+					return View(view);
+				}
+			}
+			else
+			{
+				return RedirectToAction(nameof(CheckoutNewUser), new { message = "Sorry Something Went Wrong!" });
+			}
+		}
+		[HttpPost]
+		public async Task<IActionResult> Payment(PaymentModel model)
+		{
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			var cartModel = services.LoadCart(userModel!.UserId);
+			if (userModel != null && !userModel.Email!.Contains("@wazaware.co.za"))
+			{
+				model.PaymentMethod = "EFT";
+				model.UserId = userModel.UserId;
+				_context.PaymentModels.Attach(model);
+				_context.PaymentModels.Add(model);
+				var userCart = _context.UsersShoppingCarts.FirstOrDefault(u => u.UserId == userModel.UserId);
+	
+				var newOrder = new Orders
+				{
+					UserId = userModel.UserId,
+					ProductId = userCart.ProductId,
+					PaymentId = model.Id,
+					ProductCount = userCart.ProductCount,
+					ShippingPrice = 300,
+					OrderTotal = cartModel.Select(s => s.CartSaleTotalFormatted).First(),
+					isOrderPayed = false,
+					OrderCreatedOn = DateTime.Now
+				};
+				_context.Orders.Attach(newOrder);
+				_context.Orders.Add(newOrder);
+				await _context.SaveChangesAsync();
+				return RedirectToAction(nameof(Payment), new { message = "200" });
+			}
+			else
+			{
+				return RedirectToAction(nameof(CheckoutNewUser), new { message = "Sorry Something Went Wrong!" });
+			}
 		}
 		[HttpPost]
 		public async Task SendEmail(string userEmail, string fullName, decimal orderSubTotal, decimal shippingTotal, decimal fee, decimal orderGrandTotal, int orderId)
@@ -521,49 +414,42 @@ namespace WazaWare.co.za.Controllers
 			}
 
 		}
-		/// <heading></heading>
-		/// <summary>
-		/// ...
-		/// </summary>
-		/// <returns></returns>
-		public async Task<string> SyncUserCookieAsync()
+		public UserModel? CookieTime()
 		{
-			UserManagerService ums = new(_context, _httpContextAccessor);
-			while (true)
+			WebServices services = new(_context, _httpContextAccessor);
+			UserModel? model = null;
+			const string cookieName = "wazaware.co.za-auto-sign-in";
+			var requestCookies = HttpContext.Request.Cookies;
+			var intialRequest = requestCookies[cookieName];
+			var cookieOptions = new CookieOptions
 			{
-				const string cookieName = "WazaWarecookie7";
-				var requestCookies = HttpContext.Request.Cookies;
-				var intialRequest = requestCookies[cookieName];
-				if (intialRequest != null)
-					return intialRequest;
-				var cookieOptions = new CookieOptions
+				Expires = DateTimeOffset.Now.AddDays(7),
+				IsEssential = true
+			};
+			if (intialRequest != null)
+			{
+				if (_context.Users.Any(u => u.Email == intialRequest))
 				{
-					Expires = DateTimeOffset.Now.AddDays(7),
-					IsEssential = true
-				};
-				// Checks for User Cookie
-				if (!requestCookies.ContainsKey(cookieName))
+					model = _context.Users.Where(x => x.Email == intialRequest).FirstOrDefault();
+				}
+				else
 				{
-					var userId = await ums.CreateCookieReferance();
-					// Create Cookie if CreateCookieReferance() was Successful
-					if (userId > 0)
-						HttpContext.Response.Cookies.Append(cookieName, userId.ToString(), cookieOptions);
-					if (userId == 0)
-						continue;
-					else
-						return userId.ToString();
+					var email = services.CreateCookieReferance().Result;
+					HttpContext.Response.Cookies
+						.Append(cookieName, email, cookieOptions);
+					model = _context.Users
+						.Where(x => x.Email == email).FirstOrDefault();
 				}
 			}
-		}
-		/// <heading></heading>
-		/// <summary>
-		/// ...
-		/// </summary>
-		/// <returns></returns>
-		public async Task SetUserModel(int cookieResponse)
-		{
-			UserManagerService ums = new(_context, _httpContextAccessor);
-			_user = await ums.GetCurrentUserModel(cookieResponse);
+			else
+			{
+				var email = services.CreateCookieReferance().Result;
+				HttpContext.Response.Cookies
+					.Append(cookieName, email, cookieOptions);
+				model = _context.Users
+					.Where(x => x.Email == email).FirstOrDefault();
+			}
+			return model;
 		}
 	}
 

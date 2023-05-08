@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
+using wazaware.co.za.Models;
 using WazaWare.co.za.Services;
 using X.PagedList;
 using static NuGet.Packaging.PackagingConstants;
@@ -153,8 +154,95 @@ namespace WazaWare.co.za.Models
 		public string FilterId { get; set; }
 		public string FilterName { get; set; }
 	}
-	public class ProductsViewModel
+
+	public class UserManagerViewModels
 	{
+		//
+		public class UserModelView
+		{
+			[Required]
+			public string FirstName { get; set; }
+			public string LastName { get; set; }
+			[Required]
+			public string Email { get; set; }
+			[Required]
+			public string Phone { get; set; }
+		}
+		//
+		public class UserLoginViewModel
+		{
+			[Required(ErrorMessage = "Email Address is required.")]
+			[EmailAddress]
+			public string? Email { get; set; }
+			[Required]
+			public string? Password { get; set; }
+		}
+		//
+		public class UserRegisterViewModel
+		{
+			[Required]
+			public string FirstName { get; set; }
+			public string LastName { get; set; }
+			[Required]
+			public string Email { get; set; }
+			[Required]
+			public string Phone { get; set; }
+			[Required]
+			[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+			[DataType(DataType.Password)]
+			[Display(Name = "Password")]
+			public string? Password { get; set; }
+			[Required]
+			[DataType(DataType.Password)]
+			[Display(Name = "Confirm password")]
+			[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+			public string? ConfirmPassword { get; set; }
+
+		}
+		//
+		public class UserShippingViewModel
+		{
+			[Required]
+			public string FirstName { get; set; }
+			[Required]
+			public string MiddleName { get; set; }
+			[Required]
+			public string LastName { get; set; }
+			[Required]
+			public string Phone { get; set; }
+			[Required]
+			public string Email { get; set; }
+			public int UnitNo { get; set; }
+			[Required]
+			public string StreetAddress { get; set; }
+			[Required]
+			public string Suburb { get; set; }
+			[Required]
+			public string City { get; set; }
+			[Required]
+			public string Province { get; set; }
+			[Required]
+			public int PostalCode { get; set; }
+			public string Notes { get; set; }
+
+			public string? Password { get; set; }
+
+			public string? ConfirmPassword { get; set; }
+
+		}
+		//public UserLoginViewModel userLoginViewModel { get; set; }
+		//public UserViewModel userViewModel { get; set; }
+		//public UserRegisterViewModel userRegisterModel { get; set; }
+		//public UserShippingViewModel userShippingInfo { get; set; }
+	}
+	public class ViewModels
+	{
+		public PaymentModel Payment { get; set; }
+		public OrderSummary Summary { get; set; }
+		public UserManagerViewModels.UserModelView userView { get; set; }
+		public UserManagerViewModels.UserLoginViewModel userLoginView { get; set; }
+		public UserManagerViewModels.UserRegisterViewModel userRegisterView { get; set; }
+		public UserManagerViewModels.UserShippingViewModel userShippingView { get; set; }
 		public IPagedList<Product> Products { get; set; }
 		public IList<Filter_Sortby> FilterSortBy { get; set; }
 		public IList<Filter_Manufacturer> FilterManufacturer { get; set; }
@@ -164,6 +252,10 @@ namespace WazaWare.co.za.Models
 		public IPagedList<LimitedStockModel> LimitedStock { get; set; }
 		public IPagedList<TrendingProductsModel> TrendingProducts { get; set; }
 		public IList<ProductsInCartModel> Cart { get; set; }
+
+
+
+
 
 	}
 }

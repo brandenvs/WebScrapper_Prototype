@@ -11,13 +11,16 @@ namespace WazaWare.co.za.Models
 		[Required]
 		public int UserId { get; set; }
 		[Required]
-		public int? ProductId { get; set; }
+		public int? PaymentId { get; set; }
 		[Required]
-		public decimal OrderTotalShipping { get; set; }
+		public int ProductId { get; set; }
+		public int ProductCount { get; set; }
 		[Required]
-		public decimal OrderTotalHandlingFee { get; set; }
+		public int? ShippingPrice { get; set; }
 		[Required]
-		public decimal OrderGrandTotal { get; set; }
+		public string? OrderTotal { get; set; }
+		[Required]
+		public Boolean isOrderPayed { get; set; }
 		[Required]
 		public DateTime? OrderCreatedOn { get; set; }
 		

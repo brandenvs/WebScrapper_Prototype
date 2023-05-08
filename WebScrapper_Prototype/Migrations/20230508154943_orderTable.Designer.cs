@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WazaWare.co.za.DAL;
 
@@ -11,9 +12,10 @@ using WazaWare.co.za.DAL;
 namespace WazaWare.co.za.Migrations
 {
     [DbContext(typeof(WazaWare_db_context))]
-    partial class WazaWare_db_contextModelSnapshot : ModelSnapshot
+    [Migration("20230508154943_orderTable")]
+    partial class orderTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

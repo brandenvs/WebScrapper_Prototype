@@ -1,4 +1,4 @@
-﻿@model WazaWare.co.za.Models.ProductsViewModel
+﻿@model WazaWare.co.za.Models.ViewModels
 
 <div class="middle-inner">
 	<div class="container">
@@ -41,10 +41,10 @@
 								</div>
 								<ul class="shopping-list">
 									<li>
-										<a class="h5" href="/User">Login</a>
+										<a class="h5" href="@Url.Action("Login", "User")">Login</a>
 									</li>
 									<li>
-										<a class="h5" href="/User">Register</a>
+										<a class="h5" href="@Url.Action("Register", "User")">Register</a>
 									</li>
 								</ul>
 							</div>
@@ -60,7 +60,7 @@
 										<a class="cart-img" href="/User"><img src="" alt="UserImage" /></a>
 									</li>
 									<li>
-										<a class="h4" href="/User">My Account</a>
+										<a class="h4" href="@Url.Action("Index", "User")">My Account</a>
 									</li>
 									<li>
 										<a class="h5" href="/User">My Orders</a>
@@ -70,7 +70,7 @@
 									</li>
 								</ul>
 								<div class="bottom">
-									<a href="#" onclick="userLogout()" class="btn animate">Logout</a>
+									<a href="#" onclick="@Url.Action("Logout", "User")" class="btn animate">Logout</a>
 								</div>
 							</div>
 						}

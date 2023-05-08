@@ -1,9 +1,6 @@
-﻿@using WazaWare.co.za.Controllers;
-@using X.PagedList.Mvc.Core;
-@using X.PagedList;
-@model WazaWare.co.za.Models.ViewModels
+﻿@model WazaWare.co.za.Models.ViewModels
 @{
-	ViewData["Title"] = "Shopping Cart";
+	ViewData["Title"] = "CheckoutNewUser";
 }
 <!DOCTYPE html>
 <configuration>
@@ -17,7 +14,7 @@
 	</system.webServer>
 </configuration>
 <html lang="zxx">
-<head>		
+<head>
 	<!-- Meta Tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,7 +32,7 @@
 	<link rel="shortcut icon" href="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.comhttps://wazaware.co.za/Media/Logo/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.comhttps://wazaware.co.za/Media/Logo/favicon.ico" type="image/x-icon">
 	<!-- Title Tag  -->
-	<title>Shopping Cart</title>
+	<title>Checkout</title>
 	<!-- Web Font -->
 	<link href="https://fonts.googleapis.com/css?family=Lato:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
 	<!-- StyleSheet -->
@@ -75,13 +72,6 @@
 	<!-- Site CSS -->
 	<link rel="stylesheet" href="~/css/site.css">
 	<style type="text/css">
-		.cardChanges{
-			display: flex;
-			flex-wrap: wrap;
-			flex-direction: row;
-			justify-content: space-evenly;
-			margin:10px;
-		}
 		/* hide mobile div by default */
 		.mobile {
 			display: none;
@@ -108,6 +98,18 @@
 				display: block;
 			}
 		}
+
+		.section-divider {
+			border-top: 1px solid black;
+			padding-top: 20px;
+			margin-top: 20px;
+		}
+
+		.div-divider {
+			border-right: 1px solid black;
+			padding-right: 10px;
+			margin-right: 10px;
+		}
 	</style>
 </head>
 <body class="js">
@@ -121,11 +123,12 @@
 		</div>
 	</div>
 	<!-- // -->
-	<!-- Scroller -->
+	<!-- Scroll -->
 	<div id="progressBarContainer">
 		<div id="progressBar"></div>
 	</div>
 	<!-- // -->
+	<!-- Header Shop -->
 	<div class="header shop" style="background-color:#FFF5E1;">
 		<!-- Topbar // Desktop Only -->
 		<div class="desktop">
@@ -144,6 +147,7 @@
 		</div>
 		<!-- // -->
 	</div>
+	<!-- // -->
 	<!-- Breadcrumbs -->
 	<div class="breadcrumbs">
 		<div class="container">
@@ -151,9 +155,8 @@
 				<div class="col-12">
 					<div class="bread-inner">
 						<ul class="bread-list">
-							<li><a href="/">Home<i class="ti-arrow-right"></i></a></li>
-							<li><a href="/Shop">Shop<i class="ti-arrow-right"></i></a></li>
-							<li class="active"><a href="/Shop/Cart">Cart</a></li>
+							<li><a href="/Shop/Cart">Cart<i class="ti-arrow-right"></i></a></li>
+							<li class="active"><a href="/Checkout">Checkout</a></li>
 						</ul>
 					</div>
 				</div>
@@ -161,162 +164,169 @@
 		</div>
 	</div>
 	<!-- End Breadcrumbs -->
+	<!-- Start Checkout -->
+	<div id="loading-bar" style="display: none;">
+		<section class="shop checkout section">
+			<h4>Please wait while we process your order...</h4>
+		</section>
+	</div>
 	<!-- Shopping Cart -->
 	@if (Model.Cart.Count() > 0)
 	{
-		<section class="product-area shop-sidebar shop section">
+		<section id="123Section" class="product-area shop-sidebar shop section">
 			<div class="container" style="max-width:100%">
-				<div class="row">			
-						<div class="col-12">
-							<p class="fs-4 h4" style="padding:0 10px;">
-								My Shopping Cart
-							</p>	
-						</div>
-					</div>				
-					<div id="cartmain" class="row section-divider">
-						<!-- Shop Product Grid -->
-						<div class="col-lg-7 col-md-4 col-12">
-							<!-- Latest Products: Header -->
-							<div class="col-12" style="padding: 0;">
-								<div class="shop-top curvedEdges">
-									<div class="content" style="width:100%;">
-										@if(Model.Cart.Select(s => s.ShippingCost).First() != 0)
-										{
-											<div class="row">
-												<div class="col">
-													<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-													<lord-icon src="https://cdn.lordicon.com/uetqnvvg.json"
-															   trigger="loop-on-hover"
-															   delay="1000"
-															   colors="primary:#121331,secondary:#f7941d"
-															   style="width:100px;height:100px">
-													</lord-icon>
-												</div>
-												<div class="col" style="padding:25px">
-													<p class="text-sm-start text-md-start text-lg-center">
-														<span style="color:#ff6b6b; font-weight:500;">
-															GET FREE SHIPPING
-														</span>
-													</p>
-													<h3 class="text-sm-start text-md-start text-lg-center">
-														Spend @Model.Cart.Select(s => s.TryGetFreeShippingFormatted).First() and We Cover Your Shipping Costs
-													</h3>
-												</div>
+				<div class="row">
+					<div class="col-12">
+						<p class="fs-4 h4" style="padding:0 10px;">
+							Do you have everything you need?
+						</p>
+					</div>
+				</div>
+				<div id="cartmain" class="row section-divider">
+					<!-- Shop Product Grid -->
+					<div class="col-lg-7 col-md-4 col-12">
+						<!-- Latest Products: Header -->
+						<div class="col-12" style="padding: 0;">
+							<div class="shop-top curvedEdges">
+								<div class="content" style="width:100%;">
+									@if (Model.Cart.Select(s => s.ShippingCost).First() != 0)
+									{
+										<div class="row">
+											<div class="col">
+												<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+												<lord-icon src="https://cdn.lordicon.com/uetqnvvg.json"
+														   trigger="loop-on-hover"
+														   delay="1000"
+														   colors="primary:#121331,secondary:#f7941d"
+														   style="width:100px;height:100px">
+												</lord-icon>
 											</div>
-										}
-										else
-										{
-											<div class="row">
-												<div class="col">
-													<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-													<lord-icon src="https://cdn.lordicon.com/uetqnvvg.json"
-															   trigger="loop-on-hover"
-															   delay="1000"
-															   colors="primary:#121331,secondary:#f7941d"
-															   style="width:100px;height:100px">
-													</lord-icon>
-												</div>
-												<div class="col">
-													<p class="text-sm-start text-md-start text-lg-center">
-														<span style="color:#ff6b6b; font-weight:500;">
-															FREE SHIPPING
-														</span>
-													</p>
-													<h3 class="text-sm-start text-md-start text-lg-center">
-														Your Shipping Costs are Covered Thats Means Its FREE!
-													</h3>
-												</div>
+											<div class="col" style="padding:25px">
+												<p class="text-sm-start text-md-start text-lg-center">
+													<span style="color:#ff6b6b; font-weight:500;">
+														GET FREE SHIPPING
+													</span>
+												</p>
+												<h3 class="text-sm-start text-md-start text-lg-center">
+													Spend @Model.Cart.Select(s => s.TryGetFreeShippingFormatted).First() and We Cover Your Shipping Costs
+												</h3>
 											</div>
-										}
-									</div>
+										</div>
+									}
+									else
+									{
+										<div class="row">
+											<div class="col">
+												<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
+												<lord-icon src="https://cdn.lordicon.com/uetqnvvg.json"
+														   trigger="loop-on-hover"
+														   delay="1000"
+														   colors="primary:#121331,secondary:#f7941d"
+														   style="width:100px;height:100px">
+												</lord-icon>
+											</div>
+											<div class="col">
+												<p class="text-sm-start text-md-start text-lg-center">
+													<span style="color:#ff6b6b; font-weight:500;">
+														FREE SHIPPING
+													</span>
+												</p>
+												<h3 class="text-sm-start text-md-start text-lg-center">
+													Your Shipping Costs are Covered Thats Means Its FREE!
+												</h3>
+											</div>
+										</div>
+									}
 								</div>
 							</div>
-							<!-- Cart Products: Grid -->
-							<div class="row">
-								@foreach (var product in Model.Cart)
-								{
-									<div class="col-lg-6 col-md-9 col-12">
-										<div class="single-product contain-fit">
-											<div class="product-img contain-fit">
-												<a href="/Shop/Product/@product.ProductId">
-													<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" class="contain-fit" />
-												</a>
-												<div class="button-head">
-													<div class="product-action">
-														<a href="#0" class="remove" title="Remove this item" onclick="loadDeleteCart('@product.ProductId')">
-															<i class="fa fa-remove"></i><span>Remove Item From Cart</span></a>
-													</div>
-												</div>
-											</div>
-											<div class="product-content">
-												<h3><a href="/Shop/Product/@product.ProductId">@product.ProductName!.Substring(0,35) ...</a></h3>
-												<div class="product-price">
-													<span style="">Quantity : @Model.Cart.Select(s => s.ProductCount).First()</span>
-												</div>
-												<div class="product-price">
-													<span style="">Price : @product.ProductTotalFormatted</span>
-												</div>
-												<div class="product-price">
-													<span style="font-weight:800">You Save : @product.ProductBaseSaleDiffFormatted</span>
+						</div>
+						<!-- Cart Products: Grid -->
+						<div class="row">
+							@foreach (var product in Model.Cart)
+							{
+								<div class="col-lg-6 col-md-9 col-12">
+									<div class="single-product contain-fit">
+										<div class="product-img contain-fit">
+											<a href="/Shop/Product/@product.ProductId">
+												<img src="@Url.Action("GetImage", "Backend", new { id = product.ProductId })" alt="@product.ProductName" class="contain-fit" />
+											</a>
+											<div class="button-head">
+												<div class="product-action">
+													<a href="#0" class="remove" title="Remove this item" onclick="loadDeleteCart('@product.ProductId')">
+														<i class="fa fa-remove"></i><span>Remove Item From Cart</span>
+													</a>
 												</div>
 											</div>
 										</div>
+										<div class="product-content">
+											<h3><a href="/Shop/Product/@product.ProductId">@product.ProductName!.Substring(0,35) ...</a></h3>
+											<div class="product-price">
+												<span style="">Quantity : @Model.Cart.Select(s => s.ProductCount).First()</span>
+											</div>
+											<div class="product-price">
+												<span style="">Price : @product.ProductTotalFormatted</span>
+											</div>
+											<div class="product-price">
+												<span style="font-weight:800">You Save : @product.ProductBaseSaleDiffFormatted</span>
+											</div>
+										</div>
 									</div>
-								}
-							</div>
-							<!-- // BREAK // -->
-							<br>
+								</div>
+							}
 						</div>
-						<!-- Side Cards -->
-						<div class="col-lg-5 col-md-6 col-12">
-							<div class="card text-bg-dark" style="margin:10px;">
-								<div class="card-header text-center">
-									<p class="fs-2 h2">
-									Checkout Cart
-									</p>
-								</div>
-								<div class="card-body">
-									@if (Model.Cart.Select(s => s.ShippingCost).First() != 0)
-									{
-										<p class="fs-4 h4">
-											Shipping:<br>
-											<span>
-												@Model.Cart.Select(s => s.ShippingCostFormatted).First()
-											</span>											
-										</p>
-										<br>
-									}
+						<!-- // BREAK // -->
+						<br>
+					</div>
+					<!-- Side Cards -->
+					<div class="col-lg-5 col-md-6 col-12">
+						<div class="card text-bg-dark" style="margin:10px;">
+							<div class="card-header text-center">
+								<p class="fs-2 h2">
+									Finalize Cart & Payment
+								</p>
+							</div>
+							<div class="card-body">
+								@if (Model.Cart.Select(s => s.ShippingCost).First() != 0)
+								{
 									<p class="fs-4 h4">
-										Your Total WAS:<br>
-										<span class="text-decoration-line-through" style="color:red; text-decoration:line-through;">
-											@Model.Cart.Select(s => s.CartBaseTotalFormatted).First()
+										Shipping:<br>
+										<span>
+											@Model.Cart.Select(s => s.ShippingCostFormatted).First()
 										</span>
 									</p>
 									<br>
-									<p class="fs-4 h4">
-										You Save:<br>
-										<span style="color:forestgreen;">
-											@Model.Cart.Select(s => s.CartBaseSaleDiffFormatted).First()
-										</span>
-									</p>
-									<br>
-									<p class="fs-4 h4">
-										Your Total NOW:<br>
-										<span style="text-decoration-line:underline;font-weight:700;">
-											@Model.Cart.Select(s => s.CartSaleTotalFormatted).First()
-										</span>
-									</p>
-									<br>
-								</div>
+								}
+								<p class="fs-4 h4">
+									Your Total WAS:<br>
+									<span class="text-decoration-line-through" style="color:red; text-decoration:line-through;">
+										@Model.Cart.Select(s => s.CartBaseTotalFormatted).First()
+									</span>
+								</p>
+								<br>
+								<p class="fs-4 h4">
+									You Save:<br>
+									<span style="color:forestgreen;">
+										@Model.Cart.Select(s => s.CartBaseSaleDiffFormatted).First()
+									</span>
+								</p>
+								<br>
+								<p class="fs-4 h4">
+									Your Total NOW:<br>
+									<span style="text-decoration-line:underline;font-weight:700;">
+										@Model.Cart.Select(s => s.CartSaleTotalFormatted).First()
+									</span>
+								</p>
+								<br>
+							</div>
 
-								<div class="card-footer text-center">
-									<button onclick="" type="button" class="btn-outline-info fs-4 h4" style="padding:5px;">Checkout Cart</button>
-									<button onclick="" type="button" class="btn-outline-info fs-4 h4" style="padding:5px;">Continue Shopping</button>
-								</div>
+							<div class="card-footer text-center">
+								<a href="@Url.Action("Payment", "Checkout")" type="button" class="btn-outline-success fs-4 h4" style="padding:5px;">Proceed with Payment</a>
+								<button onclick="" type="button" class="btn-outline-info fs-4 h4" style="padding:5px;">Forgot Something?</button>
 							</div>
 						</div>
 					</div>
-				</div>		
+				</div>
+			</div>
 		</section>
 	}
 	else
@@ -348,6 +358,7 @@
 		</section>
 	}
 	<!-- // -->
+	<!--/ End Checkout -->
 	<!-- Shop Services Partial View-->
 	<partial name="_Services" />
 	<!-- // -->
@@ -393,7 +404,7 @@
 	<script src="~/js/active.js"></script>
 
 	<!-- Custom Scripts -->
-	<!-- Load ProgressBar -->
+	<!--Load Scrolling Bar-->
 	<script type="text/javascript">
 		const progressBarContainer = document.querySelector("#progressBarContainer");
 		const progressBar = document.querySelector("#progressBar");
@@ -426,73 +437,40 @@
 	</script>
 	<!--Functions-->
 	<script type="text/javascript">
-		// [Alertify]
-		// Prompt user to accept or decline cookies
-		function fireOncePerSession1() {
-			if (!sessionStorage.getItem('hasFired1')) {
-				$(document).ready(function () {
-				});
-				sessionStorage.setItem('hasFired1', true);
-			}
-		}
-
-		// [Alertify] & [POST]
-		// If user is not subscribed then prompt user with pop-up (Delay: 25 secs)
-		function SendSubAlert() {
-			setTimeout(function () {
-				alertify.prompt('Subscribe to Our Weekly Newsletter and get 10% Off Your First Order!', ' Enter Your Email', ' ',
-					function (evt, value) {
-						$.ajax({
-							type: 'POST',
-							url: '/Home/UpdateSubscribedStatus',
-							data: { email: value },
-							success: function () {
-								sessionStorage.setItem('hasFired2', true);
-							},
-							error: function () {
-								console.error('Error saving email!');
-							}
-						});
-					},
-					function () { alertify.error('Cancel') });
-			}, 25000);
-		}
-		
+		// Hide the loading bar on page load
+		$(document).ready(function () {
+			$('#loading-bar').hide();
+			$('#123Section').show();
+		});
 		// [GET]
-		// Load Shopping Cart
-		function loadCart() {
-			let basketStart = 1;
+		// Proceed to checkout
+		function proceedToCheckout() {
+			let startPlaceOrder = 1;
+			// Show the loading bar
+			$('#loading-bar').show();
+			$('#123Section').hide();
+			// Make an Ajax call to the server to start the processing
 			$.ajax({
-				type: 'GET',
-				url: '/Shop/Index',
-				data: { basketStart: basketStart },
+				type: "POST",
+				url: '/Checkout/Proceed',
+				data: { startPlaceOrder: startPlaceOrder },
 				success: function (r) {
-					$("#shoppingbasket").html($(r).find("#shoppingbasket").html());
-				},
-				error: function (e) {
-					alertify.error('Error: JavaScript Function (loadCart)');
-					alertify.error(e);
-				}
-			});
-		}
+					alertify.notify('Order Created!', 'success', 2, function () { console.log('dismissed'); });
+					// Hide the loading bar when the processing is complete
+					$('#loading-bar').hide();
 
-		// [POST]
-		// Delete from Cart
-		function loadDeleteCart(productId) {
-			$.ajax({
-				type: 'POST',
-				url: '/Shop/DeleteConfirmed',
-				data: { BasketRemovePID: productId },
-				success: function (r) {
-					$("#shoppingbasket").html($(r).find("#shoppingbasket").html());
-					alertify.notify('Removed from Cart!', 'custom', 2, function () { console.log('dismissed'); });
+					// Do something with the server response, if necessary
+					alert('Thank You. Your Order has been placed. Please check your email!');
+					window.location.href = '/Orders/Index';
 				},
 				error: function (e) {
-					alertify.error('Error: JavaScript Function (loadAddToCart)');
-					alertify.error(e);
+					alertify.error('Error: You have entered some invalid information');
+					window.location.href = '/Shop/Index';
 				}
 			});
 		}
 	</script>
 </body>
+
 </html>
+

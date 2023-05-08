@@ -425,7 +425,7 @@ namespace WazaWare.co.za.Services
 				$"Successfully Scraped {productUrls.Count} Children!");
 			Console.WriteLine();
 			Console.Write(
-				$"View Products(y/n)?");
+				$"ViewModels Products(y/n)?");
 			string? consoleInput = Console.ReadLine();
 			if (string.IsNullOrEmpty(consoleInput) || consoleInput != null && (consoleInput.ToLower().Equals("y") || consoleInput.ToLower().Equals("yes")))
 				await ViewProducts(productUrls);

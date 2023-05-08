@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
 using System.Text;
+using WazaWare.co.za.DAL;
 using WazaWare.co.za.Mappers;
 using WazaWare.co.za.Models;
 
@@ -7,7 +8,7 @@ namespace WazaWare.co.za.Services
 {
     public class ProductService
     {
-        public List<Product> ReadCSVFileSingle(string path)
+		public List<Product> ReadCSVFileSingle(string path)
         {
             Console.WriteLine(path);
             try

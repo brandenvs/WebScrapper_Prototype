@@ -9,12 +9,13 @@ using Microsoft.AspNetCore.Identity;
 using WazaWare.co.za.Services;
 using System.Configuration;
 using System.Linq;
-using static WazaWare.co.za.Models.ViewModels.PrimaryModel;
 using System.Collections;
 using System.Data.Entity;
 using System.Globalization;
 using System.Web.WebPages;
 using Microsoft.AspNetCore.Html;
+using wazaware.co.za.Services;
+using static WazaWare.co.za.Models.UserManagerViewModels;
 
 namespace WazaWare.co.za.Controllers
 {
@@ -23,9 +24,6 @@ namespace WazaWare.co.za.Controllers
 		private readonly ILogger<ShopController> _logger;
 		private readonly WazaWare_db_context _context;
 		private readonly IHttpContextAccessor _httpContextAccessor;
-		private static int basketCounter;
-		private static UserModel? _user;
-		private static Boolean _isCookieUser;
 		private static List<Product> products;
 
 		public ShopController(ILogger<ShopController> logger, WazaWare_db_context context, IHttpContextAccessor httpContextAccessor)
@@ -33,7 +31,7 @@ namespace WazaWare.co.za.Controllers
 			_logger = logger;
 			_context = context;
 			_httpContextAccessor = httpContextAccessor;
-			ViewBag.isCookie = _isCookieUser;
+
 		}
 		/// <heading></heading>
 		/// <summary>
@@ -41,21 +39,38 @@ namespace WazaWare.co.za.Controllers
 		/// </summary>
 		/// <returns></returns>
 		[HttpGet]
-		public async Task<IActionResult> Index(string search, int productId, int actionCode, int loadCode)
+		public async Task<IActionResult> Index(string search, int productId, int actionCode, int loadCode, string message)
 		{
-			var cookieResponse = await SyncUserCookieAsync();
-			if (cookieResponse != null)
-				// Sets User Model so that {_user} can be called
-				await SetUserModel(int.Parse(cookieResponse));
-			/// Update ViewBags Appropriately ///				
-			// Check if user is a Cookie or Registered
-			if (!_user!.Email!.Contains("WazaWareCookie6.542-Email"))
-				_isCookieUser = false;
+			ViewBag.IsCookie = false;
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			var cartModel = services.LoadCart(userModel!.UserId);
+			var userView = new UserModelView
+			{
+				FirstName = userModel.FirstName,
+				LastName = userModel.LastName,
+				Email = userModel.Email,
+				Phone = userModel.Phone
+			};
+			if (userModel == null)
+			{
+				ViewBag.isCookie = true;
+			}
 			else
-				_isCookieUser = true;
-			ViewBag.isCookie = _isCookieUser;
-			if (!_isCookieUser)
-				ViewBag.FirstName = _user.FirstName;
+			{
+				if (userModel.Email!.Contains("@wazaware.co.za"))
+				{
+					ViewBag.isCookie = true;
+				}
+				else
+				{
+					ViewBag.isCookie = false;
+				}
+			}
+			if (message != null)
+			{
+				ViewBag.Message = message;
+			}
 			// Search For Products
 			if (!string.IsNullOrEmpty(search))
 				return RedirectToAction("Products", new { search });
@@ -65,7 +80,7 @@ namespace WazaWare.co.za.Controllers
 				switch (actionCode)
 				{
 					case 1:
-						LoadShoppingCart(_user.UserId);
+						services.LoadCart(userModel!.UserId);
 						break;
 					// Add Product to Shopping Cart
 					case 5:
@@ -80,10 +95,10 @@ namespace WazaWare.co.za.Controllers
 						break;
 				}
 			}
-			while (_user != null)
+			while (userModel != null)
 			{
 				// Load Shopping Cart
-				var userShoppingCart = LoadShoppingCart(_user.UserId).ToList();
+				var userShoppingCart = services.LoadCart(userModel.UserId).ToList();
 
 				// Load Latest Arrivals
 				var latestArrivalProducts = _context.Products
@@ -138,13 +153,14 @@ namespace WazaWare.co.za.Controllers
 
 					}).ToPagedList(1, 8);
 
-				// View Model to return
-				var viewModel1 = new ProductsViewModel
+				// ViewModels Model to return
+				var viewModel1 = new ViewModels
 				{
 					LatestArrivals = latestArrivalProducts,
 					LimitedStock = limitedStockProducts,
 					TrendingProducts = trendingProducts,
-					Cart = userShoppingCart		
+					Cart = userShoppingCart,
+					userView = userView
 				};
 				return View(viewModel1);
 			}
@@ -156,59 +172,51 @@ namespace WazaWare.co.za.Controllers
 		/// <START>
 		/// WHILE true:
 		///		IF User IS NOT Null:
-		///			Display View : Appropriate Cookie ViewBage
+		///			Display ViewModels : Appropriate Cookie ViewBage
 		///			LoadShoppingCart(userId) into Variable userShoppingCart
 		///			RETURN[BREAK WHILE LOOP // STOP] viewModel { ProductsInCartModel = userShoppingCart }
 		///		ELSE:
 		///			User requires server to re-sync cookies : Trying Again
 		///			[RE-SYNC COOKIES WITH SEVER]
 		///			Sync Current User & Cookies WITH Controller
-		///			Display View : Appropriate Cookie ViewBage
+		///			Display ViewModels : Appropriate Cookie ViewBage
 		///			CONTINUE
 		///	</STOP>
 		[HttpGet]
 		public async Task<IActionResult> Cart()
 		{
-			while (true)
+			ViewBag.IsCookie = false;
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			var cartModel = services.LoadCart(userModel!.UserId);
+			var userView = new UserModelView
 			{
-				// Check if user requires cookies to be synced with sever
-				if (_user != null)
+				FirstName = userModel.FirstName,
+				LastName = userModel.LastName,
+				Email = userModel.Email,
+				Phone = userModel.Phone
+			};
+			if (userModel == null)
+			{
+				ViewBag.isCookie = true;
+			}
+			else
+			{
+				if (userModel.Email!.Contains("@wazaware.co.za"))
 				{
-					// Check if user is a Cookie or Registered
-					if (!_user!.Email!.Contains("WazaWareCookie6.542-Email"))
-						_isCookieUser = false;
-					else
-						_isCookieUser = true;
-					// Send Cookie to View
-					ViewBag.isCookie = _isCookieUser;
-					Console.WriteLine("USER Successfully Loaded!");
-					// Load User Shopping Cart into Variable
-					var userShoppingCart = LoadShoppingCart(_user.UserId);
-					var viewModel = new ProductsViewModel
-					{
-						Cart = userShoppingCart
-					};
-					return View(viewModel);
+					ViewBag.isCookie = true;
 				}
 				else
 				{
-					// User requires server to re-sync cookies : Trying Again
-					Console.WriteLine("USER IS NULL : Syncing User with server side Cookies and Trying Again...");
-					var cookieResponse = await SyncUserCookieAsync();
-					if (cookieResponse != null)
-						// Sets User Model so that {_user} can be called
-						await SetUserModel(int.Parse(cookieResponse));
-					/// Update ViewBags Appropriately ///				
-					// Check if user is a Cookie or Registered
-					if (!_user!.Email!.Contains("WazaWareCookie6.542-Email"))
-						_isCookieUser = false;
-					else
-						_isCookieUser = true;
-					// Send Cookie to View
-					ViewBag.isCookie = _isCookieUser;
-					continue;
+					ViewBag.isCookie = false;
 				}
-			}
+			}			
+			var viewModel = new ViewModels
+			{
+				Cart = cartModel,
+				userView = userView
+			};
+			return View(viewModel);
 		}
 		/// <heading></heading>
 		/// <summary>
@@ -218,25 +226,40 @@ namespace WazaWare.co.za.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Products(string search, string category, string manufacturer, int page, string filterSort, string filterMan)
 		{
-			var cookieResponse = await SyncUserCookieAsync();
-			if (cookieResponse != null)
-				await SetUserModel(int.Parse(cookieResponse)); // Sets User Model so that {_user} can be called				
-															   // Check if user is a Cookie or Registered
-			if (!_user!.Email!.Contains("WazaWareCookie6.542-Email"))
-				_isCookieUser = false;
+			ViewBag.IsCookie = false;
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			var cartModel = services.LoadCart(userModel!.UserId);
+			var userView = new UserModelView
+			{
+				FirstName = userModel.FirstName,
+				LastName = userModel.LastName,
+				Email = userModel.Email,
+				Phone = userModel.Phone
+			};
+			if (userModel == null)
+			{
+				ViewBag.isCookie = true;
+			}
 			else
-				_isCookieUser = true;
-			ViewBag.isCookie = _isCookieUser;
-			if (!_isCookieUser)
-				ViewBag.FirstName = _user.FirstName;
-			var viewproducts = new List<Product>();
+			{
+				if (userModel.Email!.Contains("@wazaware.co.za"))
+				{
+					ViewBag.isCookie = true;
+				}
+				else
+				{
+					ViewBag.isCookie = false;
+				}
+			}
+				var viewproducts = new List<Product>();
 			// Load Filters
 			var viewSortBy = new List<Filter_Sortby>();
 			var viewManufacturers = new List<Filter_Manufacturer>();
 			var viewSubCategories = new List<Filter_Category>();
 			Dictionary<string, string> manufactorsDict = new();
 			// Load Shopping Cart
-			var userShoppingCart = LoadShoppingCart(_user.UserId).ToList();
+			var userShoppingCart = services.LoadCart(userModel!.UserId).ToList();
 			// Handles Search Directs & Results
 			if (search != null)
 			{
@@ -489,12 +512,13 @@ namespace WazaWare.co.za.Controllers
 				.GroupBy(p => p.ProductCategory!.ToLower())
 				.Select(g => g.Take(10))
 				.SelectMany(g => g).ToPagedList(page, items);
-			var viewModel = new ProductsViewModel
+			var viewModel = new ViewModels
 			{
 				Products = viewProducts,
 				Cart = userShoppingCart,
 				FilterSortBy = viewSortBy,
-				FilterManufacturer = viewManufacturers
+				FilterManufacturer = viewManufacturers,
+				userView = userView
 				//FilterCategory = viewSubCategories
 			};
 			return View(viewModel);
@@ -507,24 +531,40 @@ namespace WazaWare.co.za.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Product(int id)
 		{
-			var cookieResponse = await SyncUserCookieAsync();
-			if (cookieResponse != null)
-				await SetUserModel(int.Parse(cookieResponse)); // Sets User Model so that {_user} can be called
-			/// Update ViewBags Appropriately ///				
-			// Check if user is a Cookie or Registered
-			if (!_user!.Email!.Contains("WazaWareCookie6.542-Email"))
-				_isCookieUser = false;
+			ViewBag.IsCookie = false;
+			WebServices services = new(_context, _httpContextAccessor);
+			var userModel = CookieTime();
+			var cartModel = services.LoadCart(userModel!.UserId);
+			var userView = new UserModelView
+			{
+				FirstName = userModel.FirstName,
+				LastName = userModel.LastName,
+				Email = userModel.Email,
+				Phone = userModel.Phone
+			};
+			if (userModel == null)
+			{
+				ViewBag.isCookie = true;
+			}
 			else
-				_isCookieUser = true;
-			ViewBag.isCookie = _isCookieUser;
+			{
+				if (userModel.Email!.Contains("@wazaware.co.za"))
+				{
+					ViewBag.isCookie = true;
+				}
+				else
+				{
+					ViewBag.isCookie = false;
+				}
+			}
 			// Load Shopping Cart
-			var userShoppingCart = LoadShoppingCart(_user.UserId).ToList();
+			var userShoppingCart = services.LoadCart(userModel!.UserId).ToList();
 
 			var product = _context.Products.Where(p => p.ProductId!.Equals(id)).FirstOrDefault(); 
 			if (product != null)
 			{
 				ViewBag.Oops = false;
-				var viewModel = new ProductsViewModel
+				var viewModel = new ViewModels
 				{
 					Cart = userShoppingCart,
 					Product = product
@@ -534,9 +574,10 @@ namespace WazaWare.co.za.Controllers
 			else
 			{
 				ViewBag.Oops = true;
-				var viewModel = new ProductsViewModel
+				var viewModel = new ViewModels
 				{
-					Cart = userShoppingCart
+					Cart = userShoppingCart,
+					userView = userView
 				};
 				return View(viewModel);
 			}
@@ -546,91 +587,12 @@ namespace WazaWare.co.za.Controllers
 		/// ...
 		/// </summary>
 		/// <returns></returns>
-		[HttpGet]
-		public IList<ProductsInCartModel> LoadShoppingCart(int userId)
-		{
-			// Query Database for User's Shopping Cart using variable userId
-			// Convert Database response to a List using : .ToList()
-			var userShoppingCart = _context.UsersShoppingCarts
-				.Where(c => c.UserId == userId)
-				.ToList();
-			// Select Product Ids in Shopping Cart List
-			var productIds = userShoppingCart
-				.Select(c => c.ProductId)
-				.ToList();
-			// Query Database for Products related to User's Shopping Cart
-			// Convert Database response to a List using : .ToList()
-			var products = _context.Products
-				.Where(p => productIds.Contains(p.ProductId))
-				.ToList();
-			// Join Products & Shopping Cart Lists
-			var joint = userShoppingCart
-				.Join(products, c => c.ProductId, p => p.ProductId, (c, p) => new { ShoppingCart = c, Product = p })
-				.ToList();
-			// Queue Product Total Values 
-			Queue<decimal?> totalBase = new();
-			Queue<decimal?> totalSale = new();
-			foreach (var product in joint)
-			{
-				totalBase.Enqueue(product.Product.ProductPriceBase * product.ShoppingCart.ProductCount);
-				totalSale.Enqueue(product.Product.ProductPriceSale * product.ShoppingCart.ProductCount);
-			}
-			// Calculations & Building View Model:
-			decimal? shippingThreshold = 1500;
-			decimal? shippingCost = 0;
-			decimal? tryGetFreeShipping = 0;
-			// Calculate : Shipping Costs
-			if (totalSale.Sum() < shippingThreshold)
-			{
-				shippingCost = 450;
-				tryGetFreeShipping = 1500 - totalSale.Sum();
-			}
-			// Calculate Sum : Cart Base Total
-			decimal? cartBaseTotal = totalBase.Sum() + shippingCost;
-			// Calculate Sum : Cart Sale Total
-			decimal? cartSaleTotal = totalSale.Sum() + shippingCost;
-			// Calculate Difference : Cart Base Total - Cart Sale Total
-			decimal? cartBaseSaleDiff = cartBaseTotal - cartSaleTotal;
-			// Build Model
-			var productsInCart = products
-				.Select(x => new ProductsInCartModel
-				{
-					ProductId = x.ProductId,
-					ProductName = x.ProductName,
-					ProductPriceBase = x.ProductPriceBase,
-					ProductPriceSale = x.ProductPriceSale,
-					ProductImageUrl = x.ProductImageUrl,
-					// Count : Quantity of a Product in Cart
-					ProductCount = userShoppingCart
-					.Where(p => p.ProductId == x.ProductId)
-					.Select(s => s.ProductCount)
-					.First(),
-					// Calculate : Products Sale Total
-					ProductTotal = userShoppingCart
-					.Where(p => p.ProductId == x.ProductId)
-					.Select(s => s.ProductCount)
-					.First() * x.ProductPriceSale,
-					ProductBaseSaleDiff = x.ProductPriceBase - x.ProductPriceSale,
-					CartBaseTotal = cartBaseTotal,
-					CartSaleTotal = cartSaleTotal,
-					CartBaseSaleDiff = cartBaseSaleDiff,
-					ShippingCost = shippingCost,
-					TryGetFreeShipping = tryGetFreeShipping,
-					ProductPic = x.ProductPic
-				});
-			// Return User's Cart Information in a List Data Type to Relevant Action Method
-			return productsInCart.ToList();
-		}
-		/// <heading></heading>
-		/// <summary>
-		/// ...
-		/// </summary>
-		/// <returns></returns>
 		[HttpPost]
 		public async Task AddToCart(int productId)
 		{
+			var user = CookieTime();
 			var product = _context.Products.Where(p => p.ProductId.Equals(productId)).First();
-			var existingEntry = _context.UsersShoppingCarts.FirstOrDefault(c => c.UserId == _user!.UserId && c.ProductId == productId);
+			var existingEntry = _context.UsersShoppingCarts.FirstOrDefault(c => c.UserId == user!.UserId && c.ProductId == productId);
 			if (existingEntry != null)
 			{
 				existingEntry.ProductCount += 1;
@@ -642,7 +604,7 @@ namespace WazaWare.co.za.Controllers
 			{
 				var newEntry = new UserShoppingCart
 				{
-					UserId = _user!.UserId,
+					UserId = user!.UserId,
 					ProductId = productId,
 					ProductCount = 1,
 					ProductTotal = product.ProductPriceSale,
@@ -666,7 +628,7 @@ namespace WazaWare.co.za.Controllers
 			//{
 			//	var updateProductInShoppingCart = new UserShoppingCart
 			//	{
-			//		UserId = _user!.UserId,
+			//		UserId = user!.UserId,
 			//		ProductId = productId,
 			//		ProductCount = count,
 			//		CartEntryDate = DateTime.Now
@@ -678,7 +640,7 @@ namespace WazaWare.co.za.Controllers
 			//{
 			//	var addProductToShoppingCart = new UserShoppingCart
 			//	{
-			//		UserId = _user!.UserId,
+			//		UserId = user!.UserId,
 			//		ProductId = productId,
 			//		CartEntryDate = DateTime.Now
 			//	};
@@ -695,8 +657,9 @@ namespace WazaWare.co.za.Controllers
 		[HttpPost]
 		public async Task RemoveFromCart(int productId)
 		{
+			var user = CookieTime();
 			var userShoppingCart = _context.UsersShoppingCarts
-				.Where(s => s.UserId == _user!.UserId && s.ProductId == productId).First();
+				.Where(s => s.UserId == user!.UserId && s.ProductId == productId).First();
 			_context.UsersShoppingCarts.Attach(userShoppingCart);
 			_context.Remove(userShoppingCart);
 			await _context.SaveChangesAsync();
@@ -716,50 +679,6 @@ namespace WazaWare.co.za.Controllers
 		/// ...
 		/// </summary>
 		/// <returns></returns>
-		public async Task<string> SyncUserCookieAsync()
-		{
-			UserManagerService ums = new(_context, _httpContextAccessor);
-			while (true)
-			{
-				const string cookieName = "WazaWarecookie7";
-				var requestCookies = HttpContext.Request.Cookies;
-				var intialRequest = requestCookies[cookieName];
-				if (intialRequest != null)
-					return intialRequest;
-				var cookieOptions = new CookieOptions
-				{
-					Expires = DateTimeOffset.Now.AddDays(7),
-					IsEssential = true
-				};
-				// Checks for User Cookie
-				if (!requestCookies.ContainsKey(cookieName))
-				{
-					var userId = await ums.CreateCookieReferance();
-					// Create Cookie if CreateCookieReferance() was Successful
-					if (userId > 0)
-						HttpContext.Response.Cookies.Append(cookieName, userId.ToString(), cookieOptions);
-					if (userId == 0)
-						continue;
-					else
-						return userId.ToString();
-				}
-			}
-		}
-		/// <heading></heading>
-		/// <summary>
-		/// ...
-		/// </summary>
-		/// <returns></returns>
-		public async Task SetUserModel(int cookieResponse)
-		{
-			UserManagerService ums = new(_context, _httpContextAccessor);
-			_user = await ums.GetCurrentUserModel(cookieResponse);
-		}
-		/// <heading></heading>
-		/// <summary>
-		/// ...
-		/// </summary>
-		/// <returns></returns>
 		public IPagedList<Product> SearchProducts(string search)
 		{
 			//
@@ -771,6 +690,43 @@ namespace WazaWare.co.za.Controllers
 			var productsJoined = normalSearch.Union(caseSensitiveSearch).Union(deeperSearch).ToList();
 			//
 			return productsJoined.ToPagedList();
+		}
+		public UserModel? CookieTime()
+		{
+			WebServices services = new(_context, _httpContextAccessor);
+			UserModel? model = null;
+			const string cookieName = "wazaware.co.za-auto-sign-in";
+			var requestCookies = HttpContext.Request.Cookies;
+			var intialRequest = requestCookies[cookieName];
+			var cookieOptions = new CookieOptions
+			{
+				Expires = DateTimeOffset.Now.AddDays(7),
+				IsEssential = true
+			};
+			if (intialRequest != null)
+			{
+				if (_context.Users.Any(u => u.Email == intialRequest))
+				{
+					model = _context.Users.Where(x => x.Email == intialRequest).FirstOrDefault();
+				}
+				else
+				{
+					var email = services.CreateCookieReferance().Result;
+					HttpContext.Response.Cookies
+						.Append(cookieName, email, cookieOptions);
+					model = _context.Users
+						.Where(x => x.Email == email).FirstOrDefault();
+				}
+			}
+			else
+			{
+				var email = services.CreateCookieReferance().Result;
+				HttpContext.Response.Cookies
+					.Append(cookieName, email, cookieOptions);
+				model = _context.Users
+					.Where(x => x.Email == email).FirstOrDefault();
+			}
+			return model;
 		}
 	}
 }

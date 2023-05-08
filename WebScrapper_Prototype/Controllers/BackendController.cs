@@ -25,7 +25,7 @@ namespace WazaWare.co.za.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 		/// <summary>
-		/// Index View for Backend
+		/// Index ViewModels for Backend
 		/// </summary>
 		[HttpGet]
 		public IActionResult Index()
@@ -180,7 +180,7 @@ namespace WazaWare.co.za.Controllers
 			/// </summary>
 		}
 		/// <summary>
-		/// View method for Downloading and Saving Images. Gets and passes image URL to correct methods
+		/// ViewModels method for Downloading and Saving Images. Gets and passes image URL to correct methods
 		/// </summary>
 		//[HttpGet]
 		public async Task<IActionResult> GetImages(int startAutoDownload, int clear)

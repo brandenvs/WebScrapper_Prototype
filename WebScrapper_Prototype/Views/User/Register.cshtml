@@ -1,0 +1,265 @@
+﻿@using WazaWare.co.za.Controllers;
+@model WazaWare.co.za.Models.ViewModels
+@{
+	ViewData["Title"] = "Account Details";
+}
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+	<!-- Meta Tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="WazaWare.co.za | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta property="og:title" content="WazaWare">
+	<meta property="og:description" content="WazaWare.co.za | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta property="og:image" content="https://wazaware.co.za/Media/Logo/LogoOfficialIcon.png">
+	<meta property="og:url" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com">
+	<meta property="og:type" content="website">
+	<meta name="twitter:card" content="https://wazaware.co.za/Media/Logo/LogoOfficialIcon.png">
+	<meta name="twitter:title" content="WazaWare">
+	<meta name="twitter:description" content="WazaWare.co.za | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta name="twitter:image" content="https://wazaware.co.za/Media/Logo/LogoOfficialIcon.png">
+	<!-- Logo -->
+	<link rel="shortcut icon" href="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.comhttps://wazaware.co.za/Media/Logo/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.comhttps://wazaware.co.za/Media/Logo/favicon.ico" type="image/x-icon">
+	<!-- Title Tag  -->
+	<title>Account Details</title>
+	<!-- Web Font -->
+	<link href="https://fonts.googleapis.com/css?family=Lato:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+	<!-- StyleSheet -->
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="~/css/bootstrap.css">
+	<!-- Magnific Popup -->
+	<link rel="stylesheet" href="~/css/magnific-popup.min.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="~/css/font-awesome.css">
+	<!-- Fancybox -->
+	<link rel="stylesheet" href="~/css/jquery.fancybox.min.css">
+	<!-- Themify Icons -->
+	<link rel="stylesheet" href="~/css/themify-icons.css">
+	<!-- Jquery Ui -->
+	<link rel="stylesheet" href="~/css/jquery-ui.css">
+	<!-- Nice Select CSS -->
+	<link rel="stylesheet" href="~/css/niceselect.css">
+	<!-- Animate CSS -->
+	<link rel="stylesheet" href="~/css/animate.css">
+	<!-- Flex Slider CSS -->
+	<link rel="stylesheet" href="~/css/flex-slider.min.css">
+	<!-- Owl Carousel -->
+	<link rel="stylesheet" href="~/css/owl-carousel.css">
+	<!-- Slicknav -->
+	<link rel="stylesheet" href="~/css/slicknav.min.css">
+	<!-- Alertify -->
+	<link rel="stylesheet" href="~/alertifyjs/css/alertify.min.css" />
+	<link rel="stylesheet" href="~/alertifyjs/css/themes/default.min.css" />
+	<!-- Reset CSS -->
+	<link rel="stylesheet" href="~/css/reset.css">
+	<!-- Temp CSS -->
+	<link rel="stylesheet" href="~/css/style.css">
+	<!-- Responsive CSS -->
+	<link rel="stylesheet" href="~/css/responsive.css">
+	<!-- Site CSS -->
+	<link rel="stylesheet" href="~/css/site.css">
+	<style type="text/css">
+		/* hide mobile div by default */
+		.mobile {
+			display: none;
+		}
+
+		/* show desktop div on screens wider than 768px */
+		@@media (min-width: 768px) {
+			.desktop {
+				display: block;
+			}
+
+			.mobile {
+				display: none;
+			}
+		}
+
+		/* show mobile div on screens narrower than 768px */
+		@@media (max-width: 767px) {
+			.desktop {
+				display: none;
+			}
+
+			.mobile {
+				display: block;
+			}
+		}
+
+		.section-divider {
+			border-top: 1px solid black;
+			padding-top: 20px;
+			margin-top: 20px;
+		}
+
+		.div-divider {
+			border-right: 1px solid black;
+			padding-right: 10px;
+			margin-right: 10px;
+		}
+	</style>
+</head>
+<body class="js">
+	<!-- Preloader -->
+	<div class="preloader">
+		<div class="preloader-inner">
+			<div class="preloader-icon">
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+	</div>
+	<!-- // -->
+	<!-- Header Shop -->
+	<div class="header shop" style="background-color:#FFF5E1;">
+		<!-- Topbar // Desktop Only -->
+		<div class="desktop">
+			<partial name="_TopBar" />
+			<!-- Middle Inner -->
+			<partial name="_MiddleInner" />
+			<!-- Header Inner Partial View-->
+			<partial name="_HeaderInner" />
+		</div>
+		<!-- // -->
+		<!-- Header Inner // Mobile Only -->
+		<div class="mobile">
+			<!-- Header Inner Partial View-->
+			<partial name="_HeaderInnerMobile" />
+			<!-- // -->
+		</div>
+		<!-- // -->
+	</div>
+	<!-- // -->
+	<section id="RegisterNewUser" class="shop checkout section">
+		<div class="container">
+			<div class="row section-divider">
+				<div class="col-9">
+					<br>
+					<p class="fs-4 h4">Unlock Unbelievable Discounts All Day, Everyday!</p>
+					<p class="fs-2 h2">Please Complete the Form to Checkout</p>
+				</div>
+				<div class="col-9" style="margin: 0 10px;">
+					<p class="fw-bolder h5"><br>We don't share any of your information with anyone</p>
+					<form id="userRegister" asp-action="Register" class="form" method="post">
+						<div class="row">
+							<div class="col">
+								<div asp-validation-summary="All" class="text-danger"></div>
+							</div>
+						</div>
+						<div class="row" style="top:15px">
+							<div class="col-lg-6 col-md-6 col-12">
+								<div class="form-group">
+									<label asp-for="userRegisterView.FirstName" class="form-label">First Name</label>
+									<input asp-for="userRegisterView.FirstName" type="text" name="firstName" autocomplete="on" placeholder="Bill" class="form-control" aria-label="FirstName">
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-12">
+								<div class="form-group">
+									<label asp-for="userRegisterView.LastName" class="form-label">Last Name</label>
+									<input asp-for="userRegisterView.LastName" type="text" name="lastName" autocomplete="on" placeholder="Gates" class="form-control" aria-label="LastName">
+								</div>
+							</div>
+						</div>
+						<div class="row" style="top:15px">
+							<div class="col-lg-6 col-md-6 col-12">
+								<div class="form-group">
+									@if (ViewBag.Message != null)
+									{
+										<p class="fs-6 h6" style="color:red">@ViewBag.Message</p>
+									}									
+									<label asp-for="userRegisterView.Email" class="form-label">Email Address</label>
+									<input asp-for="userRegisterView.Email" type="email" name="email" autocomplete="on" placeholder="lowprices@wazaware.co.za" class="form-control" aria-label="Email">
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-12">
+								<div class="form-group">
+									<label asp-for="userRegisterView.Phone" class="form-label">Phone Number</label>
+									<input asp-for="userRegisterView.Phone" type="tel" name="phone" autocomplete="on" placeholder="0815650206" class="form-control" aria-label="PhoneNumber">
+								</div>
+							</div>
+						</div>
+						<div class="row" style="top:15px">
+							<div class="col-lg-6 col-md-6 col-12">
+								<div class="form-group">
+									<label asp-for="userRegisterView.Password" class="form-label">Password</label>
+									<input asp-for="userRegisterView.Password" type="Password" name="password" autocomplete="off" placeholder="Password" class="form-control" aria-label="Password">
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-12">
+								<div class="form-group">
+									<label asp-for="userRegisterView.ConfirmPassword" class="form-label">Confirm Password</label>
+									<input asp-for="userRegisterView.ConfirmPassword" type="password" name="confirmPassword" autocomplete="off" placeholder="Confirm Password" class="form-control" aria-label="ConfirmPassword">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<input type="submit" value="Register" class="btn btn-primary" />
+							</div>
+						</div>
+					</form>
+					<div class="row">
+						<div class="col" style="top:10px;">
+							<a href="@Url.Action("Login", "User")" type="button" class="btn-outline-info" style="padding:5px;">Already Registered?</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Footer Partial View-->
+	<partial name="_Footer" />
+	<!-- // -->
+	<!-- Jquery -->
+	<script src="~/js/jquery.min.js"></script>
+	<script src="~/js/jquery-migrate-3.0.0.js"></script>
+	<script src="~/js/jquery-ui.min.js"></script>
+	<!-- Popper JS -->
+	<script src="~/js/popper.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="~/js/bootstrap.min.js"></script>
+	<!-- Color JS -->
+	<script src="~/js/colors.js"></script>
+	<!-- Slicknav JS -->
+	<script src="~/js/slicknav.min.js"></script>
+	<!-- Owl Carousel JS -->
+	<script src="~/js/owl-carousel.js"></script>
+	<!-- Magnific Popup JS -->
+	<script src="~/js/magnific-popup.js"></script>
+	<!-- Waypoints JS -->
+	<script src="~/js/waypoints.min.js"></script>
+	<!-- Countdown JS -->
+	<script src="~/js/finalcountdown.min.js"></script>
+	<!-- Nice Select JS -->
+	<script src="~/js/nicesellect.js"></script>
+	<!-- Flex Slider JS -->
+	<script src="~/js/flex-slider.js"></script>
+	<!-- Alertify -->
+	<script src="~/alertifyjs/alertify.min.js"></script>
+	<!-- ScrollUp JS -->
+	<script src="~/js/scrollup.js"></script>
+	<!-- Onepage Nav JS -->
+	<script src="~/js/onepage-nav.min.js"></script>
+	<!-- Easing JS -->
+	<script src="~/js/easing.js"></script>
+	<!-- Active JS -->
+	<script src="~/js/active.js"></script>
+	<script type="text/javascript">
+		function userLogout() {
+			alertify.notify('Logging out', 'custom', 2, function () { console.log('dismissed'); });
+			$.ajax({
+				type: 'GET',
+				url: '/User/Logout',
+				success: function (r) {
+					alertify.notify('You have Logged out' + category, 'success', 3, function () { console.log('dismissed'); });
+				},
+				error: function (e) {
+					alertify.error('Error: JavaScript Function (userLogout)');
+				}
+			});
+		}
+	</script>
+</body>
+</html>
