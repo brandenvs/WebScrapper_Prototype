@@ -1,1 +1,445 @@
-﻿
+﻿@model WazaWare.co.za.Models.ViewModels
+@{
+	ViewData["Title"] = "CheckoutNewUser";
+}
+<!DOCTYPE html>
+<configuration>
+	<system.webServer>
+		<security>
+			<dynamicIpSecurity denyAction="Forbidden">
+				<denyByConcurrentRequests enabled="true" maxConcurrentRequests="10" />
+				<denyByRequestRate enabled="true" maxRequests="30" requestIntervalInMilliseconds="300" />
+			</dynamicIpSecurity>
+		</security>
+	</system.webServer>
+</configuration>
+<html lang="zxx">
+<head>
+	<!-- Meta Tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="WazaWare.co.za | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta property="og:title" content="WazaWare">
+	<meta property="og:description" content="WazaWare.co.za | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta property="og:image" content="https://wazaware.co.za/Media/Logo/LogoOfficialIcon.png">
+	<meta property="og:url" content="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.com">
+	<meta property="og:type" content="website">
+	<meta name="twitter:card" content="https://wazaware.co.za/Media/Logo/LogoOfficialIcon.png">
+	<meta name="twitter:title" content="WazaWare">
+	<meta name="twitter:description" content="WazaWare.co.za | Gaming | PC | Laptops | Monitors | PC Builder">
+	<meta name="twitter:image" content="https://wazaware.co.za/Media/Logo/LogoOfficialIcon.png">
+	<!-- Logo -->
+	<link rel="shortcut icon" href="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.comhttps://wazaware.co.za/Media/Logo/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="http://swiftlinkprod-env.eba-s2qbd5re.eu-central-1.elasticbeanstalk.comhttps://wazaware.co.za/Media/Logo/favicon.ico" type="image/x-icon">
+	<!-- Title Tag  -->
+	<title>Checkout</title>
+	<!-- Web Font -->
+	<link href="https://fonts.googleapis.com/css?family=Lato:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+	<!-- StyleSheet -->
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="~/css/bootstrap.css">
+	<!-- Magnific Popup -->
+	<link rel="stylesheet" href="~/css/magnific-popup.min.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="~/css/font-awesome.css">
+	<!-- Fancybox -->
+	<link rel="stylesheet" href="~/css/jquery.fancybox.min.css">
+	<!-- Themify Icons -->
+	<link rel="stylesheet" href="~/css/themify-icons.css">
+	<!-- Jquery Ui -->
+	<link rel="stylesheet" href="~/css/jquery-ui.css">
+	<!-- Nice Select CSS -->
+	<link rel="stylesheet" href="~/css/niceselect.css">
+	<!-- Animate CSS -->
+	<link rel="stylesheet" href="~/css/animate.css">
+	<!-- Flex Slider CSS -->
+	<link rel="stylesheet" href="~/css/flex-slider.min.css">
+	<!-- Owl Carousel -->
+	<link rel="stylesheet" href="~/css/owl-carousel.css">
+	<!-- Slicknav -->
+	<link rel="stylesheet" href="~/css/slicknav.min.css">
+	<!-- Alertify -->
+	<link rel="stylesheet" href="~/alertifyjs/css/alertify.min.css" />
+	<link rel="stylesheet" href="~/alertifyjs/css/themes/default.min.css" />
+	<!-- Reset CSS -->
+	<link rel="stylesheet" href="~/css/reset.css">
+	<!-- Nice Select JS -->
+	<link rel="stylesheet" href="~/css/niceselect.css">
+	<!-- Temp CSS -->
+	<link rel="stylesheet" href="~/css/style.css">
+	<!-- Responsive CSS -->
+	<link rel="stylesheet" href="~/css/responsive.css">
+	<!-- Site CSS -->
+	<link rel="stylesheet" href="~/css/site.css">
+	<style type="text/css">
+		/* hide mobile div by default */
+		.mobile {
+			display: none;
+		}
+
+		/* show desktop div on screens wider than 768px */
+		@@media (min-width: 768px) {
+			.desktop {
+				display: block;
+			}
+
+			.mobile {
+				display: none;
+			}
+		}
+
+		/* show mobile div on screens narrower than 768px */
+		@@media (max-width: 767px) {
+			.desktop {
+				display: none;
+			}
+
+			.mobile {
+				display: block;
+			}
+		}
+
+		.section-divider {
+			border-top: 1px solid black;
+			padding-top: 20px;
+			margin-top: 20px;
+		}
+
+		.div-divider {
+			border-right: 1px solid black;
+			padding-right: 10px;
+			margin-right: 10px;
+		}
+	</style>
+</head>
+<body class="js">
+	<!-- Preloader -->
+	<div class="preloader">
+		<div class="preloader-inner">
+			<div class="preloader-icon">
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+	</div>
+	<!-- // -->
+	<!-- Scroll -->
+	<div id="progressBarContainer">
+		<div id="progressBar"></div>
+	</div>
+	<!-- // -->
+	<!-- Header Shop -->
+	<div class="header shop" style="background-color:#FFF5E1;">
+		<!-- Topbar // Desktop Only -->
+		<div class="desktop">
+			<partial name="_TopBar" />
+			<!-- Middle Inner -->
+			<partial name="_MiddleInner" />
+			<!-- Header Inner Partial View-->
+			<partial name="_HeaderInner" />
+		</div>
+		<!-- // -->
+		<!-- Header Inner // Mobile Only -->
+		<div class="mobile">
+			<!-- Header Inner Partial View-->
+			<partial name="_HeaderInnerMobile" />
+			<!-- // -->
+		</div>
+		<!-- // -->
+	</div>
+	<!-- // -->
+	<!-- Breadcrumbs -->
+	<div class="breadcrumbs">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="bread-inner">
+						<ul class="bread-list">
+							<li><a href="/Shop/Cart">Cart<i class="ti-arrow-right"></i></a></li>
+							<li class="active"><a href="/Checkout">Checkout</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Breadcrumbs -->
+	@if (ViewBag.Message == "noBilling")
+	{
+		<section id="billingaddress" class="shop checkout section">
+			<div class="container">
+				<div class="row section-divider">
+					<div class="col-9">
+						<br>
+						<p class="fs-5 h5">Billing Address</p>
+						<p class="fs-2 h2">Please Complete the Form</p>
+					</div>
+					@if (ViewBag.ErrorMessage != null)
+					{
+						<p class="fs-2 h2">@ViewBag.ErrorMessage</p>
+					}
+					<div class="col-9" style="margin: 0 10px;">
+						<p class="fw-bolder h5"><br>We don't share any of your information with anyone</p>
+						<form id="userRegister" asp-action="Payment" class="form" method="post">
+							<div class="row" style="top:15px">
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="Payment.FirstName" class="form-label">First Name<span>*</span></label>
+										<input asp-for="Payment.FirstName" value="@Model.userShippingView.FirstName" type="text" name="firstName" autocomplete="on" placeholder="Bill" class="form-control" aria-label="FirstName" required>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="Payment.LastName" class="form-label">Last Name<span>*</span></label>
+										<input asp-for="Payment.LastName" value="@Model.userShippingView.LastName" type=" text" name="lastName" autocomplete="on" placeholder="Gates" class="form-control" aria-label="LastName" required>
+									</div>
+								</div>
+							</div>
+							<div class="row" style="top:15px">
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="Payment.Email" class="form-label">Email Address<span>*</span></label>
+										<input asp-for="Payment.Email" value="@Model.userShippingView.Email" type="email" name="email" autocomplete="on" placeholder="lowprices@wazaware.co.za" class="form-control" aria-label="Email" required>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="Payment.Phone" class="form-label">Phone Number<span>*</span></label>
+										<input asp-for="Payment.Phone" value="@Model.userShippingView.Phone" type="tel" name="phone" autocomplete="on" placeholder="0815650206" class="form-control" aria-label="PhoneNumber" required>
+									</div>
+								</div>
+							</div>
+							<div class="row" style="top:15px">
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="Payment.UnitNo" class="form-label">Unit No.</label>
+										<input asp-for="Payment.UnitNo" value="@Model.userShippingView.UnitNo" type="number" name="UnitNo" autocomplete="on" placeholder="213" class="form-control" aria-label="UnitNumber">
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="Payment.StreetAddress" class="form-label">Street Address<span>*</span></label>
+										<input asp-for="Payment.StreetAddress" value="@Model.userShippingView.StreetAddress" type="text" name="StreetAddress" autocomplete="on" placeholder="16 St James Road" class="form-control" aria-label="StreetAddress" required>
+									</div>
+								</div>
+							</div>
+							<div class="row" style="top:15px">
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="Payment.Suburb" class="form-label">Suburb<span>*</span></label>
+										<input asp-for="Payment.Suburb" value="@Model.userShippingView.Suburb" type="text" name="suburb" autocomplete="on" placeholder="Kenilworth" class="form-control" aria-label="Suburb" required>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="Payment.City" class="form-label">City<span>*</span></label>
+										<input asp-for="Payment.City" value="@Model.userShippingView.City" type="text" name="City" autocomplete="on" placeholder="Cape Town" class="form-control" aria-label="City" required>
+									</div>
+								</div>
+							</div>
+							<div class="row" style="top:15px">
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="Payment.Province" class="form-label">Province<span>*</span></label>
+										<input asp-for="Payment.Province" value="@Model.userShippingView.Province" type="text" name="province" autocomplete="on" placeholder="Western Cape" class="form-control" aria-label="Province" required>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="Payment.PostalCode" class="form-label">Postal Code<span>*</span></label>
+										<input asp-for="Payment.PostalCode" value="@Model.userShippingView.PostalCode" type="number" name="postalCode" autocomplete="on" placeholder="6571" class="form-control" aria-label="Postal Code" required>
+									</div>
+								</div>
+							</div>
+							<div class="row" style="top: 15px;">
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="Payment.PaymentMethod" class="form-label">Select a Payment Method<span>*</span></label>
+										<select asp-for="Payment.PaymentMethod" class="form-control">
+											<option asp-for="Payment.PaymentMethod" value="EFT Transaction">EFT Transaction</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
+									<input type="submit" value="Continue" class="btn btn-primary" />
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</section>
+	}
+	else if (ViewBag.Message == "hasBilling")
+	{
+		<section id="OrderSummary" class="shop checkout section">
+			<div class="container" style="max-width:100%">
+				<div class="row">
+					<div class="col-12">
+						<p class="fs-4 h4">Please Confirm Your Current Details</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<p class="fs-4 h5"><br>Shipping Address <a href="#"><i class="ti-pencil-alt" style="white-space: nowrap;" data-toggle="tooltip" data-placement="right" title="Change Contact Details"></i></a></p>
+					</div>
+				</div>
+				<div class="row section-divider">
+					<div class="col-lg-6 col-md-9 col-sm-12">
+						<div class="row">
+							<div class="col-lg-3 col-md-6 col-sm-12">
+								<p class="fs-6 h6">Unit Number</p>
+								<p class="fs-5 h5"><b>@Model.userShippingView!.UnitNo</b></p>
+							</div>
+							<div class="col-lg-3 col-md-6 col-sm-12">
+								<p class="fs-6 h6">Street Address</p>
+								<p class="fs-5 h5" style="top:0;"><b>@Model.userShippingView.StreetAddress</b></p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-9 col-sm-12">
+						<div class="row">
+							<div class="col-lg-3 col-md-6 col-sm-12">
+								<p class="fs-6 h6">Suburb</p>
+								<p class="fs-5 h5" style="top:0;"><b>@Model.userShippingView.Suburb</b></p>
+							</div>
+							<div class="col-lg-3 col-md-6 col-sm-12">
+								<p class="fs-6 h6">City</p>
+								<p class="fs-5 h5" style="top:0;"><b>@Model.userShippingView.City</b></p>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6 col-md-9 col-sm-12">
+						<div class="row">
+							<div class="col-lg-3 col-md-6 col-sm-12">
+								<p class="fs-6 h6">Province</p>
+								<p class="fs-5 h5" style="top:0;"><b>@Model.userShippingView.Province</b></p>
+							</div>
+							<div class="col-lg-3 col-md-6 col-sm-12">
+								<p class="fs-6 h6">PostalCode</p>
+								<p class="fs-5 h5" style="top:0;"><b>@Model.userShippingView.PostalCode</b></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	}
+	<!--/ End Checkout -->
+	<!-- Shop Services Partial View-->
+	<partial name="_Services" />
+	<!-- // -->
+	<!-- Footer Partial View-->
+	<partial name="_Footer" />
+	<!-- // -->
+	@section Scripts {
+		<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+	}
+	<!-- Jquery -->
+	<script src="~/js/jquery.min.js"></script>
+	<script src="~/js/jquery-migrate-3.0.0.js"></script>
+	<script src="~/s/jquery-ui.min.js"></script>
+	<!-- Popper JS -->
+	<script src="~/js/popper.min.js"></script>
+	<!-- Bootstrap JS -->
+	<script src="~/js/bootstrap.min.js"></script>
+	<!-- Color JS -->
+	<script src="~/js/colors.js"></script>
+	<!-- Slicknav JS -->
+	<script src="~/js/slicknav.min.js"></script>
+	<!-- Owl Carousel JS -->
+	<script src="~/js/owl-carousel.js"></script>
+	<!-- Magnific Popup JS -->
+	<script src="~/js/magnific-popup.js"></script>
+	<!-- Waypoints JS -->
+	<script src="~/js/waypoints.min.js"></script>
+	<!-- Countdown JS -->
+	<script src="~/js/finalcountdown.min.js"></script>
+	<!-- Nice Select JS -->
+	<script src="~/js/nicesellect.js"></script>
+	<!-- Flex Slider JS -->
+	<script src="~/js/flex-slider.js"></script>
+	<!-- Alertify -->
+	<script src="~/alertifyjs/alertify.min.js"></script>
+	<!-- ScrollUp JS -->
+	<script src="~/js/scrollup.js"></script>
+	<!-- Onepage Nav JS -->
+	<script src="~/js/onepage-nav.min.js"></script>
+	<!-- Easing JS -->
+	<script src="~/js/easing.js"></script>
+	<!-- Active JS -->
+	<script src="~/js/active.js"></script>
+
+	<!-- Custom Scripts -->
+	<!--Load Scrolling Bar-->
+	<script type="text/javascript">
+		const progressBarContainer = document.querySelector("#progressBarContainer");
+		const progressBar = document.querySelector("#progressBar");
+		let totalPageHeight = document.body.scrollHeight - window.innerHeight;
+		let debounceResize;
+
+		window.addEventListener("scroll", () => {
+			let newProgressHeight = window.pageYOffset / totalPageHeight;
+			progressBar.style.transform = `scale(1,${newProgressHeight})`;
+			progressBar.style.opacity = `${newProgressHeight}`;
+		}, {
+			capture: true,
+			passive: true
+		});
+
+		window.addEventListener("resize", () => {
+			clearTimeout(debounceResize);
+			debounceResize = setTimeout(() => {
+				totalPageHeight = document.body.scrollHeight - window.innerHeight;
+			}, 250);
+		});
+
+		progressBarContainer.addEventListener("click", (e) => {
+			let newPageScroll = e.clientY / progressBarContainer.offsetHeight * totalPageHeight;
+			window.scrollTo({
+				top: newPageScroll,
+				behavior: 'smooth'
+			});
+		});
+	</script>
+	<!--Functions-->
+	<script type="text/javascript">
+		// Hide the loading bar on page load
+		$(document).ready(function () {
+			$('#paymentmethod').hide();
+			$('#billingaddress').show();
+		});
+		// [GET]
+		// Proceed to checkout
+		function proceedToCheckout() {
+			let startPlaceOrder = 1;
+			// Show the loading bar
+			$('#loading-bar').show();
+			$('#123Section').hide();
+			// Make an Ajax call to the server to start the processing
+			$.ajax({
+				type: "POST",
+				url: '/Checkout/Proceed',
+				data: { startPlaceOrder: startPlaceOrder },
+				success: function (r) {
+					alertify.notify('Order Created!', 'success', 2, function () { console.log('dismissed'); });
+					// Hide the loading bar when the processing is complete
+					$('#loading-bar').hide();
+
+					// Do something with the server response, if necessary
+					alert('Thank You. Your Order has been placed. Please check your email!');
+					window.location.href = '/Orders/Index';
+				},
+				error: function (e) {
+					alertify.error('Error: You have entered some invalid information');
+					window.location.href = '/Shop/Index';
+				}
+			});
+		}
+	</script>
+</body>
+
+</html>
+

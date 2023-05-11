@@ -1,19 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mail;
 using System.Net;
 using WazaWare.co.za.Models;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using Microsoft.EntityFrameworkCore;
 using WazaWare.co.za.DAL;
-using WazaWare.co.za.Services;
 using wazaware.co.za.Services;
 using static WazaWare.co.za.Models.UserManagerViewModels;
-using Microsoft.AspNetCore.Http;
-using System.Web.Helpers;
 using wazaware.co.za.Models;
-using System.Linq;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.Extensions.Hosting.Internal;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace WazaWare.co.za.Controllers
 {
@@ -22,34 +20,36 @@ namespace WazaWare.co.za.Controllers
 		private readonly ILogger<ShopController> _logger;
 		private readonly WazaWare_db_context _context;
 		private readonly IHttpContextAccessor _httpContextAccessor;
+		private readonly IRazorViewEngine _viewEngine;
+		ITempDataProvider _tempData;
 		private static UserModel? _user;
 		private static Boolean _isCookieUser;
 
-		public CheckoutController(ILogger<ShopController> logger, WazaWare_db_context context, IHttpContextAccessor httpContextAccessor)
+		public CheckoutController(ILogger<ShopController> logger, WazaWare_db_context context, IHttpContextAccessor httpContextAccessor, IRazorViewEngine viewEngine, ITempDataProvider tempData)
 		{
 			_logger = logger;
 			_context = context;
 			_httpContextAccessor = httpContextAccessor;
+			_viewEngine = viewEngine;
+			_tempData = tempData;
 		}
 		[HttpGet]
-		public async Task<IActionResult> Index()
-		{
-			
+		public IActionResult Index()
+		{			
 			var userModel = CookieTime();
 			if (userModel!.Email!.Contains("@wazaware.co.za"))
 			{
 				if(_context.UsersShoppingCarts.Any(s => s.UserId == userModel.UserId))
-				{
 					return RedirectToAction(nameof(CheckoutNewUser));
-				}
 				else
-				{
 					return RedirectToAction("Index", "Shop", new { message = "Your Shopping Cart is Empty!" });
-				}
 			}
 			else
 			{
-				return RedirectToAction(nameof(CheckoutCurrentUser));
+				if (_context.UsersShoppingCarts.Any(s => s.UserId == userModel.UserId))
+					return RedirectToAction(nameof(CheckoutNewUser));
+				else
+					return RedirectToAction("Index", "Shop", new { message = "Your Shopping Cart is Empty!" });
 			}
 		}
 		[HttpGet]
@@ -73,9 +73,17 @@ namespace WazaWare.co.za.Controllers
 					ViewBag.isCookie = false;
 				}
 			}
+			var userView = new UserModelView
+			{
+				FirstName = userModel.FirstName,
+				LastName = userModel.LastName,
+				Email = userModel.Email,
+				Phone = userModel.Phone
+			};
 			var viewModel = new ViewModels
 			{
-				Cart = cartModel
+				Cart = cartModel,
+				userView = userView
 			};
 			ViewBag.Message = message;
 			return View(viewModel);
@@ -147,7 +155,7 @@ namespace WazaWare.co.za.Controllers
 			return RedirectToAction(nameof(PlaceOrder));
 		}
 		[HttpGet]
-		public async Task<IActionResult> CheckoutCurrentUser()
+		public IActionResult CheckoutCurrentUser()
 		{
 			WebServices services = new(_context, _httpContextAccessor);
 			var userModel = CookieTime();
@@ -182,7 +190,7 @@ namespace WazaWare.co.za.Controllers
 			return View(viewModel);
 		}
 		[HttpGet]
-		public async Task<IActionResult> PlaceOrder()
+		public IActionResult PlaceOrder()
 		{
 			WebServices services = new(_context, _httpContextAccessor);
 			var userModel = CookieTime();
@@ -217,7 +225,7 @@ namespace WazaWare.co.za.Controllers
 			return View(viewModel);
 		}
 		[HttpGet]
-		public IActionResult Payment(string message)
+		public async Task<IActionResult> Payment(string message)
 		{
 			WebServices services = new(_context, _httpContextAccessor);
 			var userModel = CookieTime();
@@ -243,6 +251,11 @@ namespace WazaWare.co.za.Controllers
 					var paymentModel = _context.PaymentModels.Where(s => s.UserId == userModel.UserId).First();
 					var shippingModel = _context.UserShippings.Where(s => s.UserId == userModel.UserId).First();
 					var cartModel = services.LoadCart(userModel!.UserId);
+					// RESET CART:
+					var removeCart = _context.UsersShoppingCarts.Where(s => s.UserId != userModel.UserId).ToList();
+					_context.UsersShoppingCarts.AddRange(removeCart);
+					_context.UsersShoppingCarts.RemoveRange(removeCart);
+					await _context.SaveChangesAsync();
 					var order = _context.Orders.Where(s => s.UserId == userModel.UserId).First();
 					var orderSummary = new OrderSummary
 					{
@@ -252,8 +265,8 @@ namespace WazaWare.co.za.Controllers
 					};
 					var userView = new UserModelView
 					{
-						FirstName = userModel.FirstName,
-						LastName = userModel.LastName,
+						FirstName = userModel!.FirstName!,
+						LastName = userModel!.LastName!,
 						Email = userModel.Email,
 						Phone = userModel.Phone
 					};
@@ -283,7 +296,8 @@ namespace WazaWare.co.za.Controllers
 						userView = userView
 					};
 					ViewBag.Message = "hasBilling";
-					return View(view);
+                    await SendEmail(view);
+                    return View(view);
 				}
 				else
 				{
@@ -291,8 +305,8 @@ namespace WazaWare.co.za.Controllers
 					var shippingModel = _context.UserShippings.Where(s => s.UserId == userModel.UserId).First();
 					var userView = new UserModelView
 					{
-						FirstName = userModel.FirstName,
-						LastName = userModel.LastName,
+						FirstName = userModel!.FirstName!,
+						LastName = userModel!.LastName!,
 						Email = userModel.Email,
 						Phone = userModel.Phone
 					};
@@ -324,9 +338,7 @@ namespace WazaWare.co.za.Controllers
 				}
 			}
 			else
-			{
 				return RedirectToAction(nameof(CheckoutNewUser), new { message = "Sorry Something Went Wrong!" });
-			}
 		}
 		[HttpPost]
 		public async Task<IActionResult> Payment(PaymentModel model)
@@ -337,17 +349,14 @@ namespace WazaWare.co.za.Controllers
 			if (userModel != null && !userModel.Email!.Contains("@wazaware.co.za"))
 			{
 				model.PaymentMethod = "EFT";
-				model.UserId = userModel.UserId;
+				model.UserId = userModel.UserId;				
 				_context.PaymentModels.Attach(model);
 				_context.PaymentModels.Add(model);
-				var userCart = _context.UsersShoppingCarts.FirstOrDefault(u => u.UserId == userModel.UserId);
 	
 				var newOrder = new Orders
 				{
 					UserId = userModel.UserId,
-					ProductId = userCart.ProductId,
 					PaymentId = model.Id,
-					ProductCount = userCart.ProductCount,
 					ShippingPrice = 300,
 					OrderTotal = cartModel.Select(s => s.CartSaleTotalFormatted).First(),
 					isOrderPayed = false,
@@ -355,6 +364,16 @@ namespace WazaWare.co.za.Controllers
 				};
 				_context.Orders.Attach(newOrder);
 				_context.Orders.Add(newOrder);
+				var newOrderProducts = cartModel.Select(s => new OrderProducts
+				{
+					OrderId = newOrder.UserId,
+					ProductId = s.ProductId,
+					ProductCount = s.ProductCount
+				}).ToList();
+				_context.AttachRange(newOrderProducts);
+				_context.OrderProducts.AddRange(newOrderProducts);
+
+								
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Payment), new { message = "200" });
 			}
@@ -364,55 +383,10 @@ namespace WazaWare.co.za.Controllers
 			}
 		}
 		[HttpPost]
-		public async Task SendEmail(string userEmail, string fullName, decimal orderSubTotal, decimal shippingTotal, decimal fee, decimal orderGrandTotal, int orderId)
-		{
-			try
-			{
-				SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com", 587);
-				SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
-				MailMessage email = new MailMessage();
-				// START
-				email.From = new MailAddress("brandenconnected@gmail.com");
-				email.To.Add(userEmail);
-				email.CC.Add("brandenconnected@gmail.com");
-				email.Subject = "SwiftLink Order Confirmation";
-				email.Body = "" +
-					"<!DOCTYPE html>" +
-					"<html> " +
-					"<head> " +
-					"<meta charset=\"utf-8\"/> " +
-					"<style>/* Styling for the header */ .header{display: flex; justify-content: space-between; align-items: center; padding: 20px;}.header img{height: 50px;}.header h1{margin: 0; font-size: 24px; color: #333;}/* Styling for the message */ .message{background-color: #f5f5f5; padding: 20px;}.message h2{margin-top: 0; font-size: 20px; color: #333;}.message p{margin: 0; font-size: 16px; line-height: 1.5; color: #666;}/* Styling for the banner */ .banner{text-align: center; padding: 20px;}.banner img{max-width: 100%;}/* Styling for the signature */ .signature{text-align: center; padding: 20px;}.signature p{margin: 0; font-size: 16px; line-height: 1.5; color: #666;}</style> " +
-					"</head> " +
-					"<body> " +
-					"<div class=\"header\"> " +
-					"<img src=\"/Media/LogoCropped.png\" alt=\"Logo\"/> " +
-					"<h1>SwiftLink Order Confirmation</h1> </div><div class=\"message\"> " +
-					"<h2>Thank You for Your Order!</h2> " +
-					"<p> Dear <strong>" + fullName + "</strong>, " +
-					"<br/> Thank you for placing your order with SwiftLink. We are now processing your order and it can take between 1 - 2 working days. " +
-					"You will receive a shipping tracking number once your order is processed and on its way." +
-					"</p><p>You can review your order by clicking on the following link: <a href='https://longdogechallenge.com/'>Order Details</a></p>" +
-					"</div>" +
-					"<div class=\"banner\"> " +
-					"<img src=\"https://example.com/banner.png\" alt=\"Banner\"/> " +
-					"</div>" +
-					"<div class=\"signature\"> " +
-					"<p>Kind regards,</p><p>The SwiftLink Team</p>" +
-					"</div>" +
-					"</body></html>";
-				email.IsBodyHtml = true;
-				//END
-				SmtpServer.Timeout = 5000;
-				SmtpServer.EnableSsl = true;
-				SmtpServer.UseDefaultCredentials = false;
-				SmtpServer.Credentials = new NetworkCredential("brandenconnected@gmail.com", "mueadqbombixceuk");
-				await SmtpServer.SendMailAsync(email);
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.ToString());
-			}
-
+		public async Task SendEmail(ViewModels viewModel)
+		{	
+			EmailerService emailerService = new EmailerService(_httpContextAccessor, _viewEngine, _tempData);
+			await emailerService.SendEmail(viewModel);
 		}
 		public UserModel? CookieTime()
 		{

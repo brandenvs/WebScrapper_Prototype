@@ -4,6 +4,7 @@ using System.Web.Helpers;
 using Microsoft.AspNetCore.HttpOverrides;
 using WazaWare.co.za.DAL;
 
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
 
@@ -16,14 +17,14 @@ builder.Services.AddHttpContextAccessor();
 //builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.")));
 
 //var connectionString = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ApplicationDbContextConnection' not found.");
-var connectionString = builder.Configuration.GetConnectionString("WazaWare_db_context") ?? throw new InvalidOperationException("Connection string 'WazaWare_db_context' not found.");
+var connectionString = builder.Configuration.GetConnectionString("wazaware_db_context") ?? throw new InvalidOperationException("Connection string 'WazaWare_db_context' not found.");
 builder.Services.AddDbContext<WazaWare_db_context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("WazaWare_db_context") ?? throw new InvalidOperationException("Connection string 'WazaWare_db_context' not found.")));
 
-builder.Services.AddRazorPages();
-
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddRazorPages();
 AddAuthorizationPolicies(builder.Services);
+builder.Services.AddMvcCore().AddRazorViewEngine();
+builder.Services.AddMvcCore().AddViews().AddCookieTempDataProvider();
 
 AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
 
@@ -49,7 +50,6 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapRazorPages();
 
 app.MapControllerRoute(

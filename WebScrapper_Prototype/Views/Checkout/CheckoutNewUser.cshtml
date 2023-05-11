@@ -189,14 +189,14 @@
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
 									<label asp-for="userShippingView.FirstName" class="form-label">First Name<span>*</span></label>
-									<input asp-for="userShippingView.FirstName" type="text" name="firstName" autocomplete="on" placeholder="Bill" class="form-control" aria-label="FirstName" required>
+									<input asp-for="userShippingView.FirstName" type="text" value="@if(ViewBag.isCookie == false){ @Model.userView.FirstName }" name="firstName" autocomplete="on" placeholder="Bill" class="form-control" aria-label="FirstName" required>
 									<span asp-validation-for="userShippingView.FirstName" class="text-danger"></span>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
 									<label asp-for="userShippingView.LastName" class="form-label">Last Name<span>*</span></label>
-									<input asp-for="userShippingView.LastName" type="text" name="lastName" autocomplete="on" placeholder="Gates" class="form-control" aria-label="LastName" required>
+									<input asp-for="userShippingView.LastName" type="text" value="@if(ViewBag.isCookie == false){ @Model.userView.LastName }" name="lastName" autocomplete="on" placeholder="Gates" class="form-control" aria-label="LastName" required>
 								</div>
 							</div>
 						</div>
@@ -204,13 +204,13 @@
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">		
 									<label asp-for="userShippingView.Email" class="form-label">Email Address<span>*</span></label>
-									<input asp-for="userShippingView.Email" type="email" name="email" autocomplete="on" placeholder="lowprices@wazaware.co.za" class="form-control" aria-label="Email" required>
+									<input asp-for="userShippingView.Email" type="email" value="@if(ViewBag.isCookie == false){ @Model.userView.Email }" name="email" autocomplete="on" placeholder="lowprices@wazaware.co.za" class="form-control" aria-label="Email" required>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
 									<label asp-for="userShippingView.Phone" class="form-label">Phone Number<span>*</span></label>
-									<input asp-for="userShippingView.Phone" type="tel" name="phone" autocomplete="on" placeholder="0815650206" class="form-control" aria-label="PhoneNumber" required>
+									<input asp-for="userShippingView.Phone" type="tel" name="phone" value="@if(ViewBag.isCookie == false){ @Model.userView.Phone }" autocomplete="on" placeholder="0815650206" class="form-control" aria-label="PhoneNumber" required>
 								</div>
 							</div>
 						</div>												
@@ -218,13 +218,13 @@
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">		
 									<label asp-for="userShippingView.UnitNo" class="form-label">Unit No.</label>
-									<input asp-for="userShippingView.UnitNo" type="number" name="UnitNo" autocomplete="on" placeholder="213" class="form-control" aria-label="UnitNumber">
+									<input asp-for="userShippingView.UnitNo" type="number" name="UnitNo" value="@if(ViewBag.isCookie == false){ @Model.userShippingView.UnitNo }" autocomplete="on" placeholder="213" class="form-control" aria-label="UnitNumber">
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
 									<label asp-for="userShippingView.StreetAddress" class="form-label">Street Address<span>*</span></label>
-									<input asp-for="userShippingView.StreetAddress" type="text" name="StreetAddress" autocomplete="on" placeholder="16 St James Road" class="form-control" aria-label="StreetAddress" required>
+									<input asp-for="userShippingView.StreetAddress" type="text" name="StreetAddress" autocomplete="on" value="@if(ViewBag.isCookie == false){ @Model.userShippingView.StreetAddress }" placeholder="16 St James Road" class="form-control" aria-label="StreetAddress" required>
 								</div>
 							</div>
 						</div>												
@@ -232,13 +232,13 @@
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">		
 									<label asp-for="userShippingView.Suburb" class="form-label">Suburb<span>*</span></label>
-									<input asp-for="userShippingView.Suburb" type="text" name="suburb" autocomplete="on" placeholder="Kenilworth" class="form-control" aria-label="Suburb" required>
+									<input asp-for="userShippingView.Suburb" type="text" name="suburb" autocomplete="on" value="@if(ViewBag.isCookie == false){ @Model.userShippingView.Suburb }" placeholder="Kenilworth" class="form-control" aria-label="Suburb" required>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
 									<label asp-for="userShippingView.City" class="form-label">City<span>*</span></label>
-									<input asp-for="userShippingView.City" type="text" name="City" autocomplete="on" placeholder="Cape Town" class="form-control" aria-label="City" required>
+									<input asp-for="userShippingView.City" type="text" name="City" autocomplete="on" value="@if(ViewBag.isCookie == false){ @Model.userShippingView.City }" placeholder="Cape Town" class="form-control" aria-label="City" required>
 								</div>
 							</div>
 						</div>
@@ -246,13 +246,13 @@
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
 									<label asp-for="userShippingView.Province" class="form-label">Province<span>*</span></label>
-									<input asp-for="userShippingView.Province" type="text" name="province" autocomplete="on" placeholder="Western Cape" class="form-control" aria-label="Province" required>
+									<input asp-for="userShippingView.Province" type="text" name="province" autocomplete="on" value="@if(ViewBag.isCookie == false){ @Model.userShippingView.Province }" placeholder="Western Cape" class="form-control" aria-label="Province" required>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
 									<label asp-for="userShippingView.PostalCode" class="form-label">Postal Code<span>*</span></label>
-									<input asp-for="userShippingView.PostalCode" type="number" name="postalCode" autocomplete="on" placeholder="6571" class="form-control" aria-label="Postal Code" required>
+									<input asp-for="userShippingView.PostalCode" type="number" name="postalCode" autocomplete="on" value="@if(ViewBag.isCookie == false){ @Model.userShippingView.PostalCode }" placeholder="6571" class="form-control" aria-label="Postal Code" required>
 								</div>
 							</div>
 						</div>												

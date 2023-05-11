@@ -10,5 +10,8 @@ namespace WazaWare.co.za.Models
         public int OrderId { get; set; }
         [Required]
         public int ProductId { get; set; }
+		[Required]
+		public int ProductCount { get; set; }
+
     }
 }

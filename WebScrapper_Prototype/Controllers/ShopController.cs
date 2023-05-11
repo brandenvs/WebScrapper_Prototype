@@ -531,57 +531,41 @@ namespace WazaWare.co.za.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Product(int id)
 		{
-			ViewBag.IsCookie = false;
-			WebServices services = new(_context, _httpContextAccessor);
-			var userModel = CookieTime();
-			var cartModel = services.LoadCart(userModel!.UserId);
-			var userView = new UserModelView
-			{
-				FirstName = userModel.FirstName,
-				LastName = userModel.LastName,
-				Email = userModel.Email,
-				Phone = userModel.Phone
-			};
-			if (userModel == null)
-			{
-				ViewBag.isCookie = true;
-			}
-			else
-			{
-				if (userModel.Email!.Contains("@wazaware.co.za"))
-				{
-					ViewBag.isCookie = true;
-				}
-				else
-				{
-					ViewBag.isCookie = false;
-				}
-			}
-			// Load Shopping Cart
-			var userShoppingCart = services.LoadCart(userModel!.UserId).ToList();
-
+            ViewBag.IsCookie = false;
+            WebServices services = new(_context, _httpContextAccessor);
+            var userModel = CookieTime();
+            var cartModel = services.LoadCart(userModel!.UserId);
+            var userView = new UserModelView
+            {
+                FirstName = userModel.FirstName,
+                LastName = userModel.LastName,
+                Email = userModel.Email,
+                Phone = userModel.Phone
+            };
+            if (userModel == null)
+            {
+                ViewBag.isCookie = true;
+            }
+            else
+            {
+                if (userModel.Email!.Contains("@wazaware.co.za"))
+                {
+                    ViewBag.isCookie = true;
+                }
+                else
+                {
+                    ViewBag.isCookie = false;
+                }
+            }
 			var product = _context.Products.Where(p => p.ProductId!.Equals(id)).FirstOrDefault(); 
-			if (product != null)
-			{
-				ViewBag.Oops = false;
-				var viewModel = new ViewModels
-				{
-					Cart = userShoppingCart,
-					Product = product
-				};
-				return View(viewModel);
-			}
-			else
-			{
-				ViewBag.Oops = true;
-				var viewModel = new ViewModels
-				{
-					Cart = userShoppingCart,
-					userView = userView
-				};
-				return View(viewModel);
-			}
-		}
+            var viewModel = new ViewModels
+            {
+				Product = product,
+                Cart = cartModel,
+                userView = userView
+            };
+            return View(viewModel);
+        }
 		/// <heading></heading>
 		/// <summary>
 		/// ...
