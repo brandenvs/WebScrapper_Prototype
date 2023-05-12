@@ -5,24 +5,24 @@ using WazaWare.co.za.Models;
 
 namespace WazaWare.co.za.Services
 {
-    public class ProductService
-    {
+	public class ProductService
+	{
 		public List<Product> ReadCSVFileSingle(string path)
-        {
-            Console.WriteLine(path);
-            try
-            {
+		{
+			Console.WriteLine(path);
+			try
+			{
 				using var reader = new StreamReader(path, Encoding.Default);
 				using var csv = new CsvReader(reader);
 				csv.Configuration.RegisterClassMap<ProductMapSingle>();
 				var rows = csv.GetRecords<Product>().ToList();
 				return rows;
 			}
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
+			catch (Exception e)
+			{
+				throw new Exception(e.Message);
+			}
+		}
 		public List<ProductImageURLs> ReadCSVFileImage(string path)
 		{
 			Console.WriteLine(path);
@@ -41,9 +41,9 @@ namespace WazaWare.co.za.Services
 		}
 		// [DEPRECATED]
 		public void SaveCSVFile(string path, List<Product> product)
-        {
-			using StreamWriter sw = new StreamWriter(path, false, new UTF8Encoding(true));
-			using CsvWriter csvw = new CsvWriter(sw);
+		{
+			using StreamWriter sw = new(path, false, new UTF8Encoding(true));
+			using CsvWriter csvw = new(sw);
 			csvw.WriteHeader<Product>();
 			csvw.NextRecord();
 			foreach (Product prod in product)
@@ -52,5 +52,5 @@ namespace WazaWare.co.za.Services
 				csvw.NextRecord();
 			}
 		}
-    }
+	}
 }

@@ -1,6 +1,6 @@
 ﻿@model WazaWare.co.za.Models.ViewModels
 @{
-	ViewData["Title"] = "CheckoutNewUser";
+	ViewData["Title"] = "CheckoutUser";
 }
 <!DOCTYPE html>
 <configuration>
@@ -185,13 +185,13 @@
 								<div class="col-lg-6 col-md-6 col-12">
 									<div class="form-group">
 										<label asp-for="Payment.FirstName" class="form-label">First Name<span>*</span></label>
-										<input asp-for="Payment.FirstName" value="@Model.userShippingView.FirstName" type="text" name="firstName" autocomplete="on" placeholder="Bill" class="form-control" aria-label="FirstName" required>
+										<input asp-for="Payment.FirstName" value="@Model.UserShippingView.FirstName" type="text" name="firstName" autocomplete="on" placeholder="Bill" class="form-control" aria-label="FirstName" required>
 									</div>
 								</div>
 								<div class="col-lg-6 col-md-6 col-12">
 									<div class="form-group">
 										<label asp-for="Payment.LastName" class="form-label">Last Name<span>*</span></label>
-										<input asp-for="Payment.LastName" value="@Model.userShippingView.LastName" type=" text" name="lastName" autocomplete="on" placeholder="Gates" class="form-control" aria-label="LastName" required>
+										<input asp-for="Payment.LastName" value="@Model.UserShippingView.LastName" type=" text" name="lastName" autocomplete="on" placeholder="Gates" class="form-control" aria-label="LastName" required>
 									</div>
 								</div>
 							</div>
@@ -199,13 +199,13 @@
 								<div class="col-lg-6 col-md-6 col-12">
 									<div class="form-group">
 										<label asp-for="Payment.Email" class="form-label">Email Address<span>*</span></label>
-										<input asp-for="Payment.Email" value="@Model.userShippingView.Email" type="email" name="email" autocomplete="on" placeholder="lowprices@wazaware.co.za" class="form-control" aria-label="Email" required>
+										<input asp-for="Payment.Email" value="@Model.UserShippingView.Email" type="email" name="email" autocomplete="on" placeholder="lowprices@wazaware.co.za" class="form-control" aria-label="Email" required>
 									</div>
 								</div>
 								<div class="col-lg-6 col-md-6 col-12">
 									<div class="form-group">
 										<label asp-for="Payment.Phone" class="form-label">Phone Number<span>*</span></label>
-										<input asp-for="Payment.Phone" value="@Model.userShippingView.Phone" type="tel" name="phone" autocomplete="on" placeholder="0815650206" class="form-control" aria-label="PhoneNumber" required>
+										<input asp-for="Payment.Phone" value="@Model.UserShippingView.Phone" type="tel" name="phone" autocomplete="on" placeholder="0815650206" class="form-control" aria-label="PhoneNumber" required>
 									</div>
 								</div>
 							</div>
@@ -213,13 +213,13 @@
 								<div class="col-lg-6 col-md-6 col-12">
 									<div class="form-group">
 										<label asp-for="Payment.UnitNo" class="form-label">Unit No.</label>
-										<input asp-for="Payment.UnitNo" value="@Model.userShippingView.UnitNo" type="number" name="UnitNo" autocomplete="on" placeholder="213" class="form-control" aria-label="UnitNumber">
+										<input asp-for="Payment.UnitNo" value="@Model.UserShippingView.UnitNo" type="number" name="UnitNo" autocomplete="on" placeholder="213" class="form-control" aria-label="UnitNumber">
 									</div>
 								</div>
 								<div class="col-lg-6 col-md-6 col-12">
 									<div class="form-group">
 										<label asp-for="Payment.StreetAddress" class="form-label">Street Address<span>*</span></label>
-										<input asp-for="Payment.StreetAddress" value="@Model.userShippingView.StreetAddress" type="text" name="StreetAddress" autocomplete="on" placeholder="16 St James Road" class="form-control" aria-label="StreetAddress" required>
+										<input asp-for="Payment.StreetAddress" value="@Model.UserShippingView.StreetAddress" type="text" name="StreetAddress" autocomplete="on" placeholder="16 St James Road" class="form-control" aria-label="StreetAddress" required>
 									</div>
 								</div>
 							</div>
@@ -227,13 +227,13 @@
 								<div class="col-lg-6 col-md-6 col-12">
 									<div class="form-group">
 										<label asp-for="Payment.Suburb" class="form-label">Suburb<span>*</span></label>
-										<input asp-for="Payment.Suburb" value="@Model.userShippingView.Suburb" type="text" name="suburb" autocomplete="on" placeholder="Kenilworth" class="form-control" aria-label="Suburb" required>
+										<input asp-for="Payment.Suburb" value="@Model.UserShippingView.Suburb" type="text" name="suburb" autocomplete="on" placeholder="Kenilworth" class="form-control" aria-label="Suburb" required>
 									</div>
 								</div>
 								<div class="col-lg-6 col-md-6 col-12">
 									<div class="form-group">
 										<label asp-for="Payment.City" class="form-label">City<span>*</span></label>
-										<input asp-for="Payment.City" value="@Model.userShippingView.City" type="text" name="City" autocomplete="on" placeholder="Cape Town" class="form-control" aria-label="City" required>
+										<input asp-for="Payment.City" value="@Model.UserShippingView.City" type="text" name="City" autocomplete="on" placeholder="Cape Town" class="form-control" aria-label="City" required>
 									</div>
 								</div>
 							</div>
@@ -241,13 +241,13 @@
 								<div class="col-lg-6 col-md-6 col-12">
 									<div class="form-group">
 										<label asp-for="Payment.Province" class="form-label">Province<span>*</span></label>
-										<input asp-for="Payment.Province" value="@Model.userShippingView.Province" type="text" name="province" autocomplete="on" placeholder="Western Cape" class="form-control" aria-label="Province" required>
+										<input asp-for="Payment.Province" value="@Model.UserShippingView.Province" type="text" name="province" autocomplete="on" placeholder="Western Cape" class="form-control" aria-label="Province" required>
 									</div>
 								</div>
 								<div class="col-lg-6 col-md-6 col-12">
 									<div class="form-group">
 										<label asp-for="Payment.PostalCode" class="form-label">Postal Code<span>*</span></label>
-										<input asp-for="Payment.PostalCode" value="@Model.userShippingView.PostalCode" type="number" name="postalCode" autocomplete="on" placeholder="6571" class="form-control" aria-label="Postal Code" required>
+										<input asp-for="Payment.PostalCode" value="@Model.UserShippingView.PostalCode" type="number" name="postalCode" autocomplete="on" placeholder="6571" class="form-control" aria-label="Postal Code" required>
 									</div>
 								</div>
 							</div>
@@ -291,11 +291,11 @@
 						<div class="row">
 							<div class="col-lg-3 col-md-6 col-sm-12">
 								<p class="fs-6 h6">Unit Number</p>
-								<p class="fs-5 h5"><b>@Model.userShippingView!.UnitNo</b></p>
+								<p class="fs-5 h5"><b>@Model.UserShippingView!.UnitNo</b></p>
 							</div>
 							<div class="col-lg-3 col-md-6 col-sm-12">
 								<p class="fs-6 h6">Street Address</p>
-								<p class="fs-5 h5" style="top:0;"><b>@Model.userShippingView.StreetAddress</b></p>
+								<p class="fs-5 h5" style="top:0;"><b>@Model.UserShippingView.StreetAddress</b></p>
 							</div>
 						</div>
 					</div>
@@ -303,11 +303,11 @@
 						<div class="row">
 							<div class="col-lg-3 col-md-6 col-sm-12">
 								<p class="fs-6 h6">Suburb</p>
-								<p class="fs-5 h5" style="top:0;"><b>@Model.userShippingView.Suburb</b></p>
+								<p class="fs-5 h5" style="top:0;"><b>@Model.UserShippingView.Suburb</b></p>
 							</div>
 							<div class="col-lg-3 col-md-6 col-sm-12">
 								<p class="fs-6 h6">City</p>
-								<p class="fs-5 h5" style="top:0;"><b>@Model.userShippingView.City</b></p>
+								<p class="fs-5 h5" style="top:0;"><b>@Model.UserShippingView.City</b></p>
 							</div>
 						</div>
 					</div>
@@ -315,11 +315,11 @@
 						<div class="row">
 							<div class="col-lg-3 col-md-6 col-sm-12">
 								<p class="fs-6 h6">Province</p>
-								<p class="fs-5 h5" style="top:0;"><b>@Model.userShippingView.Province</b></p>
+								<p class="fs-5 h5" style="top:0;"><b>@Model.UserShippingView.Province</b></p>
 							</div>
 							<div class="col-lg-3 col-md-6 col-sm-12">
 								<p class="fs-6 h6">PostalCode</p>
-								<p class="fs-5 h5" style="top:0;"><b>@Model.userShippingView.PostalCode</b></p>
+								<p class="fs-5 h5" style="top:0;"><b>@Model.UserShippingView.PostalCode</b></p>
 							</div>
 						</div>
 					</div>

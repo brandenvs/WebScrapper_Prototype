@@ -1,6 +1,6 @@
 ﻿@model WazaWare.co.za.Models.ViewModels
 @{
-	ViewData["Title"] = "CheckoutNewUser";
+	ViewData["Title"] = "CheckoutUser";
 }
 <!DOCTYPE html>
 <configuration>
@@ -171,7 +171,7 @@
 		</section>
 	</div>
 	<!-- Shopping Cart -->
-	@if (Model.Cart.Count() > 0)
+	@if (Model.Cart!.Count() > 0)
 	{
 		<section id="123Section" class="product-area shop-sidebar shop section">
 			<div class="container" style="max-width:100%">
@@ -189,7 +189,7 @@
 						<div class="col-12" style="padding: 0;">
 							<div class="shop-top curvedEdges">
 								<div class="content" style="width:100%;">
-									@if (Model.Cart.Select(s => s.ShippingCost).First() != 0)
+									@if (Model.Cart!.Select(s => s.ShippingCost).First() != 0)
 									{
 										<div class="row">
 											<div class="col">
@@ -242,7 +242,7 @@
 						</div>
 						<!-- Cart Products: Grid -->
 						<div class="row">
-							@foreach (var product in Model.Cart)
+							@foreach (var product in Model.Cart!)
 							{
 								<div class="col-lg-6 col-md-9 col-12">
 									<div class="single-product contain-fit">
@@ -318,10 +318,15 @@
 								</p>
 								<br>
 							</div>
-
 							<div class="card-footer text-center">
-								<a href="@Url.Action("Payment", "Checkout")" type="button" class="btn-outline-success fs-4 h4" style="padding:5px;">Proceed with Payment</a>
-								<button onclick="" type="button" class="btn-outline-info fs-4 h4" style="padding:5px;">Forgot Something?</button>
+								<div class="row">
+									<div class="col">
+										<a href="@Url.Action("Payment", "Checkout")" class="btn fs-4 h4" style="padding:5px;">Proceed with Payment</a>
+									</div>
+									<div class="col">
+										<a href="/" class="btn fs-4 h4" style="padding:5px;">Forgot Something?</a>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

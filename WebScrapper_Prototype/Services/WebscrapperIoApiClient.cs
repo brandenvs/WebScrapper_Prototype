@@ -1,26 +1,27 @@
 ﻿using HtmlAgilityPack;
-using System.Web;
-using WazaWare.co.za.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Web;
 using WazaWare.co.za.DAL;
+using WazaWare.co.za.Models;
 
 namespace WazaWare.co.za.Services
 {
 	public class WebscrapperIoApiClient
 	{
 		private readonly WazaWare_db_context _context;
-		Dictionary<int, string?> VendorSite = new();
-		Dictionary<int, string?> VendorProductURL = new();
-		Dictionary<int, string?> ProductKey = new();
-		Dictionary<int, string?> ProductCategory = new();
+		readonly Dictionary<int, string?> VendorSite = new();
+		readonly Dictionary<int, string?> VendorProductURL = new();
+		readonly Dictionary<int, string?> ProductKey = new();
+		readonly Dictionary<int, string?> ProductCategory = new();
+
 		//Dictionary<int, string?> ProductName = new();
-		Dictionary<int, string?> ProductStock = new();
-		Dictionary<int, decimal?> ProductBasePrice = new();
-		Dictionary<int, decimal?> ProductSalePrice = new();
-		Dictionary<int, string?> ProductDescription = new();
-		Dictionary<int, string?> ProductImageURL = new();
-		Dictionary<int, string?> Visible = new();
-		Dictionary<int, string?> dataBatch = new();
+		readonly Dictionary<int, string?> ProductStock = new();
+		readonly Dictionary<int, decimal?> ProductBasePrice = new();
+		readonly Dictionary<int, decimal?> ProductSalePrice = new();
+		readonly Dictionary<int, string?> ProductDescription = new();
+		readonly Dictionary<int, string?> ProductImageURL = new();
+		readonly Dictionary<int, string?> Visible = new();
+		readonly Dictionary<int, string?> dataBatch = new();
 
 		private readonly string url = "https://proxy.scrapeops.io/v1/";
 		private readonly string targetUrl = "https://www.wootware.co.za/sale";
@@ -48,12 +49,12 @@ namespace WazaWare.co.za.Services
 					"	Found Start URL: " +
 					$"		{filename}\n");
 				Console.Write(
-					"	Update File(y/n)?");					
+					"	Update File(y/n)?");
 				string? consoleInput = Console.ReadLine();
 				if (string.IsNullOrEmpty(consoleInput) || consoleInput != null && (consoleInput.ToLower().Equals("y") || consoleInput.ToLower().Equals("yes")))
 					await NewRequestWithProxy();
-				else if (string.IsNullOrEmpty(consoleInput) || consoleInput != null && (consoleInput.ToLower().Equals("n") || consoleInput.ToLower().Equals("no")))							
-					await StartScraping(filename);				
+				else if (string.IsNullOrEmpty(consoleInput) || consoleInput != null && (consoleInput.ToLower().Equals("n") || consoleInput.ToLower().Equals("no")))
+					await StartScraping(filename);
 				else
 					Console.WriteLine("Invalid Input");
 			}
@@ -100,7 +101,7 @@ namespace WazaWare.co.za.Services
 									  $"    Hyperlink: {href}");
 					if (!File.Exists(filename))
 					{
-						missingChildren.Add(countId, href);		
+						missingChildren.Add(countId, href);
 						Console.WriteLine($"Couldn't find child {filename}");
 					}
 					else
@@ -110,9 +111,9 @@ namespace WazaWare.co.za.Services
 						VendorSite.Add(countId, url);
 						ProductCategory.Add(countId, category);
 						kidnappedChildren.Add(countId, filename);
-					}				
+					}
 				}
-			}		
+			}
 			Console.WriteLine("<<-------------------------------------------------");
 			Console.WriteLine(
 				$"	Couldn't find {missingChildren.Count} children\n" +
@@ -306,7 +307,7 @@ namespace WazaWare.co.za.Services
 			while (test)
 			{
 				Console.WriteLine("Waiting for Response...");
-				using var response = await httpClient.GetAsync(proxyUrl);			
+				using var response = await httpClient.GetAsync(proxyUrl);
 				if (response.IsSuccessStatusCode)
 				{
 					Console.WriteLine("Response: " + response.StatusCode);
@@ -351,13 +352,13 @@ namespace WazaWare.co.za.Services
 					$"		Child No. {productUrl.Key}" +
 					$"		File: {productUrl.Value}\n");
 				Console.WriteLine();
-				HtmlDocument doc = new HtmlDocument();
+				HtmlDocument doc = new();
 				doc.Load(productUrl.Value);
 
 				// Get the product name				
 				var productNameNode = doc.DocumentNode.SelectSingleNode("//h1[@itemprop='name']");
 				if (productNameNode != null && !string.IsNullOrEmpty(productNameNode.InnerHtml))
-					ProductKey.Add(productUrl.Key, productNameNode.InnerHtml);	
+					ProductKey.Add(productUrl.Key, productNameNode.InnerHtml);
 				else
 					ProductKey.Add(productUrl.Key, "404");
 				// Get the product stock
@@ -436,7 +437,7 @@ namespace WazaWare.co.za.Services
 		}
 		public async Task ViewProducts(Dictionary<int, string> productUrls)
 		{
-			foreach(var productUrl in productUrls)
+			foreach (var productUrl in productUrls)
 			{
 				int key = productUrl.Key;
 				Console.ForegroundColor = ConsoleColor.Black;
@@ -496,7 +497,7 @@ namespace WazaWare.co.za.Services
 				var productSample = new List<string>();
 				int key = productUrl.Key;
 				foreach (var site in ProductKey.Where(s => s.Key == key))
-					productSample.Add(site.Value);
+					productSample.Add(site.Value!);
 				Console.ForegroundColor = ConsoleColor.Black;
 				Console.BackgroundColor = ConsoleColor.Blue;
 				Console.WriteLine();
@@ -506,7 +507,7 @@ namespace WazaWare.co.za.Services
 				{
 					Console.WriteLine("\n------------------------------------------------------------->>");
 					Console.WriteLine($"	Removing Product {item}");
-					var productRowsToDelete = products.Where(s => s.ProductName.Contains(item));
+					var productRowsToDelete = products.Where(s => s.ProductName!.Contains(item));
 					counterRemoved++;
 					_context.RemoveRange(productRowsToDelete);
 
@@ -586,26 +587,6 @@ namespace WazaWare.co.za.Services
 				$"Total Products Removed: {counterRemoved}\n" +
 				$"Total Products Added: {counterRemoved}\n");
 			Console.WriteLine();
-		}
-		public void Parse(string response)
-		{
-			//var productNameElement = doc.DocumentNode.SelectSingleNode("//h1[@itemprop='name']");
-			//var productName = productNameElement.InnerText.Trim();
-
-			//var stockAvailabilityElement = doc.DocumentNode.SelectSingleNode("//div[@class='availability-in-stock']");
-			//var stockAvailability = stockAvailabilityElement.InnerText.Trim();
-
-
-
-
-			// Create a WebRequest object to send a request to the URL of the HTML snippet
-			//WebRequest request = WebRequest.Create("https://www.example.com");
-			//WebResponse response = request.GetResponse();
-			//Stream dataStream = response.GetResponseStream();
-
-			//// Create an HTML document object and load the HTML snippet
-			//HtmlDocument doc = new HtmlDocument();
-			//doc.Load(dataStream);
 		}
 	}
 }

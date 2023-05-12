@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WazaWare.co.za.Models
@@ -17,7 +16,7 @@ namespace WazaWare.co.za.Models
 		public string? Email { get; set; }
 		[Required]
 		[Phone]
-		public string Phone { get; set; }
+		public string? Phone { get; set; }
 		[Required]
 		[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
 		[DataType(DataType.Password)]
@@ -31,6 +30,9 @@ namespace WazaWare.co.za.Models
 		public string? ConfirmPassword { get; set; }
 		[Required]
 		public DateTime Joined { get; set; }
+
+		[NotMapped]
+		public List<UserModel>? Users { get; set; }
 
 	}
 }

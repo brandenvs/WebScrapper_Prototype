@@ -2,16 +2,14 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using wazaware.co.za.Models;
-using WazaWare.co.za.Services;
 using X.PagedList;
-using static NuGet.Packaging.PackagingConstants;
 
 namespace WazaWare.co.za.Models
 {
-    public class Product
-    {
-        [Key]
-        public int ProductId { get; set; }
+	public class Product
+	{
+		[Key]
+		public int ProductId { get; set; }
 		[Required]
 		public string? ProductName { get; set; }
 		[Required]
@@ -25,18 +23,22 @@ namespace WazaWare.co.za.Models
 		[Required]
 		public decimal? ProductPriceSale { get; set; }
 		[Required]
-        public string? ProductVendorName { get; set; }
-        [Required]
-        public string? ProductVendorUrl { get; set; }
-        [Required]
-        public string? ProductVisibility { get; set; }
-        [Required]
-        public string? ProductDataBatchNo { get; set; }
+		public string? ProductVendorName { get; set; }
+		[Required]
+		public string? ProductVendorUrl { get; set; }
+		[Required]
+		public string? ProductVisibility { get; set; }
+		[Required]
+		public string? ProductDataBatchNo { get; set; }
 		[Required]
 		public string? ProductImageUrl { get; set; }
 		[NotMapped]
-        public IFormFile ProductPic { get; set; }
-    }
+		public IFormFile ProductPic { get; set; }
+		[NotMapped]
+		public string? ProductPriceBaseFormatted => ProductPriceBase?.ToString("C", CultureInfo.CreateSpecificCulture("en-ZA"));
+		[NotMapped]
+		public string? ProductPriceSaleFormatted => ProductPriceSale?.ToString("C", CultureInfo.CreateSpecificCulture("en-ZA"));
+	}
 	// Define LatestArrivalModel
 	public class LatestArrivalModel
 	{
@@ -144,17 +146,6 @@ namespace WazaWare.co.za.Models
 		public string FilterId { get; set; }
 		public string FilterName { get; set; }
 	}
-	public class Filter_Category
-	{
-		public string FilterId { get; set; }
-		public string FilterName { get; set; }
-	}
-	public class Filter_Active
-	{
-		public string FilterId { get; set; }
-		public string FilterName { get; set; }
-	}
-
 	public class UserManagerViewModels
 	{
 		//
@@ -225,33 +216,24 @@ namespace WazaWare.co.za.Models
 			public int PostalCode { get; set; }
 			public string Notes { get; set; }
 
-			public string? Password { get; set; }
-
-			public string? ConfirmPassword { get; set; }
-
 		}
-		//public UserLoginViewModel userLoginViewModel { get; set; }
-		//public UserViewModel userViewModel { get; set; }
-		//public UserRegisterViewModel userRegisterModel { get; set; }
-		//public UserShippingViewModel userShippingInfo { get; set; }
 	}
 	public class ViewModels
 	{
-		public PaymentModel Payment { get; set; }
-		public OrderSummary Summary { get; set; }
-		public UserManagerViewModels.UserModelView userView { get; set; }
-		public UserManagerViewModels.UserLoginViewModel userLoginView { get; set; }
-		public UserManagerViewModels.UserRegisterViewModel userRegisterView { get; set; }
-		public UserManagerViewModels.UserShippingViewModel userShippingView { get; set; }
-		public IPagedList<Product> Products { get; set; }
-		public IList<Filter_Sortby> FilterSortBy { get; set; }
-		public IList<Filter_Manufacturer> FilterManufacturer { get; set; }
-		public IList<Filter_Category> FilterCategory { get; set; }
-		public Product Product { get; set; }
-		public IPagedList<LatestArrivalModel> LatestArrivals { get; set; }
-		public IPagedList<LimitedStockModel> LimitedStock { get; set; }
-		public IPagedList<TrendingProductsModel> TrendingProducts { get; set; }
-		public IList<ProductsInCartModel> Cart { get; set; }
+		public PaymentModel? Payment { get; set; }
+		public OrderSummary? Summary { get; set; }
+		public UserManagerViewModels.UserModelView? UserView { get; set; }
+		public UserManagerViewModels.UserLoginViewModel? UserLoginView { get; set; }
+		public UserManagerViewModels.UserRegisterViewModel? UserRegisterView { get; set; }
+		public UserManagerViewModels.UserShippingViewModel? UserShippingView { get; set; }
+		public IPagedList<Product>? Products { get; set; }
+		public IList<Filter_Sortby>? FilterSortBy { get; set; }
+		public IList<Filter_Manufacturer>? FilterManufacturer { get; set; }
+		public Product? Product { get; set; }
+		public IPagedList<LatestArrivalModel>? LatestArrivals { get; set; }
+		public IPagedList<LimitedStockModel>? LimitedStock { get; set; }
+		public IPagedList<TrendingProductsModel>? TrendingProducts { get; set; }
+		public IList<ProductsInCartModel>? Cart { get; set; }
 
 
 

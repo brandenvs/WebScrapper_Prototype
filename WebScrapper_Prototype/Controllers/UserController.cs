@@ -1,12 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Web.Helpers;
+﻿using Microsoft.AspNetCore.Mvc;
 using wazaware.co.za.Services;
 using WazaWare.co.za.DAL;
 using WazaWare.co.za.Models;
-using WazaWare.co.za.Services;
 using static WazaWare.co.za.Models.UserManagerViewModels;
 
 namespace WazaWare.co.za.Controllers
@@ -24,9 +19,9 @@ namespace WazaWare.co.za.Controllers
 		[HttpGet]
 		public IActionResult Index()
 		{
-			WebServices services = new(_context, _httpContextAccessor);
+			WebServices services = new(_context);
 			var user = CookieTime();
-			if(user == null)
+			if (user == null)
 			{
 				ViewBag.isCookie = true;
 			}
@@ -39,7 +34,7 @@ namespace WazaWare.co.za.Controllers
 				else
 				{
 					ViewBag.isCookie = false;
-					return RedirectToAction(nameof(User));
+					return RedirectToAction(nameof(UserAccount));
 				}
 			}
 			return RedirectToAction(nameof(Login));
@@ -48,7 +43,7 @@ namespace WazaWare.co.za.Controllers
 		public IActionResult Login()
 		{
 			ViewBag.IsCookie = true;
-			WebServices services = new(_context, _httpContextAccessor);
+			WebServices services = new(_context);
 			var userModel = CookieTime();
 			var cartModel = services.LoadCart(userModel!.UserId);
 			var viewModel = new ViewModels
@@ -61,7 +56,7 @@ namespace WazaWare.co.za.Controllers
 		public IActionResult Login(UserLoginViewModel loginModel)
 		{
 			ViewBag.IsCookie = true;
-			WebServices services = new(_context, _httpContextAccessor);
+			WebServices services = new(_context);
 			var userModel = CookieTime();
 			var cartModel = services.LoadCart(userModel!.UserId);
 			if (TryValidateModel(loginModel))
@@ -86,7 +81,7 @@ namespace WazaWare.co.za.Controllers
 				{
 					ViewBag.InvalidCredentials = "Invalid Email... Please Register!";
 				}
-			}			
+			}
 			var viewModel = new ViewModels
 			{
 				Cart = cartModel
@@ -97,7 +92,7 @@ namespace WazaWare.co.za.Controllers
 		public IActionResult Register()
 		{
 			ViewBag.IsCookie = true;
-			WebServices services = new(_context, _httpContextAccessor);
+			WebServices services = new(_context);
 			var userModel = CookieTime();
 			var cartModel = services.LoadCart(userModel!.UserId);
 			var viewModel = new ViewModels
@@ -110,7 +105,7 @@ namespace WazaWare.co.za.Controllers
 		public async Task<IActionResult> Register(UserRegisterViewModel registerModel)
 		{
 			ViewBag.IsCookie = true;
-			WebServices services = new(_context, _httpContextAccessor);
+			WebServices services = new(_context);
 			var userModel = CookieTime();
 			var cartModel = services.LoadCart(userModel!.UserId);
 
@@ -145,20 +140,20 @@ namespace WazaWare.co.za.Controllers
 		public IActionResult UpdateUser()
 		{
 			ViewBag.IsCookie = false;
-			WebServices services = new(_context, _httpContextAccessor);
+			WebServices services = new(_context);
 			var userModel = CookieTime();
 			var cartModel = services.LoadCart(userModel!.UserId);
-			var userView = new UserModelView
+			var UserView = new UserModelView
 			{
-				FirstName = userModel.FirstName,
-				LastName = userModel.LastName,
-				Email = userModel.Email,
-				Phone = userModel.Phone
+				FirstName = userModel.FirstName!,
+				LastName = userModel.LastName!,
+				Email = userModel.Email!,
+				Phone = userModel.Phone!
 			};
 			var viewModel = new ViewModels
 			{
 				Cart = cartModel,
-				userView = userView
+				UserView = UserView
 			};
 			return View(viewModel);
 		}
@@ -166,11 +161,11 @@ namespace WazaWare.co.za.Controllers
 		public IActionResult UpdateUser(UserRegisterViewModel registerModel)
 		{
 			ViewBag.IsCookie = false;
-			WebServices services = new(_context, _httpContextAccessor);
+			WebServices services = new(_context);
 			var userModel = CookieTime();
 			var updatedUser = new UserModel();
 			bool changed = false;
-			if (userModel.FirstName != registerModel.FirstName)
+			if (userModel!.FirstName != registerModel.FirstName)
 			{
 				changed = true;
 				userModel.FirstName = registerModel.FirstName;
@@ -204,23 +199,23 @@ namespace WazaWare.co.za.Controllers
 			}
 			return RedirectToAction(nameof(Index));
 		}
-		public IActionResult User()
+		public IActionResult UserAccount()
 		{
 			ViewBag.IsCookie = false;
-			WebServices services = new(_context, _httpContextAccessor);
+			WebServices services = new(_context);
 			var userModel = CookieTime();
 			var cartModel = services.LoadCart(userModel!.UserId);
-			var userView = new UserModelView
+			var UserView = new UserModelView
 			{
-				FirstName = userModel.FirstName,
-				LastName = userModel.LastName,
-				Email = userModel.Email,
-				Phone = userModel.Phone
+				FirstName = userModel.FirstName!,
+				LastName = userModel.LastName!,
+				Email = userModel.Email!,
+				Phone = userModel.Phone!
 			};
 			var viewModel = new ViewModels
 			{
 				Cart = cartModel,
-				userView = userView
+				UserView = UserView
 			};
 			return View(viewModel);
 		}
@@ -230,7 +225,7 @@ namespace WazaWare.co.za.Controllers
 		}
 		public IActionResult Logout()
 		{
-			WebServices services = new(_context, _httpContextAccessor);
+			WebServices services = new(_context);
 			const string cookieName = "wazaware.co.za-auto-sign-in";
 			var requestCookies = HttpContext.Request.Cookies;
 			var intialRequest = requestCookies[cookieName];
@@ -249,7 +244,7 @@ namespace WazaWare.co.za.Controllers
 		{
 			const string cookieName = "wazaware.co.za-auto-sign-in";
 			var requestCookies = HttpContext.Request.Cookies;
-			var intialRequest = requestCookies[cookieName];
+			_ = requestCookies[cookieName];
 			var cookieOptions = new CookieOptions
 			{
 				Expires = DateTimeOffset.Now.AddDays(7),
@@ -267,7 +262,7 @@ namespace WazaWare.co.za.Controllers
 		}
 		public UserModel? CookieTime()
 		{
-			WebServices services = new(_context, _httpContextAccessor);
+			WebServices services = new(_context);
 			UserModel? model = null;
 			const string cookieName = "wazaware.co.za-auto-sign-in";
 			var requestCookies = HttpContext.Request.Cookies;
@@ -279,7 +274,7 @@ namespace WazaWare.co.za.Controllers
 			};
 			if (intialRequest != null)
 			{
-				if (_context.Users.Any(u => u.Email == intialRequest))
+				if (_context.Users!.Any(u => u.Email == intialRequest))
 				{
 					model = _context.Users.Where(x => x.Email == intialRequest).FirstOrDefault();
 				}
@@ -297,7 +292,7 @@ namespace WazaWare.co.za.Controllers
 				var email = services.CreateCookieReferance().Result;
 				HttpContext.Response.Cookies
 					.Append(cookieName, email, cookieOptions);
-				model = _context.Users
+				model = _context.Users!
 					.Where(x => x.Email == email).FirstOrDefault();
 			}
 			return model;

@@ -21,6 +21,6 @@ namespace WazaWare.co.za.Models
 		public Boolean isOrderPayed { get; set; }
 		[Required]
 		public DateTime? OrderCreatedOn { get; set; }
-		
+
 	}
 }

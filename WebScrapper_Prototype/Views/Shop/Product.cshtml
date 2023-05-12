@@ -142,8 +142,8 @@
 				<div class="col-12">
 					<div class="bread-inner">
 						<ul class="bread-list">
-							<li><a href="/Shop">Shop<i class="ti-arrow-right"></i></a></li>
-							<li class="active"><a href="">@Model.Product.ProductName!.Substring(0, 20)</a></li>							
+							<li><a href="/">Shop<i class="ti-arrow-right"></i></a></li>
+							<li class="active"><a href="">@Model.Product!.ProductName!.Substring(0, 20)...</a></li>							
 						</ul>
 					</div>
 				</div>
@@ -161,7 +161,7 @@
 					<div class="row no-gutters">
 						<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
 							<!-- Product Slider -->
-							<div class="product-gallery">
+							<div class="img-fluid">
 								<img src="@Url.Action("GetImage", "Backend", new { id = Model.Product.ProductId })" alt="@Model.Product.ProductName" />
 							</div>
 							<!-- End Product slider -->
@@ -185,8 +185,8 @@
 									<span><i class="fa fa-check-circle-o"></i> @Model.Product.ProductStock</span>
 								</div>
 								<div class="product-price">
-									<span class="text-decoration-line-through" style="color:red">R @Model.Product.ProductPriceBase</span>
-									<h3 style="font-weight:800;">R @Model.Product.ProductPriceSale</h3>
+									<span class="text-decoration-line-through" style="color:red">@Model.Product.ProductPriceBaseFormatted</span>
+									<h3 style="font-weight:800;">@Model.Product.ProductPriceSaleFormatted</h3>
 								</div>
 								<div class="quickview-peragraph">
 									<p>@Model.Product.ProductDescription</p>
@@ -215,7 +215,7 @@
 	<div style="border-top:dotted; border-width:2px; margin:15px; padding:10px;"></div>
 	<div class="container">
 		<div class="col-9">
-			<h3>Similar Products Section is being implemented</h3>
+			<h3>Frequently Bought Together</h3>
 		</div>
 		<div class="row">
 			<div class="col">

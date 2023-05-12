@@ -151,14 +151,14 @@
 						<div class="row" style="top:15px">
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
-									<label asp-for="userRegisterView.FirstName" class="form-label">First Name</label>
-									<input asp-for="userRegisterView.FirstName" type="text" name="firstName" autocomplete="on" placeholder="Bill" class="form-control" aria-label="FirstName">
+									<label asp-for="UserRegisterView.FirstName" class="form-label">First Name</label>
+									<input asp-for="UserRegisterView.FirstName" type="text" name="firstName" autocomplete="on" placeholder="Bill" class="form-control" aria-label="FirstName">
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
-									<label asp-for="userRegisterView.LastName" class="form-label">Last Name</label>
-									<input asp-for="userRegisterView.LastName" type="text" name="lastName" autocomplete="on" placeholder="Gates" class="form-control" aria-label="LastName">
+									<label asp-for="UserRegisterView.LastName" class="form-label">Last Name</label>
+									<input asp-for="UserRegisterView.LastName" type="text" name="lastName" autocomplete="on" placeholder="Gates" class="form-control" aria-label="LastName">
 								</div>
 							</div>
 						</div>
@@ -169,28 +169,28 @@
 									{
 										<p class="fs-6 h6" style="color:red">@ViewBag.Message</p>
 									}									
-									<label asp-for="userRegisterView.Email" class="form-label">Email Address</label>
-									<input asp-for="userRegisterView.Email" type="email" name="email" autocomplete="on" placeholder="lowprices@wazaware.co.za" class="form-control" aria-label="Email">
+									<label asp-for="UserRegisterView.Email" class="form-label">Email Address</label>
+									<input asp-for="UserRegisterView.Email" type="email" name="email" autocomplete="on" placeholder="lowprices@wazaware.co.za" class="form-control" aria-label="Email">
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
-									<label asp-for="userRegisterView.Phone" class="form-label">Phone Number</label>
-									<input asp-for="userRegisterView.Phone" type="tel" name="phone" autocomplete="on" placeholder="0815650206" class="form-control" aria-label="PhoneNumber">
+									<label asp-for="UserRegisterView.Phone" class="form-label">Phone Number</label>
+									<input asp-for="UserRegisterView.Phone" type="tel" name="phone" autocomplete="on" placeholder="0815650206" class="form-control" aria-label="PhoneNumber">
 								</div>
 							</div>
 						</div>
 						<div class="row" style="top:15px">
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
-									<label asp-for="userRegisterView.Password" class="form-label">Password</label>
-									<input asp-for="userRegisterView.Password" type="Password" name="password" autocomplete="off" placeholder="Password" class="form-control" aria-label="Password">
+									<label asp-for="UserRegisterView.Password" class="form-label">Password</label>
+									<input asp-for="UserRegisterView.Password" type="Password" name="password" autocomplete="off" placeholder="Password" class="form-control" aria-label="Password">
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
-									<label asp-for="userRegisterView.ConfirmPassword" class="form-label">Confirm Password</label>
-									<input asp-for="userRegisterView.ConfirmPassword" type="password" name="confirmPassword" autocomplete="off" placeholder="Confirm Password" class="form-control" aria-label="ConfirmPassword">
+									<label asp-for="UserRegisterView.ConfirmPassword" class="form-label">Confirm Password</label>
+									<input asp-for="UserRegisterView.ConfirmPassword" type="password" name="confirmPassword" autocomplete="off" placeholder="Confirm Password" class="form-control" aria-label="ConfirmPassword">
 								</div>
 							</div>
 						</div>
@@ -202,7 +202,7 @@
 					</form>
 					<div class="row">
 						<div class="col" style="top:10px;">
-							<a href="@Url.Action("Login", "User")" type="button" class="btn-outline-info" style="padding:5px;">Already Registered?</a>
+							<a href="@Url.Action("Login", "UserAccount")" type="button" class="btn-outline-info" style="padding:5px;">Already Registered?</a>
 						</div>
 					</div>
 				</div>

@@ -1,51 +1,48 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
-using WazaWare.co.za.Models;
 
 namespace wazaware.co.za.Models
-{	
+{
 	public class PaymentModel
 	{
 		[Key]
 		public int Id { get; set; }
 		[Required]
 		public int UserId { get; set; }
-		[Required] 
-		public string PaymentMethod { get; set; }
+		[Required]
+		public string? PaymentMethod { get; set; }
 
 		[Required]
 		[MaxLength(50)]
-		public string FirstName { get; set; }
+		public string? FirstName { get; set; }
 
 		[Required]
 		[MaxLength(50)]
-		public string LastName { get; set; }
+		public string? LastName { get; set; }
 		[Required]
 		[Phone]
-		public string Phone { get; set; }
+		public string? Phone { get; set; }
 
 		[Required]
 		[EmailAddress]
-		public string Email { get; set; }
+		public string? Email { get; set; }
 
 		public int UnitNo { get; set; }
 
 		[Required]
 		[MaxLength(100)]
-		public string StreetAddress { get; set; }
+		public string? StreetAddress { get; set; }
 
 		[Required]
 		[MaxLength(50)]
-		public string Suburb { get; set; }
+		public string? Suburb { get; set; }
 
 		[Required]
 		[MaxLength(50)]
-		public string City { get; set; }
+		public string? City { get; set; }
 
 		[Required]
 		[MaxLength(50)]
-		public string Province { get; set; }
+		public string? Province { get; set; }
 		[Required]
 		public int PostalCode { get; set; }
 

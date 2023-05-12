@@ -4,10 +4,10 @@
 
 namespace WazaWare.co.za.Migrations
 {
-    public partial class initvps1 : Migration
-    {
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+	public partial class initvps1 : Migration
+	{
+		protected override void Up(MigrationBuilder migrationBuilder)
+		{
 			migrationBuilder.DropColumn(
 				name: "UserId",
 				table: "OrderProducts");
@@ -27,9 +27,9 @@ namespace WazaWare.co.za.Migrations
 
 		}
 
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+		protected override void Down(MigrationBuilder migrationBuilder)
+		{
 
-        }
-    }
+		}
+	}
 }

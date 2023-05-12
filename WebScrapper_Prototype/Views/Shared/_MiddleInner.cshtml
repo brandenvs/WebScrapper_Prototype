@@ -41,10 +41,10 @@
 								</div>
 								<ul class="shopping-list">
 									<li>
-										<a class="h5" href="@Url.Action("Login", "User")">Login</a>
+										<a class="h5" href="@Url.Action("Login", "UserAccount")">Login</a>
 									</li>
 									<li>
-										<a class="h5" href="@Url.Action("Register", "User")">Register</a>
+										<a class="h5" href="@Url.Action("Register", "UserAccount")">Register</a>
 									</li>
 								</ul>
 							</div>
@@ -60,7 +60,7 @@
 										<a class="cart-img" href="/User"><img src="" alt="UserImage" /></a>
 									</li>
 									<li>
-										<a class="h4" href="@Url.Action("Index", "User")">My Account</a>
+										<a class="h4" href="@Url.Action("Index", "UserAccount")">My Account</a>
 									</li>
 									<li>
 										<a class="h5" href="/User">My Orders</a>
@@ -70,7 +70,7 @@
 									</li>
 								</ul>
 								<div class="bottom">
-									<a href="#" onclick="@Url.Action("Logout", "User")" class="btn animate">Logout</a>
+									<a href="#" onclick="@Url.Action("Logout", "UserAccount")" class="btn animate">Logout</a>
 								</div>
 							</div>
 						}
@@ -78,7 +78,7 @@
 					<div id="shoppingbasket" class="sinlge-bar shopping">
 						<a id="basketHover" href="#" onclick="loadCart()" class="single-icon">
 							<i>
-								<span class="total-count">@Model.Cart.Count</span>
+								<span class="total-count">@Model.Cart!.Count</span>
 								<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
 								<lord-icon src="https://cdn.lordicon.com/ggihhudh.json"
 										   trigger="loop-on-hover"
@@ -133,7 +133,7 @@
 									</div>
 									<div class="total">
 										<span>Discount:</span>
-										<span class="total-amount" style="color:red;font-weight:800;">@Model.Cart.Select(s => s.CartBaseSaleDiffFormatted).First()</span>
+										<span class="total-amount" style="color:forestgreen;font-weight:800;">@Model.Cart.Select(s => s.CartBaseSaleDiffFormatted).First()</span>
 									</div>
 									<div class="total">
 										<span>Total:</span>

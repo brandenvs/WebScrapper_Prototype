@@ -20,7 +20,6 @@
 		<PackageReference Include="CsvHelper" Version="12.2.1" />
 		<PackageReference Include="EntityFramework" Version="6.4.4" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
-		<PackageReference Include="Microsoft.AspNet.WebPages" Version="3.2.9" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.14" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.14">
 			<PrivateAssets>all</PrivateAssets>
@@ -52,6 +51,10 @@
 	<ItemGroup>
 		<Folder Include="Migrations\" />
 		<Folder Include="wwwroot\Uploads\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\.editorconfig" Link=".editorconfig" />
 	</ItemGroup>
 
 

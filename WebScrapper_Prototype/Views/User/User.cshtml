@@ -137,11 +137,11 @@
 			<div class="row">
 				<div class="col-sm-6 col-md-4 col-12">
 					<p class="fs-4 h4">Welcome back,</p>
-					<p class="fs-2 h2">@Model.userView.FirstName @Model.userView.LastName</p>
+					<p class="fs-2 h2">@Model.UserView.FirstName @Model.UserView.LastName</p>
 				</div>
 				<div class="col-sm-6 col-md-4 col-12" style="display:flex; flex-direction:column;">
 					<a href="#0" onclick="inDevNotice()" class="button btn-outline-danger" style="padding:10px;">Delete Account</a>
-					<a href="@Url.Action("Logout","User")" class="button btn-outline-warning" style="padding:10px;">Logout</a>
+					<a href="@Url.Action("Logout","UserAccount")" class="button btn-outline-warning" style="padding:10px;">Logout</a>
 				</div>
 				<div class="col-sm-6 col-md-4 col-12" style="display:flex; flex-direction:column;">
 					<a href="#0" onclick="inDevNotice()" class="button btn-outline-info" style="padding:10px;">My Orders</a>
@@ -150,27 +150,27 @@
 			</div>
 			<div class="row section-divider">
 				<div class="col-sm-6 col-md-6 col-12">
-					<p class="fw-bolder h5"><br>Contact Details <a href="@Url.Action("UpdateUser", "User")"><i class="ti-pencil-alt" style="white-space: nowrap;" data-toggle="tooltip" data-placement="right" title="Change Contact Details"></i></a></p>
+					<p class="fw-bolder h5"><br>Contact Details <a href="@Url.Action("UpdateUser", "UserAccount")"><i class="ti-pencil-alt" style="white-space: nowrap;" data-toggle="tooltip" data-placement="right" title="Change Contact Details"></i></a></p>
 					<div style="top:15px" class="row">
 						<div class="col">
 							<p class="label-info fs-4 fw-bolder">First Name</p>
-							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.userView.FirstName</p>
+							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.UserView.FirstName</p>
 						</div>
 						<div class="col">
 							<p class="label-info fs-4 fw-bolder">Last Name</p>
-							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.userView.LastName</p>
+							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.UserView.LastName</p>
 						</div>
 					</div>
 					<div style="top:15px" class="row">
 						<div class="col">
 							<p class="label-info fs-4 fw-bolder">Email Address</p>
-							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.userView.Email</p>
+							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.UserView.Email</p>
 						</div>
 					</div>
 					<div style="top:15px" class="row">
 						<div class="col">
 							<p class="label-info fs-4 fw-bolder">Phone Number</p>
-							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.userView.Phone</p>
+							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.UserView.Phone</p>
 						</div>
 						<div class="col">
 							<p class="label-info fs-4 fw-bolder">Password <a href="#" onclick=""><i class="ti-pencil-alt" style="white-space: nowrap;" data-toggle="tooltip" data-placement="right" title="Change Password"></i></a></p>

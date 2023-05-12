@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using System.Web.Helpers;
-using Microsoft.AspNetCore.HttpOverrides;
+﻿using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
 using WazaWare.co.za.DAL;
 
 
@@ -22,11 +20,10 @@ builder.Services.AddDbContext<WazaWare_db_context>(options => options.UseSqlServ
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-AddAuthorizationPolicies(builder.Services);
 builder.Services.AddMvcCore().AddRazorViewEngine();
 builder.Services.AddMvcCore().AddViews().AddCookieTempDataProvider();
 
-AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
+// AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier;
 
 var app = builder.Build();
 
@@ -57,17 +54,3 @@ app.MapControllerRoute(
 	pattern: "{controller=Shop}/{action=Index}/{id?}");
 
 app.Run();
-
-void AddAuthorizationPolicies(IServiceCollection services)
-{
-	services.AddAuthorization(options =>
-	{
-		options.AddPolicy("OwnerOnly", policy => policy.RequireClaim("OwnerId"));
-	});
-
-	services.AddAuthorization(options =>
-	{
-		options.AddPolicy("RequireAdmin", policy => policy.RequireClaim("Administrator"));
-		options.AddPolicy("RequireManager", policy => policy.RequireClaim("Manager"));
-	});
-}

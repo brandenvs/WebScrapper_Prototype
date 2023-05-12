@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Net.Mail;
 using System.Net;
+using System.Net.Mail;
 using System.Text;
 using WazaWare.co.za.DAL;
 using WazaWare.co.za.Models;
@@ -11,41 +11,66 @@ using X.PagedList;
 
 namespace WazaWare.co.za.Controllers
 {
-    public class BackendController : Controller
-    {
-        private readonly WazaWare_db_context _context;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private const string API_KEY = "b4798a48-3db7-4bfd-8cdf-7e1d4dde5ed2";
-        private static readonly HttpClient client = new();
-        public BackendController(WazaWare_db_context context, IWebHostEnvironment webHost, IHttpContextAccessor httpContextAccessor)
-        {
-            _context = context;
-            _webHostEnvironment = webHost;
-            _httpContextAccessor = httpContextAccessor;
-        }
+	public class BackendController : Controller
+	{
+		private readonly WazaWare_db_context _context;
+		private readonly IWebHostEnvironment _webHostEnvironment;
+		private readonly IHttpContextAccessor _httpContextAccessor;
+		private const string API_KEY = "b4798a48-3db7-4bfd-8cdf-7e1d4dde5ed2";
+		private static readonly HttpClient client = new();
+		public BackendController(WazaWare_db_context context, IWebHostEnvironment webHost, IHttpContextAccessor httpContextAccessor)
+		{
+			_context = context;
+			_webHostEnvironment = webHost;
+			_httpContextAccessor = httpContextAccessor;
+		}
 		/// <summary>
 		/// Index ViewModels for Backend
 		/// </summary>
 		[HttpGet]
 		public IActionResult Index()
-		{		
+		{
 			return View();
 		}
 		[HttpGet]
 		public async Task<IActionResult> ScrapeUrl(int startScraper)
 		{
-			if(startScraper > 0)
+			if (startScraper > 0)
 			{
 				WebscrapperIoApiClient webscrapper = new(_context);
 				await webscrapper.StartRequests();
 			}
 			return View();
 		}
-		/// <summary>
-		/// Downloads and Image is URL. Saves Downloaded Image to Database
-		/// </summary>
-		[HttpGet]
+        public IActionResult Portal()
+		{
+			return View();
+		}
+        public IActionResult ManageUsers()
+		{
+			var users = _context.Users!.ToList();
+			var viewModel = new UserModel
+			{
+				Users = users
+			};
+			return View(viewModel);
+		}
+		public async Task DeleteAllUsers()
+		{
+			var users = _context.Users!.ToList();
+			_context.Users!.RemoveRange(users!);
+			await _context.SaveChangesAsync();
+		}
+        public async Task DeleteCookies()
+        {
+            var cookies = _context.Users!.Where(s => s.Email!.Contains("wazaware.co.za")).ToList();
+            _context.Users!.RemoveRange(cookies!);
+            await _context.SaveChangesAsync();
+        }
+        /// <summary>
+        /// Downloads and Image is URL. Saves Downloaded Image to Database
+        /// </summary>
+        [HttpGet]
 		public async Task DownloadAndSaveImage(Dictionary<int, string> productUrls)
 		{
 			Console.WriteLine("Preparing to Download Images...");
@@ -121,7 +146,7 @@ namespace WazaWare.co.za.Controllers
 			///	using (var httpClient = new HttpClient())
 			///	{
 			///		consoleLogs.Add("Starting..."); ;
-			///		httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0");
+			///		httpClient.DefaultRequestHeaders.Add("UserAccount-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0");
 			///		httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8");
 			///		httpClient.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.5");
 			///		httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
@@ -130,7 +155,7 @@ namespace WazaWare.co.za.Controllers
 			///		httpClient.DefaultRequestHeaders.Add("Sec-Fetch-Dest", "document");
 			///		httpClient.DefaultRequestHeaders.Add("Sec-Fetch-Mode", "navigate");
 			///		httpClient.DefaultRequestHeaders.Add("Sec-Fetch-Site", "none");
-			///		httpClient.DefaultRequestHeaders.Add("Sec-Fetch-User", "?1");
+			///		httpClient.DefaultRequestHeaders.Add("Sec-Fetch-UserAccount", "?1");
 			///		httpClient.DefaultRequestHeaders.Add("Cache-Control", "max-age=0");
 			///		HttpResponseMessage response = await httpClient.GetAsync(url);
 			///		//var response = await httpClient.GetAsync(url);
@@ -200,26 +225,26 @@ namespace WazaWare.co.za.Controllers
 				Dictionary<int, string> imageFiles = new();
 				Queue<int> id = new();
 				Queue<string> url = new();
-				int productCount = products.Count();		
+				int productCount = products.Count();
 				foreach (var product in products)
 				{
 					Console.WriteLine("Loading Product...\n" +
 						$"ProductId: {product.ProductId}\n" +
 						$"URL: {product.ProductImageUrl}");
-					productUrls.Add(product.ProductId, product.ProductImageUrl);
+					productUrls.Add(product.ProductId, product.ProductImageUrl!);
 				}
-				foreach(var image in images)
+				foreach (var image in images)
 				{
 					Console.WriteLine("Loading Image...\n" +
 						$"Product Id: {image.ProductId}\n" +
 						$"File Name: {image.ImageFileName}");
-					imageFiles.Add(image.ProductId, image.ImageFileName);
+					imageFiles.Add(image.ProductId, image.ImageFileName!);
 				}
-				foreach(KeyValuePair<int, string> product in productUrls)
+				foreach (KeyValuePair<int, string> product in productUrls)
 				{
-					foreach(KeyValuePair<int, string> image in imageFiles)
+					foreach (KeyValuePair<int, string> image in imageFiles)
 					{
-						if(product.Key == image.Key)
+						if (product.Key == image.Key)
 						{
 							Console.WriteLine(product.Value + " : Image already Exists!");
 							productUrls.Remove(product.Key);
@@ -229,12 +254,12 @@ namespace WazaWare.co.za.Controllers
 					}
 				}
 				Console.Write($"Total Product Images : {products.Count()}\n" +
-					$"Original Download Queue : {productUrls.Count() + counter}" +
+					$"Original Download Queue : {productUrls.Count + counter}" +
 					$"Duplicate Images : {counter}\n" +
-					$"Optimized Download Queue : {productUrls.Count()} Images to Download\n" +
+					$"Optimized Download Queue : {productUrls.Count} Images to Download\n" +
 					"Enter (yes / no) to Confirm\n>");
 				var input = Console.ReadLine();
-				if (input == "yes" | input.Equals("yes"))
+				if (input == "yes" | input!.Equals("yes"))
 					await DownloadAndSaveImage(productUrls);
 				else
 					Console.Write("You have Exited!");
@@ -248,37 +273,37 @@ namespace WazaWare.co.za.Controllers
 		public async Task ClearImages()
 		{
 			var imageModel = _context.ProductImages;
-            foreach(var image in imageModel)
-            {
-                _context.ProductImages.Remove(image);                
-            }
+			foreach (var image in imageModel)
+			{
+				_context.ProductImages.Remove(image);
+			}
 			await _context.SaveChangesAsync();
 		}
-        /// <summary>
-        /// Gets Image. Method called.
-        /// </summary>
+		/// <summary>
+		/// Gets Image. Method called.
+		/// </summary>
 		[HttpGet]
 		public IActionResult GetImage(int id)
 		{
-            var imageModel = _context.ProductImages.FirstOrDefault(img => img.ProductId.Equals(id));
-            if (imageModel != null && imageModel.ImageFileContent != null)
-                return File(imageModel.ImageFileContent, "image/jpeg");
-            else return NotFound();
+			var imageModel = _context.ProductImages!.FirstOrDefault(img => img.ProductId.Equals(id));
+			if (imageModel != null && imageModel.ImageFileContent != null)
+				return File(imageModel.ImageFileContent, "image/jpeg");
+			else return NotFound();
 
 		}
-        /// <summary>
-        /// Automates Adding Products from CSV file. Calls Services.
-        /// </summary>
-        [HttpGet]
+		/// <summary>
+		/// Automates Adding Products from CSV file. Calls Services.
+		/// </summary>
+		[HttpGet]
 		public IActionResult AutoProductCreateTestImage()
 		{
-			AddCSV product = new AddCSV();
+			AddCSV product = new();
 			return View(product);
 		}
-        /// <summary>
-        /// Automates Adding Products from CSV file. Calls Services.
-        /// </summary>
-        [HttpPost]
+		/// <summary>
+		/// Automates Adding Products from CSV file. Calls Services.
+		/// </summary>
+		[HttpPost]
 		public ActionResult AutoProductCreateTestImage(AddCSV addCSV)
 		{
 			var _productService = new ProductService();
@@ -287,7 +312,7 @@ namespace WazaWare.co.za.Controllers
 			var rowData = _productService.ReadCSVFileImage(location);
 			foreach (ProductImageURLs item in rowData)
 			{
-				ProductImageURLs productImages = new ProductImageURLs
+				ProductImageURLs productImages = new()
 				{
 					VendorSiteOrigin = item.VendorSiteOrigin,
 					VendorSiteProduct = item.VendorSiteProduct,
@@ -304,101 +329,101 @@ namespace WazaWare.co.za.Controllers
 		/// Automates Adding Products from CSV file. Calls Services.
 		/// </summary>
 		[HttpGet]
-        public IActionResult AutoProductCreateTest()
-        {
-            AddCSV product = new AddCSV();
-            return View(product);
-        }
-        /// <summary>
-        /// Automates Adding Products from CSV file. Calls Services.
-        /// </summary>
-        [HttpPost]
-        public ActionResult AutoProductCreateTest(AddCSV addCSV)
-        {
-            var _productService = new ProductService();
-            string uniqueCSVFileName = ProcessUploadedCSVFile(addCSV);
-            var location = "wwwroot\\Uploads\\" + uniqueCSVFileName;
-            var rowData = _productService.ReadCSVFileSingle(location);
-            foreach (Product item in rowData)
-            {
-                Product product = new Product();
-                product.ProductVendorName = item.ProductVendorName;
-				product.ProductVendorUrl = item.ProductVendorUrl;
-                product.ProductCategory = item.ProductCategory;
-                product.ProductName = item.ProductName;
-                product.ProductStock = item.ProductStock;
-                product.ProductPriceBase = item.ProductPriceBase;
-                product.ProductPriceSale = item.ProductPriceSale;
-                product.ProductDescription = item.ProductDescription;
-				product.ProductImageUrl = item.ProductImageUrl;             
-                product.ProductVisibility = "ProductVisibility";
-                product.ProductDataBatchNo = "March23";
-                _context.Attach(product);
-                _context.Entry(product).State = EntityState.Added;
-                _context.SaveChanges();
-            }
-            return RedirectToAction(nameof(Index));
-        }
-        /// <summary>
-        /// Method is called to process CSV File
-        /// </summary>
-        private string ProcessUploadedCSVFile(AddCSV model)
-        {
-            string uniqueFileName = "ERROR";
-            string path = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads");
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-            if (model.CSVFile != null)
-            {
-                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.CSVFile.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    model.CSVFile.CopyTo(fileStream);
-                }
-            }
-            return uniqueFileName;
-        }
+		public IActionResult AutoProductCreateTest()
+		{
+			AddCSV product = new();
+			return View(product);
+		}
+		/// <summary>
+		/// Automates Adding Products from CSV file. Calls Services.
+		/// </summary>
+		[HttpPost]
+		public ActionResult AutoProductCreateTest(AddCSV addCSV)
+		{
+			var _productService = new ProductService();
+			string uniqueCSVFileName = ProcessUploadedCSVFile(addCSV);
+			var location = "wwwroot\\Uploads\\" + uniqueCSVFileName;
+			var rowData = _productService.ReadCSVFileSingle(location);
+			foreach (Product item in rowData)
+			{
+				Product product = new()
+				{
+					ProductVendorName = item.ProductVendorName,
+					ProductVendorUrl = item.ProductVendorUrl,
+					ProductCategory = item.ProductCategory,
+					ProductName = item.ProductName,
+					ProductStock = item.ProductStock,
+					ProductPriceBase = item.ProductPriceBase,
+					ProductPriceSale = item.ProductPriceSale,
+					ProductDescription = item.ProductDescription,
+					ProductImageUrl = item.ProductImageUrl,
+					ProductVisibility = "ProductVisibility",
+					ProductDataBatchNo = "March23"
+				};
+				_context.Attach(product);
+				_context.Entry(product).State = EntityState.Added;
+				_context.SaveChanges();
+			}
+			return RedirectToAction(nameof(Index));
+		}
+		/// <summary>
+		/// Method is called to process CSV File
+		/// </summary>
+		private string ProcessUploadedCSVFile(AddCSV model)
+		{
+			string uniqueFileName = "ERROR";
+			string path = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads");
+			if (!Directory.Exists(path))
+			{
+				Directory.CreateDirectory(path);
+			}
+			if (model.CSVFile != null)
+			{
+				string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads");
+				uniqueFileName = Guid.NewGuid().ToString() + "_" + model.CSVFile.FileName;
+				string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+				using var fileStream = new FileStream(filePath, FileMode.Create);
+				model.CSVFile.CopyTo(fileStream);
+			}
+			return uniqueFileName;
+		}
 		/// <summary>
 		/// EXPERIMENTAL FEATURE
 		/// </summary>
 		[HttpGet]
-        public async Task<IActionResult> SendSMSToTelkom(string mobileNumber, string message)
+		public async Task<IActionResult> SendSMSToTelkom(string mobileNumber, string message)
 		{
 			try
-			{			
+			{
 				SmtpClient smtpClient = new("smtp.gmail.com", 587)
-                {
-                    EnableSsl = true,
-                    UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential("brandenconnected@gmail.com", "mueadqbombixceuk")
-                };
+				{
+					EnableSsl = true,
+					UseDefaultCredentials = false,
+					Credentials = new NetworkCredential("brandenconnected@gmail.com", "mueadqbombixceuk")
+				};
 
-                MailMessage mailMessage = new()
-                {
-                    From = new MailAddress("brandenconnected@gmail.com")
-                };
-                mailMessage.To.Add($"{mobileNumber}@sms.co.za");// use the appropriate email-to-SMS gateway domain
+				MailMessage mailMessage = new()
+				{
+					From = new MailAddress("brandenconnected@gmail.com")
+				};
+				mailMessage.To.Add($"{mobileNumber}@sms.co.za");// use the appropriate email-to-SMS gateway domain
 				mailMessage.CC.Add("brandenconnected@gmail.com");
 				mailMessage.Subject = "SMS message";
 				mailMessage.Body = message[..Math.Min(160, message.Length)]; // limit the message to 160 characters
 
 				await smtpClient.SendMailAsync(mailMessage);
-                Console.WriteLine("Successfully Sent SMS\n" +
+				Console.WriteLine("Successfully Sent SMS\n" +
 					$"From : {mailMessage.From}\n" +
 					$"To : {mailMessage.To}\n" +
 					$"Subject : {mailMessage.Subject}\n" +
 					$"Body : {mailMessage.Body}\n");
-            }
-            catch (Exception ex)
+			}
+			catch (Exception ex)
 			{
 				Console.WriteLine($"An error occurred while sending the SMS message: {ex.Message}");
 			}
 			return RedirectToAction("Index");
-        }
+		}
 		/// <summary>
 		/// EXPERIMENTAL FEATURE
 		/// </summary>
@@ -406,13 +431,12 @@ namespace WazaWare.co.za.Controllers
 		public async Task<ActionResult> Gpt3Recipe(Gpt3 ingredients)
 		{
 			string recipe = string.Empty;
-			string prompt = string.Empty;
-			prompt = "Please give me a recipe based on the following ingredients:"
-				+ " " + ingredients.Ingredient1
-				+ " " + ingredients.Ingredient2
-				+ " " + ingredients.Ingredient3
-				+ " " + ingredients.Ingredient4
-				+ " " + ingredients.Ingredient5;
+			string prompt = "Please give me a recipe based on the following ingredients:"
+							+ " " + ingredients.Ingredient1
+							+ " " + ingredients.Ingredient2
+							+ " " + ingredients.Ingredient3
+							+ " " + ingredients.Ingredient4
+							+ " " + ingredients.Ingredient5;
 			Console.WriteLine(prompt);
 			HttpClient client = new();
 			client.DefaultRequestHeaders.Add("Authorization", "Bearer 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");
@@ -452,7 +476,7 @@ namespace WazaWare.co.za.Controllers
 		/// EXPERIMENTAL FEATURE
 		/// </summary>
 		[HttpGet]
-		public async Task<ActionResult> Gpt3(string text)
+		public IActionResult Gpt3(string text)
 		{
 			ViewBag.recipe = text;
 			return View();

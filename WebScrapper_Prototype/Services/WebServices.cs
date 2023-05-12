@@ -1,4 +1,5 @@
-﻿using WazaWare.co.za.DAL;
+﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using WazaWare.co.za.DAL;
 using WazaWare.co.za.Models;
 
 namespace wazaware.co.za.Services
@@ -6,32 +7,29 @@ namespace wazaware.co.za.Services
 	public class WebServices
 	{
 		private readonly WazaWare_db_context _context;
-		private readonly IHttpContextAccessor _httpContextAccessor;
-
-		public WebServices(WazaWare_db_context context, IHttpContextAccessor httpContextAccessor)
+		public WebServices(WazaWare_db_context context)
 		{
 			_context = context;
-			_httpContextAccessor = httpContextAccessor;
 		}
 		public UserModel LoadUser(string userEmail)
 		{
-			var user = _context.Users.Where(x => x.Equals(userEmail)).FirstOrDefault();
+			var user = _context.Users!.Where(x => x.Equals(userEmail)).FirstOrDefault();
 			return user!;
 		}
 		public List<ProductsInCartModel> LoadCart(int userId)
 		{
-			// Query Database for User's Shopping Cart using variable userId
+			// Query Database for UserAccount's Shopping Cart using variable userId
 			// Convert Database response to a List using : .ToList()
-			var userShoppingCart = _context.UsersShoppingCarts
+			var userShoppingCart = _context.UsersShoppingCarts!
 				.Where(c => c.UserId == userId)
 				.ToList();
 			// Select Product Ids in Shopping Cart List
 			var productIds = userShoppingCart
 				.Select(c => c.ProductId)
 				.ToList();
-			// Query Database for Products related to User's Shopping Cart
+			// Query Database for Products related to UserAccount's Shopping Cart
 			// Convert Database response to a List using : .ToList()
-			var products = _context.Products
+			var products = _context.Products!
 				.Where(p => productIds.Contains(p.ProductId))
 				.ToList();
 			// Join Products & Shopping Cart Lists
@@ -89,7 +87,7 @@ namespace wazaware.co.za.Services
 					TryGetFreeShipping = tryGetFreeShipping,
 					ProductPic = x.ProductPic
 				});
-			// Return User's Cart Information in a List Data Type to Relevant Action Method
+			// Return UserAccount's Cart Information in a List Data Type to Relevant Action Method
 			return productsInCart.ToList();
 
 		}
@@ -109,10 +107,31 @@ namespace wazaware.co.za.Services
 				Password = generatedPwd,
 				Joined = DateTime.Now
 			};
-			_context!.Users.Add(userModel);
+			_context!.Users!.Add(userModel);
 			await _context!.SaveChangesAsync();
 			var user = _context!.Users.Where(s => s.Email!.Equals(generatedEmail)).FirstOrDefault();
 			return user!.Email!;
+		}
+		public Dictionary<string, string> Capitilize(Dictionary<string, string> data)
+		{
+			Dictionary<string, string> updatedData = new();
+			foreach (KeyValuePair<string, string> dict in data)
+			{
+				string updatedString = string.Empty;
+				char[] stringCharacters = dict.Value.ToCharArray();
+				for (int i = 0; i < stringCharacters.Length; i++)
+				{
+					if (i == 0)
+					{
+						string tmp = stringCharacters[0].ToString().ToUpper();
+						updatedString += tmp;
+					}
+					else
+						updatedString += stringCharacters[i];
+				}
+				updatedData.Add(dict.Key, updatedString);
+			}			
+			return updatedData;
 		}
 
 	}

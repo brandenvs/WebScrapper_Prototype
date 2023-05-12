@@ -150,17 +150,17 @@
 						<div class="row" style="top:15px">
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
-									<label asp-for="userLoginView.Email" class="form-label">Email:</label>
-									<input asp-for="userLoginView.Email" type="email" name="email" autocomplete="on" placeholder="lowprices@wazaware.co.za" class="form-control" aria-label="Email" required>
-									<span asp-validation-for="userLoginView.Email" class="text-danger"></span>
+									<label asp-for="UserLoginView.Email" class="form-label">Email:</label>
+									<input asp-for="UserLoginView.Email" type="email" name="email" autocomplete="on" placeholder="lowprices@wazaware.co.za" class="form-control" aria-label="Email" required>
+									<span asp-validation-for="UserLoginView.Email" class="text-danger"></span>
 								</div>
 							</div>
 						</div>
 						<div class="row" style="top:15px">
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
-									<label asp-for="userLoginView.Password" class="form-label">Password</label>
-									<input asp-for="userLoginView.Password" type="password" name="password" autocomplete="on" class="form-control" placeholder="Password" aria-label="Password" required>
+									<label asp-for="UserLoginView.Password" class="form-label">Password</label>
+									<input asp-for="UserLoginView.Password" type="password" name="password" autocomplete="on" class="form-control" placeholder="Password" aria-label="Password" required>
 									<a href="#"><i class="ti-angle-right" style="white-space: nowrap;" data-toggle="tooltip" data-placement="right" title="Reset Password"> Forgot Password?</i></a>
 								</div>
 							</div>
@@ -173,7 +173,7 @@
 					</form>
 					<div class="row">
 						<div class="col" style="top:10px;">
-							<a href="@Url.Action("Register", "User")" type="button" class="btn-outline-info" style="padding:5px;">Not Registered?</a>
+							<a href="@Url.Action("Register", "UserAccount")" type="button" class="btn-outline-info" style="padding:5px;">Not Registered?</a>
 						</div>
 					</div>
 				</div>
