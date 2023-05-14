@@ -25,12 +25,12 @@ namespace WazaWare.co.za.Controllers
 			_httpContextAccessor = httpContextAccessor;
 		}
 		/// <summary>
-		/// Index ViewModels for Backend
+		/// Index ShopViewModel for Backend
 		/// </summary>
 		[HttpGet]
 		public IActionResult Index()
 		{
-			return View();
+			return RedirectToAction(nameof(Portal));
 		}
 		[HttpGet]
 		public async Task<IActionResult> ScrapeUrl(int startScraper)
@@ -48,23 +48,34 @@ namespace WazaWare.co.za.Controllers
 		}
         public IActionResult ManageUsers()
 		{
-			var users = _context.Users!.ToList();
+			var users = _context.UserAccountDb!.ToList();
 			var viewModel = new UserModel
 			{
 				Users = users
 			};
 			return View(viewModel);
 		}
+		public IActionResult Orders()
+		{
+			var orders = _context.OrderDb!.ToList();
+			var orderedProducts = _context.OrderProducts!.ToList();
+			var viewModel = new OrdersViewModel
+			{
+				Orders = orders, 
+				OrderedProducts = orderedProducts
+			};
+			return View(viewModel);
+		}
 		public async Task DeleteAllUsers()
 		{
-			var users = _context.Users!.ToList();
-			_context.Users!.RemoveRange(users!);
+			var users = _context.UserAccountDb!.ToList();
+			_context.UserAccountDb!.RemoveRange(users!);
 			await _context.SaveChangesAsync();
 		}
         public async Task DeleteCookies()
         {
-            var cookies = _context.Users!.Where(s => s.Email!.Contains("wazaware.co.za")).ToList();
-            _context.Users!.RemoveRange(cookies!);
+            var cookies = _context.UserAccountDb!.Where(s => s.Email!.Contains("wazaware.co.za")).ToList();
+            _context.UserAccountDb!.RemoveRange(cookies!);
             await _context.SaveChangesAsync();
         }
         /// <summary>
@@ -205,12 +216,12 @@ namespace WazaWare.co.za.Controllers
 			/// </summary>
 		}
 		/// <summary>
-		/// ViewModels method for Downloading and Saving Images. Gets and passes image URL to correct methods
+		/// ShopViewModel method for Downloading and Saving Images. Gets and passes image URL to correct methods
 		/// </summary>
 		//[HttpGet]
 		public async Task<IActionResult> GetImages(int startAutoDownload, int clear)
 		{
-			var products = from p in _context.Products
+			var products = from p in _context.ProductDb
 						   select p;
 			var images = from i in _context.ProductImages
 						 select i;
@@ -228,7 +239,7 @@ namespace WazaWare.co.za.Controllers
 				int productCount = products.Count();
 				foreach (var product in products)
 				{
-					Console.WriteLine("Loading Product...\n" +
+					Console.WriteLine("Loading ProductInfomation...\n" +
 						$"ProductId: {product.ProductId}\n" +
 						$"URL: {product.ProductImageUrl}");
 					productUrls.Add(product.ProductId, product.ProductImageUrl!);
@@ -236,7 +247,7 @@ namespace WazaWare.co.za.Controllers
 				foreach (var image in images)
 				{
 					Console.WriteLine("Loading Image...\n" +
-						$"Product Id: {image.ProductId}\n" +
+						$"ProductInfomation Id: {image.ProductId}\n" +
 						$"File Name: {image.ImageFileName}");
 					imageFiles.Add(image.ProductId, image.ImageFileName!);
 				}
@@ -253,7 +264,7 @@ namespace WazaWare.co.za.Controllers
 						}
 					}
 				}
-				Console.Write($"Total Product Images : {products.Count()}\n" +
+				Console.Write($"Total ProductInfomation Images : {products.Count()}\n" +
 					$"Original Download Queue : {productUrls.Count + counter}" +
 					$"Duplicate Images : {counter}\n" +
 					$"Optimized Download Queue : {productUrls.Count} Images to Download\n" +
@@ -273,9 +284,9 @@ namespace WazaWare.co.za.Controllers
 		public async Task ClearImages()
 		{
 			var imageModel = _context.ProductImages;
-			foreach (var image in imageModel)
+			foreach (var image in imageModel!)
 			{
-				_context.ProductImages.Remove(image);
+				_context.ProductImages!.Remove(image);
 			}
 			await _context.SaveChangesAsync();
 		}
@@ -292,7 +303,7 @@ namespace WazaWare.co.za.Controllers
 
 		}
 		/// <summary>
-		/// Automates Adding Products from CSV file. Calls Services.
+		/// Automates Adding ProductDb from CSV file. Calls Services.
 		/// </summary>
 		[HttpGet]
 		public IActionResult AutoProductCreateTestImage()
@@ -301,7 +312,7 @@ namespace WazaWare.co.za.Controllers
 			return View(product);
 		}
 		/// <summary>
-		/// Automates Adding Products from CSV file. Calls Services.
+		/// Automates Adding ProductDb from CSV file. Calls Services.
 		/// </summary>
 		[HttpPost]
 		public ActionResult AutoProductCreateTestImage(AddCSV addCSV)
@@ -326,7 +337,7 @@ namespace WazaWare.co.za.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 		/// <summary>
-		/// Automates Adding Products from CSV file. Calls Services.
+		/// Automates Adding ProductDb from CSV file. Calls Services.
 		/// </summary>
 		[HttpGet]
 		public IActionResult AutoProductCreateTest()
@@ -335,7 +346,7 @@ namespace WazaWare.co.za.Controllers
 			return View(product);
 		}
 		/// <summary>
-		/// Automates Adding Products from CSV file. Calls Services.
+		/// Automates Adding ProductDb from CSV file. Calls Services.
 		/// </summary>
 		[HttpPost]
 		public ActionResult AutoProductCreateTest(AddCSV addCSV)

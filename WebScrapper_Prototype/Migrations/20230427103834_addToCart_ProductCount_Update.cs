@@ -10,7 +10,7 @@ namespace WazaWare.co.za.Migrations
 		{
 			migrationBuilder.AddColumn<int>(
 				name: "ProductCount",
-				table: "UsersShoppingCarts",
+				table: "ShoppingCartDb",
 				type: "int",
 				nullable: false,
 				defaultValue: 0);
@@ -20,7 +20,7 @@ namespace WazaWare.co.za.Migrations
 		{
 			migrationBuilder.DropColumn(
 				name: "ProductCount",
-				table: "UsersShoppingCarts");
+				table: "ShoppingCartDb");
 		}
 	}
 }

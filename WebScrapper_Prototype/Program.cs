@@ -36,7 +36,7 @@ forwardedHeaderOptions.KnownProxies.Clear();
 app.UseForwardedHeaders(forwardedHeaderOptions);
 if (!app.Environment.IsDevelopment())
 {
-	app.UseExceptionHandler("/Shop/WebsiteCritical");
+	app.UseExceptionHandler("/Home/WebsiteCritical");
 	app.UseHsts();
 }
 
@@ -51,6 +51,6 @@ app.MapRazorPages();
 
 app.MapControllerRoute(
 	name: "default",
-	pattern: "{controller=Shop}/{action=Index}/{id?}");
+	pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

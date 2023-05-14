@@ -12,8 +12,8 @@ using WazaWare.co.za.DAL;
 namespace WazaWare.co.za.Migrations
 {
     [DbContext(typeof(WazaWare_db_context))]
-    [Migration("20230505114153_hotFix")]
-    partial class hotFix
+    [Migration("20230512222150_updateOrder")]
+    partial class updateOrder
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,8 +35,15 @@ namespace WazaWare.co.za.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ProductCount")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
+
+                    b.Property<decimal?>("ProductTotal")
+                        .IsRequired()
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -55,25 +62,94 @@ namespace WazaWare.co.za.Migrations
                         .IsRequired()
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("OrderGrandTotal")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("OrderTotal")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("OrderTotalHandlingFee")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int?>("PaymentId")
+                        .IsRequired()
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("OrderTotalShipping")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("ProductId")
+                    b.Property<int?>("ShippingPrice")
                         .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int>("UserShippingId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsOrderPayed")
+                        .HasColumnType("bit");
+
                     b.HasKey("OrderId");
 
                     b.ToTable("OrderDb");
+                });
+
+            modelBuilder.Entity("wazaware.co.za.Models.PaymentModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PostalCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Province")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("StreetAddress")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Suburb")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("UnitNo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PaymentModels");
                 });
 
             modelBuilder.Entity("WazaWare.co.za.Models.ProductInfomation", b =>
@@ -189,8 +265,9 @@ namespace WazaWare.co.za.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Phone")
-                        .HasColumnType("int");
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
 
@@ -224,19 +301,17 @@ namespace WazaWare.co.za.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("MiddleName")
+                    b.Property<string>("Notes")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PostalCode")
-                        .IsRequired()
+                    b.Property<int>("PostalCode")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("int");
 
                     b.Property<string>("Province")
                         .IsRequired()
@@ -253,10 +328,9 @@ namespace WazaWare.co.za.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("UnitNo")
-                        .IsRequired()
+                    b.Property<int>("UnitNo")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");

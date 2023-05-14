@@ -10,10 +10,10 @@ namespace WazaWare.co.za.Migrations
 		{
 			migrationBuilder.DropColumn(
 				name: "UserEmail",
-				table: "Orders");
+				table: "OrderDb");
 			migrationBuilder.AddColumn<int>(
 				name: "UserId",
-				table: "Orders",
+				table: "OrderDb",
 				type: "int",
 				nullable: false);
 		}

@@ -2,25 +2,26 @@
 using Microsoft.CodeAnalysis;
 using System.Data;
 using System.Data.Entity;
+using wazaware.co.za.Models.DatabaseModels;
 using wazaware.co.za.Services;
 using WazaWare.co.za.DAL;
-using WazaWare.co.za.Models;
 using X.PagedList;
-using static WazaWare.co.za.Models.UserManagerViewModels;
+using static wazaware.co.za.Models.ViewModels.ProductView;
+using static wazaware.co.za.Models.ViewModels.ShopView;
+using static wazaware.co.za.Models.ViewModels.User;
 
 namespace WazaWare.co.za.Controllers
 {
 	public class ShopController : Controller
 	{
 		private readonly ILogger<ShopController> _logger;
-		private readonly WazaWare_db_context _context;
+		private readonly WazaWare_db_context _DbContext;
 		private readonly IHttpContextAccessor _httpContextAccessor;
-		private static List<Product> products;
 
 		public ShopController(ILogger<ShopController> logger, WazaWare_db_context context, IHttpContextAccessor httpContextAccessor)
 		{
 			_logger = logger;
-			_context = context;
+			_DbContext = context;
 			_httpContextAccessor = httpContextAccessor;
 
 		}
@@ -29,182 +30,182 @@ namespace WazaWare.co.za.Controllers
 		/// ...
 		/// </summary>
 		/// <returns></returns>
-		[HttpGet]
-		public async Task<IActionResult> Index(string search, int productId, int actionCode, string message)
+		public IActionResult Index()
 		{
-			ViewBag.IsCookie = false;
-			WebServices services = new(_context); var userModel = CookieTime();
-			var cartModel = services.LoadCart(userModel!.UserId);
-			var UserView = new UserModelView
-			{FirstName = userModel.FirstName!,
-				LastName = userModel.LastName!,
-				Email = userModel.Email!,
-				Phone = userModel.Phone!
-			};
-			if (userModel == null)
-			{
-				ViewBag.isCookie = true;
-			}
-			else
-			{
-				if (userModel.Email!.Contains("@wazaware.co.za"))
-				{
-					ViewBag.isCookie = true;
-				}
-				else
-				{
-					ViewBag.isCookie = false;
-				}
-			}
-			if (message != null)
-			{
-				ViewBag.Message = message;
-			}
-			// Search For Products
-			if (!string.IsNullOrEmpty(search))
-				return RedirectToAction("Products", new { search });
-			// Dynamic Functions
-			if (productId != 0 && actionCode != 0)
-			{
-				switch (actionCode)
-				{
-					case 1:
-						services.LoadCart(userModel!.UserId);
-						break;
-					// Add Product to Shopping Cart
-					case 5:
-						await AddToCart(productId);
-						break;
-					// Remove from Shopping Cart
-					case 10:
-						await RemoveFromCart(productId);
-						break;
-					default:
-						Console.WriteLine("\n------->!!\nActionCode not found...\n!!<-------\n");
-						break;
-				}
-			}
-			while (userModel != null)
-			{
-				// Load Shopping Cart
-				var userShoppingCart = services.LoadCart(userModel.UserId).ToList();
-
-				// Load Latest Arrivals
-				var latestArrivalProducts = _context.Products!
-				.Where(p => p.ProductVisibility!.Equals("ProductVisibility") && p.ProductPriceBase < 20000 && p.ProductPriceBase > 10000)
-				.OrderByDescending(p => p.ProductPriceBase)
-				.Take(8)
-				.Select(p => new LatestArrivalModel
-				{
-					ProductId = p.ProductId,
-					ProductName = p.ProductName,
-					ProductDescription = p.ProductDescription,
-					ProductCategory = p.ProductCategory,
-					ProductStock = p.ProductStock,
-					ProductPriceBase = p.ProductPriceBase,
-					ProductPriceSale = p.ProductPriceSale,
-					ProductPic = p.ProductPic
-				}).ToPagedList(1, 8);
-
-				// Load Limited Stock
-				var limitedStockProducts = _context.Products
-					.Where(p => p.ProductVisibility!.Equals("ProductVisibility") && p.ProductPriceBase < 10000 && p.ProductPriceBase > 5000)
-					.OrderByDescending(p => p.ProductPriceBase)
-					.Take(8)
-					.Select(p => new LimitedStockModel
-					{
-						ProductId = p.ProductId,
-						ProductName = p.ProductName,
-						ProductDescription = p.ProductDescription,
-						ProductCategory = p.ProductCategory,
-						ProductStock = p.ProductStock,
-						ProductPriceBase = p.ProductPriceBase,
-						ProductPriceSale = p.ProductPriceSale,
-						ProductPic = p.ProductPic
-
-					}).ToPagedList(1, 8);
-
-				// Load Trending Products
-				var trendingProducts = _context.Products
-					.Where(p => p.ProductVisibility!.Equals("ProductVisibility") && p.ProductPriceBase > 20000 && p.ProductPriceBase < 30000)
-					.OrderByDescending(p => p.ProductPriceBase)
-					.Take(8)
-					.Select(p => new TrendingProductsModel
-					{
-						ProductId = p.ProductId,
-						ProductName = p.ProductName,
-						ProductDescription = p.ProductDescription,
-						ProductCategory = p.ProductCategory,
-						ProductStock = p.ProductStock,
-						ProductPriceBase = p.ProductPriceBase,
-						ProductPriceSale = p.ProductPriceSale,
-						ProductPic = p.ProductPic
-
-					}).ToPagedList(1, 8);
-
-				// ViewModels Model to return
-				var viewModel1 = new ViewModels
-				{
-					LatestArrivals = latestArrivalProducts,
-					LimitedStock = limitedStockProducts,
-					TrendingProducts = trendingProducts,
-					Cart = userShoppingCart,
-					UserView = UserView
-				};
-				return View(viewModel1);
-			}
 			return View();
 		}
+		[HttpGet]
+		public async Task<IActionResult> Home(string search, int productId, int actionCode, string message)
+		{
+			// 
+            ViewBag.IsCookie = false;
+			// 
+            WebServices services = new(_DbContext, _httpContextAccessor);
+			// 
+			var user = services.LoadDbUser();
+			// 
+            var cartModel = services.LoadCart(user!.UserId);
+			// 
+            if (user == null)
+				ViewBag.isCookie = true;
+			else
+            {
+                if (user.Email!.Contains("@wazaware.co.za"))
+					ViewBag.isCookie = true;
+				else
+					ViewBag.isCookie = false;
+			}
+			// 
+            if (message != null)
+            {
+                ViewBag.Message = message;
+            }
+            // 
+            if (!string.IsNullOrEmpty(search))
+                return RedirectToAction("ProductDb", new { search });
+            // 
+            if (productId != 0 && actionCode != 0)
+            {
+                switch (actionCode)
+                {
+                    case 1:
+                        services.LoadCart(user!.UserId);
+                        break;
+                    // Add ProductInfomation to Shopping Cart
+                    case 5:
+                        await AddToCart(productId);
+                        break;
+                    // Remove from Shopping Cart
+                    case 10:
+                        await RemoveFromCart(productId);
+                        break;
+                    default:
+                        Console.WriteLine("\n------->!!\nActionCode not found...\n!!<-------\n");
+                        break;
+                }
+            }
+            // 
+			while (user != null)
+            {
+                // Load Shopping Cart
+                var ShoppingCart = services.LoadCart(user.UserId).ToList();
+                // Load Latest Arrivals
+                var latestArrivalviewproducts = _DbContext.ProductDb!
+                .Where(p => p.ProductVisibility!.Equals("ProductVisibility") && p.ProductPriceBase < 20000 && p.ProductPriceBase > 10000)
+                .OrderByDescending(p => p.ProductPriceBase)
+                .Take(8)
+                .Select(p => new LatestArrival
+				{
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    ProductDescription = p.ProductDescription,
+                    ProductCategory = p.ProductCategory,
+                    ProductStock = p.ProductStock,
+                    ProductPriceBase = p.ProductPriceBase,
+                    ProductPriceSale = p.ProductPriceSale,
+                    ProductPic = p.ProductPic
+                }).ToPagedList(1, 8);
+                // Load Limited Stock
+                var limitedStockviewproducts = _DbContext.ProductDb!
+                    .Where(p => p.ProductVisibility!.Equals("ProductVisibility") && p.ProductPriceBase < 10000 && p.ProductPriceBase > 5000)
+                    .OrderByDescending(p => p.ProductPriceBase)
+                    .Take(8)
+                    .Select(p => new LimitedStock
+					{
+                        ProductId = p.ProductId,
+                        ProductName = p.ProductName,
+                        ProductDescription = p.ProductDescription,
+                        ProductCategory = p.ProductCategory,
+						ProductStock = p.ProductStock,
+                        ProductPriceBase = p.ProductPriceBase,
+                        ProductPriceSale = p.ProductPriceSale,
+                        ProductPic = p.ProductPic
+
+                    }).ToPagedList(1, 8);
+                // Load Trending ProductDb
+                var trendingviewproducts = _DbContext.ProductDb!
+                    .Where(p => p.ProductVisibility!.Equals("ProductVisibility") && p.ProductPriceBase > 20000 && p.ProductPriceBase < 30000)
+                    .OrderByDescending(p => p.ProductPriceBase)
+                    .Take(8)
+                    .Select(p => new TrendingProduct
+					{
+                        ProductId = p.ProductId,
+                        ProductName = p.ProductName,
+                        ProductDescription = p.ProductDescription,
+                        ProductCategory = p.ProductCategory,
+                        ProductStock = p.ProductStock,
+                        ProductPriceBase = p.ProductPriceBase,
+                        ProductPriceSale = p.ProductPriceSale,
+                        ProductPic = p.ProductPic
+                    }).ToPagedList(1, 8);
+				var viewUserAccount = new UserView
+				{
+					FirstName = user.FirstName!,
+					LastName = user.LastName!,
+					Email = user.Email!,
+					Phone = user.Phone!
+				};
+				// ShopViewModel Model to return
+				var view = new ShopViewModel
+				{
+					LatestArrivals = latestArrivalviewproducts,
+					LimitedStocks = limitedStockviewproducts,
+					TrendingProducts = trendingviewproducts,
+					ShoppingCart = ShoppingCart,
+					User = viewUserAccount
+				};
+				// 
+                return View(view);
+            }
+            // 
+			return View();
+        }
 		/// <summary>
 		/// Responsible for the Cart RazorView
 		/// </summary>
 		/// <START>
 		/// WHILE true:
 		///		IF UserAccount IS NOT Null:
-		///			Display ViewModels : Appropriate Cookie ViewBage
-		///			LoadShoppingCart(userId) into Variable userShoppingCart
-		///			RETURN[BREAK WHILE LOOP // STOP] viewModel { ProductsInCartModel = userShoppingCart }
+		///			Display ShopViewModel : Appropriate Cookie ViewBage
+		///			LoadShoppingCart(userId) into Variable ShoppingCart
+		///			RETURN[BREAK WHILE LOOP // STOP] view { ShoppingCartView = ShoppingCart }
 		///		ELSE:
 		///			UserAccount requires server to re-sync cookies : Trying Again
 		///			[RE-SYNC COOKIES WITH SEVER]
 		///			Sync Current UserAccount & Cookies WITH Controller
-		///			Display ViewModels : Appropriate Cookie ViewBage
+		///			Display ShopViewModel : Appropriate Cookie ViewBage
 		///			CONTINUE
 		///	</STOP>
 		[HttpGet]
 		public IActionResult Cart()
 		{
 			ViewBag.IsCookie = false;
-			WebServices services = new(_context);
-			var userModel = CookieTime();
-			var cartModel = services.LoadCart(userModel!.UserId);
-			var UserView = new UserModelView
-			{FirstName = userModel.FirstName!,
-				LastName = userModel.LastName!,
-				Email = userModel.Email!,
-				Phone = userModel.Phone!
-			};
-			if (userModel == null)
-			{
+			WebServices services = new(_DbContext, _httpContextAccessor);
+			var user = services.LoadDbUser();
+			var cart = services.LoadCart(user!.UserId);
+			// 
+			if (user == null)
 				ViewBag.isCookie = true;
-			}
 			else
 			{
-				if (userModel.Email!.Contains("@wazaware.co.za"))
-				{
+				if (user.Email!.Contains("@wazaware.co.za"))
 					ViewBag.isCookie = true;
-				}
 				else
-				{
 					ViewBag.isCookie = false;
-				}
 			}
-			var viewModel = new ViewModels
+			var viewUserAccount = new UserView
 			{
-				Cart = cartModel,
-				UserView = UserView
+				FirstName = user!.FirstName!,
+				LastName = user.LastName!,
+				Email = user.Email!,
+				Phone = user.Phone!
 			};
-			return View(viewModel);
+			var view = new ShopViewModel
+			{
+				ShoppingCart = cart,
+				User = viewUserAccount
+			};
+			return View(view);
 		}
 		/// <heading></heading>
 		/// <summary>
@@ -215,48 +216,43 @@ namespace WazaWare.co.za.Controllers
 		public IActionResult Products(string search, string category, string manufacturer, int page, string filterSort, string filterMan)
 		{
 			ViewBag.IsCookie = false;
-			WebServices services = new(_context);
-			var userModel = CookieTime();
-			var cartModel = services.LoadCart(userModel!.UserId);
-			var UserView = new UserModelView
+			            WebServices services = new(_DbContext, _httpContextAccessor);
+			var user = services.LoadDbUser();
+			var cart = services.LoadCart(user!.UserId);
+			var UserView = new UserView
 			{
-				FirstName = userModel.FirstName!,
-				LastName = userModel.LastName!,
-				Email = userModel.Email!,
-				Phone = userModel.Phone!
+				FirstName = user.FirstName!,
+				LastName = user.LastName!,
+				Email = user.Email!,
+				Phone = user.Phone!
 			};
-			if (userModel == null)
-			{
+			// 
+			if (user == null)
 				ViewBag.isCookie = true;
-			}
 			else
 			{
-				if (userModel.Email!.Contains("@wazaware.co.za"))
-				{
+				if (user.Email!.Contains("@wazaware.co.za"))
 					ViewBag.isCookie = true;
-				}
 				else
-				{
 					ViewBag.isCookie = false;
-				}
 			}
-			var viewproducts = new List<Product>();
+			var products = new List<ProductInfomation>();
 			// Load Filters
-			var viewSortBy = new List<Filter_Sortby>();
-			var viewManufacturers = new List<Filter_Manufacturer>();
+			var viewSortBy = new List<FilterSortby>();
+			var viewManufacturers = new List<FilterManufacturer>();
 			Dictionary<string, string> manufactorsDict = new();
 			// Load Shopping Cart
-			var userShoppingCart = services.LoadCart(userModel!.UserId).ToList();
+			var ShoppingCart = services.LoadCart(user!.UserId).ToList();
 			// Handles Search Directs & Results
 			if (search != null)
 			{
 				if (page == 0)
 					page = 1;
-				products = SearchProducts(search).ToList();
-				ViewBag.CountProducts = products.Count;
+				products = Searchviewproducts(search).ToList();
+				ViewBag.Countviewproducts = products.Count;
 				ViewBag.Search = search;
 			}
-			// Handles Directs for Shop Side Cards
+			// Handles Directs for Home Side Cards
 			if (manufacturer != null)
 			{
 				ViewBag.Manufacturer = manufacturer.ToUpper();
@@ -265,29 +261,62 @@ namespace WazaWare.co.za.Controllers
 					case "amd":
 						if (page == 0)
 							page = 1;
-						products = _context.Products!
+						products = _DbContext.ProductDb!
 							.Where(s => s.ProductName!.ToLower()
 							.Contains("amd") || s.ProductName!.ToLower()
-							.Contains("ryzen")).ToList();
+							.Contains("ryzen"))
+							.Select(p => new ProductInfomation
+							{
+								ProductId = p.ProductId,
+								ProductName = p.ProductName,
+								ProductDescription = p.ProductDescription,
+								ProductCategory = p.ProductCategory,
+								ProductStock = p.ProductStock,
+								ProductPriceBase = p.ProductPriceBase,
+								ProductPriceSale = p.ProductPriceSale,
+								ProductPic = p.ProductPic
+							}).ToList();
 						break;
 					case "intel":
 						if (page == 0)
 							page = 1;
-						products = _context.Products!
+						products = _DbContext.ProductDb!
 							.Where(s => s.ProductName!.ToLower()
 							.Contains("intel") || s.ProductName!.ToLower()
 							.Contains("i7") || s.ProductName!.ToLower()
-							.Contains("i5")).ToList();
+							.Contains("i5"))
+							.Select(p => new ProductInfomation
+							{
+								ProductId = p.ProductId,
+								ProductName = p.ProductName,
+								ProductDescription = p.ProductDescription,
+								ProductCategory = p.ProductCategory,
+								ProductStock = p.ProductStock,
+								ProductPriceBase = p.ProductPriceBase,
+								ProductPriceSale = p.ProductPriceSale,
+								ProductPic = p.ProductPic
+							}).ToList();
 						break;
 					case "nvidia":
 						if (page == 0)
 							page = 1;
-						products = _context.Products!
+						products = _DbContext.ProductDb!
 							.Where(s => s.ProductName!.ToLower()
 							.Contains("nvidia") || s.ProductName!.ToLower()
 							.Contains("rtx") || s.ProductName!.ToLower()
 							.Contains("gsync") || s.ProductName!.ToLower()
-							.Contains("g-sync")).ToList();
+							.Contains("g-sync"))
+							.Select(p => new ProductInfomation
+							{
+								ProductId = p.ProductId,
+								ProductName = p.ProductName,
+								ProductDescription = p.ProductDescription,
+								ProductCategory = p.ProductCategory,
+								ProductStock = p.ProductStock,
+								ProductPriceBase = p.ProductPriceBase,
+								ProductPriceSale = p.ProductPriceSale,
+								ProductPic = p.ProductPic
+							}).ToList();
 						break;
 					default:
 						Console.Write("404");
@@ -304,7 +333,7 @@ namespace WazaWare.co.za.Controllers
 					{ "deals", "Best Deals" },
 					{ "new", "Latest Arrivals" }
 				};
-				viewSortBy = sortByDict.Select(s => new Filter_Sortby
+				viewSortBy = sortByDict.Select(s => new FilterSortby
 				{
 					FilterId = s.Key,
 					FilterName = s.Value
@@ -315,7 +344,7 @@ namespace WazaWare.co.za.Controllers
 				{
 					case "essential_hardware":
 						ViewBag.PageTitle = "Essential Hardware";
-						products = _context.Products.Where(p =>
+						products = _DbContext.ProductDb!.Where(p =>
 						p.ProductName!.ToLower().Contains("memory") ||
 						p.ProductName!.ToLower().Contains("ram") ||
 						p.ProductName!.ToLower().Contains("cpu cooler") ||
@@ -329,7 +358,18 @@ namespace WazaWare.co.za.Controllers
 						p.ProductDescription!.ToLower().Contains("rgb") ||
 						p.ProductDescription!.ToLower().Contains("led") ||
 						p.ProductDescription!.ToLower().Contains("graphic card"))
-							.OrderBy(p => p.ProductPriceSale).ToList();
+							.OrderBy(p => p.ProductPriceSale)
+							.Select(p => new ProductInfomation
+							{
+								ProductId = p.ProductId,
+								ProductName = p.ProductName,
+								ProductDescription = p.ProductDescription,
+								ProductCategory = p.ProductCategory,
+								ProductStock = p.ProductStock,
+								ProductPriceBase = p.ProductPriceBase,
+								ProductPriceSale = p.ProductPriceSale,
+								ProductPic = p.ProductPic
+							}).ToList();
 						manufactorsDict = new()
 						{
 							{ "intel", "Intel" },
@@ -339,7 +379,7 @@ namespace WazaWare.co.za.Controllers
 							{ "samsung", "Samsung" }
 						};
 						foreach (KeyValuePair<string, string> ks in manufactorsDict)
-							viewManufacturers = manufactorsDict.Select(s => new Filter_Manufacturer
+							viewManufacturers = manufactorsDict.Select(s => new FilterManufacturer
 							{
 								FilterId = s.Key,
 								FilterName = s.Value
@@ -347,12 +387,23 @@ namespace WazaWare.co.za.Controllers
 						break;
 					case "latest_gpus":
 						ViewBag.PageTitle = "Latest GPUs";
-						products = _context.Products.Where(p =>
+						products = _DbContext.ProductDb!.Where(p =>
 						p.ProductName!.ToLower().Contains("rtx") ||
 						p.ProductName!.ToLower().Contains("amd") ||
 						p.ProductName!.ToLower().Contains("nvidia") ||
 						p.ProductName!.ToLower().Contains("gtx") ||
-						p.ProductName!.ToLower().Contains("radeon")).ToList();
+						p.ProductName!.ToLower().Contains("radeon"))
+							.Select(p => new ProductInfomation
+							{
+								ProductId = p.ProductId,
+								ProductName = p.ProductName,
+								ProductDescription = p.ProductDescription,
+								ProductCategory = p.ProductCategory,
+								ProductStock = p.ProductStock,
+								ProductPriceBase = p.ProductPriceBase,
+								ProductPriceSale = p.ProductPriceSale,
+								ProductPic = p.ProductPic
+							}).ToList();
 						products = products.Where(p => p.ProductName!.ToLower().Contains("graphics card"))
 						.OrderByDescending(p => p.ProductPriceSale).ToList();
 						manufactorsDict = new()
@@ -366,7 +417,7 @@ namespace WazaWare.co.za.Controllers
 							{ "zotac","Zotac" }
 						};
 						foreach (KeyValuePair<string, string> ks in manufactorsDict)
-							viewManufacturers = manufactorsDict.Select(s => new Filter_Manufacturer
+							viewManufacturers = manufactorsDict.Select(s => new FilterManufacturer
 							{
 								FilterId = s.Key,
 								FilterName = s.Value
@@ -374,7 +425,18 @@ namespace WazaWare.co.za.Controllers
 						break;
 					case "great_deals":
 						ViewBag.PageTitle = "Great Deals";
-						products = _context.Products.Where(p => p.ProductPriceSale / 2 >= p.ProductPriceBase).OrderByDescending(p => p.ProductPriceSale).ToList();
+						products = _DbContext.ProductDb!.Where(p => p.ProductPriceSale / 2 >= p.ProductPriceBase).OrderByDescending(p => p.ProductPriceSale)
+							.Select(p => new ProductInfomation
+							{
+								ProductId = p.ProductId,
+								ProductName = p.ProductName,
+								ProductDescription = p.ProductDescription,
+								ProductCategory = p.ProductCategory,
+								ProductStock = p.ProductStock,
+								ProductPriceBase = p.ProductPriceBase,
+								ProductPriceSale = p.ProductPriceSale,
+								ProductPic = p.ProductPic
+							}).ToList();
 						manufactorsDict = new()
 						{
 							{ "amd", "AMD" },
@@ -384,7 +446,7 @@ namespace WazaWare.co.za.Controllers
 							{ "dell", "Dell" }
 						};
 						foreach (KeyValuePair<string, string> ks in manufactorsDict)
-							viewManufacturers = manufactorsDict.Select(s => new Filter_Manufacturer
+							viewManufacturers = manufactorsDict.Select(s => new FilterManufacturer
 							{
 								FilterId = s.Key,
 								FilterName = s.Value
@@ -392,7 +454,7 @@ namespace WazaWare.co.za.Controllers
 						break;
 					case "pc_chassis":
 						ViewBag.PageTitle = "ATX & ITX Chassis";
-						products = _context.Products.Where(p =>
+						products = _DbContext.ProductDb!.Where(p =>
 						p.ProductName!.ToLower().Contains("chassis") ||
 						p.ProductName!.ToLower().Contains("pc chassis") ||
 						p.ProductName!.ToLower().Contains("pc case") ||
@@ -401,7 +463,18 @@ namespace WazaWare.co.za.Controllers
 						p.ProductDescription!.ToLower().Contains("itx") ||
 						p.ProductDescription!.ToLower().Contains("pc chassis") ||
 						p.ProductDescription!.ToLower().Contains("pc case"))
-						.OrderByDescending(p => p.ProductPriceSale).ToList();
+						.OrderByDescending(p => p.ProductPriceSale)
+						.Select(p => new ProductInfomation
+						{
+							ProductId = p.ProductId,
+							ProductName = p.ProductName,
+							ProductDescription = p.ProductDescription,
+							ProductCategory = p.ProductCategory,
+							ProductStock = p.ProductStock,
+							ProductPriceBase = p.ProductPriceBase,
+							ProductPriceSale = p.ProductPriceSale,
+							ProductPic = p.ProductPic
+						}).ToList();
 						manufactorsDict = new()
 						{
 							{ "phanteks", "Phanteks" },
@@ -413,7 +486,7 @@ namespace WazaWare.co.za.Controllers
 							{ "corsair", "Corsair" }
 						};
 						foreach (KeyValuePair<string, string> ks in manufactorsDict)
-							viewManufacturers = manufactorsDict.Select(s => new Filter_Manufacturer
+							viewManufacturers = manufactorsDict.Select(s => new FilterManufacturer
 							{
 								FilterId = s.Key,
 								FilterName = s.Value
@@ -421,13 +494,24 @@ namespace WazaWare.co.za.Controllers
 						break;
 					case "data_storage":
 						ViewBag.PageTitle = "HDD, SSD & RAM";
-						products = _context.Products.Where(p =>
+						products = _DbContext.ProductDb!.Where(p =>
 						p.ProductName!.ToLower().Contains("internal hard drive") ||
 						p.ProductName!.ToLower().Contains("hard drive") ||
 						p.ProductName!.ToLower().Contains("portal hard drive") ||
 						p.ProductName!.ToLower().Contains("solid state drive") ||
 						p.ProductName!.ToLower().Contains("portal hard drive"))
-						.OrderByDescending(p => p.ProductPriceSale).ToList();
+						.OrderByDescending(p => p.ProductPriceSale)
+						.Select(p => new ProductInfomation
+						{
+							ProductId = p.ProductId,
+							ProductName = p.ProductName,
+							ProductDescription = p.ProductDescription,
+							ProductCategory = p.ProductCategory,
+							ProductStock = p.ProductStock,
+							ProductPriceBase = p.ProductPriceBase,
+							ProductPriceSale = p.ProductPriceSale,
+							ProductPic = p.ProductPic
+						}).ToList();
 						manufactorsDict = new()
 						{
 							{ "samsung", "Samsung" },
@@ -435,7 +519,7 @@ namespace WazaWare.co.za.Controllers
 							{ "mushkin", "Mushkin" }
 						};
 						foreach (KeyValuePair<string, string> ks in manufactorsDict)
-							viewManufacturers = manufactorsDict.Select(s => new Filter_Manufacturer
+							viewManufacturers = manufactorsDict.Select(s => new FilterManufacturer
 							{
 								FilterId = s.Key,
 								FilterName = s.Value
@@ -443,10 +527,21 @@ namespace WazaWare.co.za.Controllers
 						break;
 					case "performace_laptops":
 						ViewBag.PageTitle = "High-end Laptops & Accessories";
-						products = _context.Products.Where(p =>
+						products = _DbContext.ProductDb!.Where(p =>
 						p.ProductName!.ToLower().Contains("gaming laptop") ||
 						p.ProductName!.ToLower().Contains("notebook"))
-						.OrderByDescending(p => p.ProductPriceSale).ToList();
+						.OrderByDescending(p => p.ProductPriceSale)
+						.Select(p => new ProductInfomation
+						{
+							ProductId = p.ProductId,
+							ProductName = p.ProductName,
+							ProductDescription = p.ProductDescription,
+							ProductCategory = p.ProductCategory,
+							ProductStock = p.ProductStock,
+							ProductPriceBase = p.ProductPriceBase,
+							ProductPriceSale = p.ProductPriceSale,
+							ProductPic = p.ProductPic
+						}).ToList();
 						manufactorsDict = new()
 						{
 							{ "msi", "MSI" },
@@ -456,7 +551,7 @@ namespace WazaWare.co.za.Controllers
 							{ "gigabyte", "Gigabyte" },
 						};
 						foreach (KeyValuePair<string, string> ks in manufactorsDict)
-							viewManufacturers = manufactorsDict.Select(s => new Filter_Manufacturer
+							viewManufacturers = manufactorsDict.Select(s => new FilterManufacturer
 							{
 								FilterId = s.Key,
 								FilterName = s.Value
@@ -489,26 +584,44 @@ namespace WazaWare.co.za.Controllers
 				products = products.Where(p =>
 				p.ProductName!.ToLower().Contains(filterMan.ToLower())).ToList();
 			}
-			// Cast Products to Paged AND prepare ViewModel
+			// Cast ProductDb to Paged AND prepare ViewModel
 			if (page < 1)
 				page = 1;
 			int items = 16;
 			if (products.Count > 32)
 				items = products.Count / 2;
-			var viewProducts = products
+			var viewviewproducts = products
 				.GroupBy(p => p.ProductCategory!.ToLower())
 				.Select(g => g.Take(10))
 				.SelectMany(g => g).ToPagedList(page, items);
-			var viewModel = new ViewModels
+			var viewUserAccount = new UserView
+			{
+				FirstName = user!.FirstName!,
+				LastName = user.LastName!,
+				Email = user.Email!,
+				Phone = user.Phone!
+			};
+			var viewProducts = products.Select(s => new ProductInfomation
+			{
+				ProductId = s.ProductId,
+				ProductName = s.ProductName,
+				ProductStock = s.ProductStock,
+				ProductDescription = s.ProductDescription,
+				ProductCategory	= s.ProductCategory,
+				ProductPriceBase = s.ProductPriceBase,
+				ProductPriceSale = s.ProductPriceSale,
+				ProductImageUrl = s.ProductImageUrl
+				//ProductPic = s.ProductPic
+			}).ToPagedList(1, 8);
+			var view = new ShopViewModel
 			{
 				Products = viewProducts,
-				Cart = userShoppingCart,
-				FilterSortBy = viewSortBy,
+				FilterSortby = viewSortBy,
 				FilterManufacturer = viewManufacturers,
-				UserView = UserView
-				//FilterCategory = viewSubCategories
+				ShoppingCart = cart,
+				User = viewUserAccount
 			};
-			return View(viewModel);
+			return View(view);
 		}
 		/// <heading></heading>
 		/// <summary>
@@ -519,23 +632,16 @@ namespace WazaWare.co.za.Controllers
 		public IActionResult Product(int id)
 		{
 			ViewBag.IsCookie = false;
-			WebServices services = new(_context);
-			var userModel = CookieTime();
-			var cartModel = services.LoadCart(userModel!.UserId);
-			var UserView = new UserModelView
-			{
-				FirstName = userModel.FirstName!,
-				LastName = userModel.LastName!,
-				Email = userModel.Email!,
-				Phone = userModel.Phone!
-			};
-			if (userModel == null)
+			WebServices services = new(_DbContext, _httpContextAccessor);
+			var user = services.LoadDbUser();
+			var cartModel = services.LoadCart(user!.UserId);
+			if (user == null)
 			{
 				ViewBag.isCookie = true;
 			}
 			else
 			{
-				if (userModel.Email!.Contains("@wazaware.co.za"))
+				if (user.Email!.Contains("@wazaware.co.za"))
 				{
 					ViewBag.isCookie = true;
 				}
@@ -544,12 +650,30 @@ namespace WazaWare.co.za.Controllers
 					ViewBag.isCookie = false;
 				}
 			}
-			var product = _context.Products.Where(p => p.ProductId!.Equals(id)).FirstOrDefault();
-			var viewModel = new ViewModels
+			var product = _DbContext.ProductDb!.Where(p => p.ProductId!.Equals(id)).FirstOrDefault();
+			var viewProduct = new ProductInfomation
 			{
-				Product = product!,
-				Cart = cartModel,
-				UserView = UserView
+				ProductId = product!.ProductId,
+				ProductName = product.ProductName,
+				ProductStock = product.ProductStock,
+				ProductDescription = product.ProductDescription,
+				ProductCategory = product.ProductCategory,
+				ProductPriceBase = product.ProductPriceBase,
+				ProductPriceSale = product.ProductPriceSale,
+				ProductImageUrl = product.ProductImageUrl
+			};
+			var viewUserAccount = new UserView
+			{
+				FirstName = user!.FirstName!,
+				LastName = user.LastName!,
+				Email = user.Email!,
+				Phone = user.Phone!
+			};
+			var viewModel = new ShopViewModel
+			{
+				SingleProduct = viewProduct,
+				ShoppingCart = cartModel,
+				User = viewUserAccount
 			};
 			return View(viewModel);
 		}
@@ -561,19 +685,20 @@ namespace WazaWare.co.za.Controllers
 		[HttpPost]
 		public async Task AddToCart(int productId)
 		{
-			var user = CookieTime();
-			var product = _context.Products!.Where(p => p.ProductId.Equals(productId)).First();
-			var existingEntry = _context.UsersShoppingCarts!.FirstOrDefault(c => c.UserId == user!.UserId && c.ProductId == productId);
+			WebServices services = new(_DbContext, _httpContextAccessor);
+			var user = services.LoadDbUser();
+			var product = _DbContext.ProductDb!.Where(p => p.ProductId.Equals(productId)).First();
+			var existingEntry = _DbContext.ShoppingCartDb!.FirstOrDefault(c => c.UserId == user!.UserId && c.ProductId == productId);
 			if (existingEntry != null)
 			{
 				existingEntry.ProductCount += 1;
 				existingEntry.ProductTotal += product.ProductPriceSale;
 				existingEntry.CartEntryDate = DateTime.Now;
-				_context.Update(existingEntry);
+				_DbContext.Update(existingEntry);
 			}
 			else
 			{
-				var newEntry = new UserShoppingCart
+				var newEntry = new ShoppingCart
 				{
 					UserId = user!.UserId,
 					ProductId = productId,
@@ -581,44 +706,9 @@ namespace WazaWare.co.za.Controllers
 					ProductTotal = product.ProductPriceSale,
 					CartEntryDate = DateTime.Now
 				};
-				_context.Add(newEntry);
+				_DbContext.Add(newEntry);
 			}
-			await _context.SaveChangesAsync();
-
-			//var product = _context.Products.FirstOrDefault(s => s.ProductId == productId);
-			//var cart = _context.UsersShoppingCarts.ToList();
-			//int count = 0;
-			//foreach(var cartProduct in cart)
-			//{
-			//	if(cartProduct.ProductId == productId)
-			//	{
-			//		count += 1;
-			//	}				
-			//}
-			//if(count > 0)
-			//{
-			//	var updateProductInShoppingCart = new UserShoppingCart
-			//	{
-			//		UserId = user!.UserId,
-			//		ProductId = productId,
-			//		ProductCount = count,
-			//		CartEntryDate = DateTime.Now
-			//	};
-			//	_context.Update(updateProductInShoppingCart);
-			//	await _context.SaveChangesAsync();
-			//}
-			//else
-			//{
-			//	var addProductToShoppingCart = new UserShoppingCart
-			//	{
-			//		UserId = user!.UserId,
-			//		ProductId = productId,
-			//		CartEntryDate = DateTime.Now
-			//	};
-			//	_context.Attach(addProductToShoppingCart);
-			//	_context.Entry(addProductToShoppingCart).State = EntityState.Added;
-			//	await _context.SaveChangesAsync();
-			//}
+			await _DbContext.SaveChangesAsync();
 		}
 		/// <heading></heading>
 		/// <summary>
@@ -628,12 +718,13 @@ namespace WazaWare.co.za.Controllers
 		[HttpPost]
 		public async Task RemoveFromCart(int productId)
 		{
-			var user = CookieTime();
-			var userShoppingCart = _context.UsersShoppingCarts!
+			WebServices services = new(_DbContext, _httpContextAccessor);
+			var user = services.LoadDbUser();
+			var ShoppingCart = _DbContext.ShoppingCartDb!
 				.Where(s => s.UserId == user!.UserId && s.ProductId == productId).First();
-			_context.UsersShoppingCarts.Attach(userShoppingCart);
-			_context.Remove(userShoppingCart);
-			await _context.SaveChangesAsync();
+			_DbContext.ShoppingCartDb!.Attach(ShoppingCart);
+			_DbContext.Remove(ShoppingCart);
+			await _DbContext.SaveChangesAsync();
 		}
 		/// <heading></heading>
 		/// <summary>
@@ -650,54 +741,29 @@ namespace WazaWare.co.za.Controllers
 		/// ...
 		/// </summary>
 		/// <returns></returns>
-		public IPagedList<Product> SearchProducts(string search)
+		public IPagedList<wazaware.co.za.Models.ViewModels.ProductView.ProductInfomation> Searchviewproducts(string search)
 		{
 			//
-			var products = _context.Products;
-			var normalSearch = products.Where(p => p.ProductName!.Contains(search));
-			var caseSensitiveSearch = products.Where(p => p.ProductName!.ToLower().Contains(search.ToLower()));
-			var deeperSearch = products.Where(p => p.ProductDescription!.ToLower().Contains(search.ToLower()));
+			var products = _DbContext.ProductDb;
+			var normalSearch = products!.Where(p => p.ProductName!.Contains(search));
+			var caseSensitiveSearch = products!.Where(p => p.ProductName!.ToLower().Contains(search.ToLower()));
+			var deeperSearch = products!.Where(p => p.ProductDescription!.ToLower().Contains(search.ToLower()));
 			//
-			var productsJoined = normalSearch.Union(caseSensitiveSearch).Union(deeperSearch).ToList();
+			var viewproductsJoined = normalSearch.Union(caseSensitiveSearch).Union(deeperSearch).ToList();
 			//
-			return productsJoined.ToPagedList();
-		}
-		public UserModel? CookieTime()
-		{
-			WebServices services = new(_context);
-			UserModel? model = null;
-			const string cookieName = "wazaware.co.za-auto-sign-in";
-			var requestCookies = HttpContext.Request.Cookies;
-			var intialRequest = requestCookies[cookieName];
-			var cookieOptions = new CookieOptions
+			var viewProducts = viewproductsJoined.Select(p => new ProductInfomation
 			{
-				Expires = DateTimeOffset.Now.AddDays(7),
-				IsEssential = true
-			};
-			if (intialRequest != null)
-			{
-				if (_context.Users.Any(u => u.Email == intialRequest))
-				{
-					model = _context.Users.Where(x => x.Email == intialRequest).FirstOrDefault();
-				}
-				else
-				{
-					var email = services.CreateCookieReferance().Result;
-					HttpContext.Response.Cookies
-						.Append(cookieName, email, cookieOptions);
-					model = _context.Users
-						.Where(x => x.Email == email).FirstOrDefault();
-				}
-			}
-			else
-			{
-				var email = services.CreateCookieReferance().Result;
-				HttpContext.Response.Cookies
-					.Append(cookieName, email, cookieOptions);
-				model = _context.Users!
-					.Where(x => x.Email == email).FirstOrDefault();
-			}
-			return model;
+				ProductId = p.ProductId,
+				ProductName = p.ProductName,
+				ProductDescription = p.ProductDescription,
+				ProductCategory = p.ProductCategory,
+				ProductStock = p.ProductStock,
+				ProductPriceBase = p.ProductPriceBase,
+				ProductPriceSale = p.ProductPriceSale,
+				ProductPic = p.ProductPic
+			}).ToPagedList();
+			//
+			return viewProducts;
 		}
 	}
 }

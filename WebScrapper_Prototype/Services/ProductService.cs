@@ -1,7 +1,7 @@
 ﻿using CsvHelper;
 using System.Text;
+using wazaware.co.za.Models.DatabaseModels;
 using WazaWare.co.za.Mappers;
-using WazaWare.co.za.Models;
 
 namespace WazaWare.co.za.Services
 {
@@ -23,22 +23,22 @@ namespace WazaWare.co.za.Services
 				throw new Exception(e.Message);
 			}
 		}
-		public List<ProductImageURLs> ReadCSVFileImage(string path)
-		{
-			Console.WriteLine(path);
-			try
-			{
-				using var reader = new StreamReader(path, Encoding.Default);
-				using var csv = new CsvReader(reader);
-				csv.Configuration.RegisterClassMap<ProductMapImages>();
-				var rows = csv.GetRecords<ProductImageURLs>().ToList();
-				return rows;
-			}
-			catch (Exception e)
-			{
-				throw new Exception(e.Message);
-			}
-		}
+		//public List<ProductImageURLs> ReadCSVFileImage(string path)
+		//{
+		//	Console.WriteLine(path);
+		//	try
+		//	{
+		//		using var reader = new StreamReader(path, Encoding.Default);
+		//		using var csv = new CsvReader(reader);
+		//		csv.Configuration.RegisterClassMap<ProductMapImages>();
+		//		var rows = csv.GetRecords<ProductImageURLs>().ToList();
+		//		return rows;
+		//	}
+		//	catch (Exception e)
+		//	{
+		//		throw new Exception(e.Message);
+		//	}
+		//}
 		// [DEPRECATED]
 		public void SaveCSVFile(string path, List<Product> product)
 		{

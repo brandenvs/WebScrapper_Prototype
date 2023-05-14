@@ -10,47 +10,47 @@ namespace WazaWare.co.za.Migrations
 		{
 			migrationBuilder.DropColumn(
 				name: "OrderGrandTotal",
-				table: "Orders");
+				table: "OrderDb");
 
 			migrationBuilder.DropColumn(
 				name: "OrderTotalHandlingFee",
-				table: "Orders");
+				table: "OrderDb");
 
 			migrationBuilder.DropColumn(
 				name: "OrderTotalShipping",
-				table: "Orders");
+				table: "OrderDb");
 
 			migrationBuilder.AddColumn<string>(
 				name: "OrderTotal",
-				table: "Orders",
+				table: "OrderDb",
 				type: "nvarchar(max)",
 				nullable: false,
 				defaultValue: "");
 
 			migrationBuilder.AddColumn<int>(
 				name: "PaymentId",
-				table: "Orders",
+				table: "OrderDb",
 				type: "int",
 				nullable: false,
 				defaultValue: 0);
 
 			migrationBuilder.AddColumn<int>(
 				name: "ProductCount",
-				table: "Orders",
+				table: "OrderDb",
 				type: "int",
 				nullable: false,
 				defaultValue: 0);
 
 			migrationBuilder.AddColumn<int>(
 				name: "ShippingPrice",
-				table: "Orders",
+				table: "OrderDb",
 				type: "int",
 				nullable: false,
 				defaultValue: 0);
 
 			migrationBuilder.AddColumn<bool>(
-				name: "isOrderPayed",
-				table: "Orders",
+				name: "IsOrderPayed",
+				table: "OrderDb",
 				type: "bit",
 				nullable: false,
 				defaultValue: false);
@@ -60,41 +60,41 @@ namespace WazaWare.co.za.Migrations
 		{
 			migrationBuilder.DropColumn(
 				name: "OrderTotal",
-				table: "Orders");
+				table: "OrderDb");
 
 			migrationBuilder.DropColumn(
 				name: "PaymentId",
-				table: "Orders");
+				table: "OrderDb");
 
 			migrationBuilder.DropColumn(
 				name: "ProductCount",
-				table: "Orders");
+				table: "OrderDb");
 
 			migrationBuilder.DropColumn(
 				name: "ShippingPrice",
-				table: "Orders");
+				table: "OrderDb");
 
 			migrationBuilder.DropColumn(
-				name: "isOrderPayed",
-				table: "Orders");
+				name: "IsOrderPayed",
+				table: "OrderDb");
 
 			migrationBuilder.AddColumn<decimal>(
 				name: "OrderGrandTotal",
-				table: "Orders",
+				table: "OrderDb",
 				type: "decimal(18,2)",
 				nullable: false,
 				defaultValue: 0m);
 
 			migrationBuilder.AddColumn<decimal>(
 				name: "OrderTotalHandlingFee",
-				table: "Orders",
+				table: "OrderDb",
 				type: "decimal(18,2)",
 				nullable: false,
 				defaultValue: 0m);
 
 			migrationBuilder.AddColumn<decimal>(
 				name: "OrderTotalShipping",
-				table: "Orders",
+				table: "OrderDb",
 				type: "decimal(18,2)",
 				nullable: false,
 				defaultValue: 0m);

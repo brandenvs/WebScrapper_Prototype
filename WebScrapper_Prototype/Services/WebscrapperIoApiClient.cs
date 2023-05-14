@@ -426,7 +426,7 @@ namespace WazaWare.co.za.Services
 				$"Successfully Scraped {productUrls.Count} Children!");
 			Console.WriteLine();
 			Console.Write(
-				$"ViewModels Products(y/n)?");
+				$"ShopViewModel ProductDb(y/n)?");
 			string? consoleInput = Console.ReadLine();
 			if (string.IsNullOrEmpty(consoleInput) || consoleInput != null && (consoleInput.ToLower().Equals("y") || consoleInput.ToLower().Equals("yes")))
 				await ViewProducts(productUrls);
@@ -444,7 +444,7 @@ namespace WazaWare.co.za.Services
 				Console.BackgroundColor = ConsoleColor.Green;
 				Console.WriteLine();
 				Console.WriteLine("\n<<-------------------------------------------------------------");
-				Console.WriteLine($"Now Viewing Product: " +
+				Console.WriteLine($"Now Viewing ProductInfomation: " +
 					$"\n{productUrl.Key} | {productUrl.Value}");
 				foreach (var site in VendorSite.Where(s => s.Key == key))
 					Console.WriteLine(site.Value);
@@ -476,7 +476,7 @@ namespace WazaWare.co.za.Services
 			Console.WriteLine();
 			Console.WriteLine("\n<<-------------------------------------------------------------");
 			Console.Write(
-				$"Save Products to Database(y/n)?");
+				$"Save ProductDb to Database(y/n)?");
 			string? consoleInput = Console.ReadLine();
 			if (string.IsNullOrEmpty(consoleInput) || consoleInput != null && (consoleInput.ToLower().Equals("y") || consoleInput.ToLower().Equals("yes")))
 				await SaveToDatabase(productUrls);
@@ -487,7 +487,7 @@ namespace WazaWare.co.za.Services
 		}
 		public async Task SaveToDatabase(Dictionary<int, string> productUrls)
 		{
-			var products = from p in _context.Products
+			var products = from p in _context.ProductDb
 						   select p;
 			int counterRemoved = 0;
 			int counterAdded = 0;
@@ -502,11 +502,11 @@ namespace WazaWare.co.za.Services
 				Console.BackgroundColor = ConsoleColor.Blue;
 				Console.WriteLine();
 				Console.WriteLine($"Preparing Database:\n" +
-					$"Checking {productSample.Count} Products...");
+					$"Checking {productSample.Count} ProductDb...");
 				foreach (var item in productSample)
 				{
 					Console.WriteLine("\n------------------------------------------------------------->>");
-					Console.WriteLine($"	Removing Product {item}");
+					Console.WriteLine($"	Removing ProductInfomation {item}");
 					var productRowsToDelete = products.Where(s => s.ProductName!.Contains(item));
 					counterRemoved++;
 					_context.RemoveRange(productRowsToDelete);
@@ -519,11 +519,11 @@ namespace WazaWare.co.za.Services
 				Console.WriteLine("\n<<-------------------------------------------------------------");
 				Console.WriteLine("Database is updated!");
 				Console.Write(
-					$"Total Products Removed: {counterRemoved}\n" +
-					$"Total Products Added: {counterRemoved}\n");
+					$"Total ProductDb Removed: {counterRemoved}\n" +
+					$"Total ProductDb Added: {counterRemoved}\n");
 				Console.WriteLine();
 				Console.WriteLine("\n------------------------------------------------------------->>");
-				Console.WriteLine($"Now Saving Product to Database: " +
+				Console.WriteLine($"Now Saving ProductInfomation to Database: " +
 					$"\n{productUrl.Key} | {productUrl.Value}");
 				Product product = new();
 				foreach (var site in ProductKey.Where(s => s.Key == key))
@@ -573,8 +573,8 @@ namespace WazaWare.co.za.Services
 				Console.WriteLine("\n<<-------------------------------------------------------------");
 				Console.WriteLine("DONE!");
 				Console.Write(
-					$"Total Products Removed: {counterRemoved}\n" +
-					$"Total Products Added: {counterRemoved}\n");
+					$"Total ProductDb Removed: {counterRemoved}\n" +
+					$"Total ProductDb Added: {counterRemoved}\n");
 				Console.WriteLine();
 			}
 			Console.Beep(1500, 1200);
@@ -584,8 +584,8 @@ namespace WazaWare.co.za.Services
 			Console.WriteLine("\n<<-------------------------------------------------------------");
 			Console.WriteLine("Database is updated!");
 			Console.Write(
-				$"Total Products Removed: {counterRemoved}\n" +
-				$"Total Products Added: {counterRemoved}\n");
+				$"Total ProductDb Removed: {counterRemoved}\n" +
+				$"Total ProductDb Added: {counterRemoved}\n");
 			Console.WriteLine();
 		}
 	}

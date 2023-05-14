@@ -43,7 +43,7 @@ namespace WazaWare.co.za.Migrations
                     b.ToTable("OrderProducts");
                 });
 
-            modelBuilder.Entity("WazaWare.co.za.Models.Orders", b =>
+            modelBuilder.Entity("WazaWare.co.za.Models.OrderDb", b =>
                 {
                     b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd()
@@ -73,10 +73,10 @@ namespace WazaWare.co.za.Migrations
 
                     b.HasKey("OrderId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("OrderDb");
                 });
 
-            modelBuilder.Entity("WazaWare.co.za.Models.Product", b =>
+            modelBuilder.Entity("WazaWare.co.za.Models.ProductInfomation", b =>
                 {
                     b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
@@ -130,7 +130,7 @@ namespace WazaWare.co.za.Migrations
 
                     b.HasKey("ProductId");
 
-                    b.ToTable("Products");
+                    b.ToTable("ProductDb");
                 });
 
             modelBuilder.Entity("WazaWare.co.za.Models.ProductImage", b =>
@@ -194,7 +194,7 @@ namespace WazaWare.co.za.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users");
+                    b.ToTable("UserAccountDb");
                 });
 
             modelBuilder.Entity("WazaWare.co.za.Models.UserShipping", b =>
@@ -263,7 +263,7 @@ namespace WazaWare.co.za.Migrations
                     b.ToTable("UserShippings");
                 });
 
-            modelBuilder.Entity("WazaWare.co.za.Models.UserShoppingCart", b =>
+            modelBuilder.Entity("WazaWare.co.za.Models.ShoppingCart", b =>
                 {
                     b.Property<int>("CartId")
                         .ValueGeneratedOnAdd()
@@ -288,7 +288,7 @@ namespace WazaWare.co.za.Migrations
 
                     b.HasKey("CartId");
 
-                    b.ToTable("UsersShoppingCarts");
+                    b.ToTable("ShoppingCartDb");
                 });
 #pragma warning restore 612, 618
         }

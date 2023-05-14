@@ -2,18 +2,19 @@
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using wazaware.co.za.Models;
+using wazaware.co.za.Models.DatabaseModels;
+using wazaware.co.za.Models.ViewModels;
 using wazaware.co.za.Services;
 using WazaWare.co.za.DAL;
-using WazaWare.co.za.Models;
-using static WazaWare.co.za.Models.UserManagerViewModels;
+using static wazaware.co.za.Models.ViewModels.ProductView;
+using static wazaware.co.za.Models.ViewModels.User;
 
 namespace WazaWare.co.za.Controllers
 {
 	public class CheckoutController : Controller
 	{
 		private readonly ILogger<ShopController> _logger;
-		private readonly WazaWare_db_context _context;
+		private readonly WazaWare_db_context _DbContext;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly IRazorViewEngine _viewEngine;
 		readonly ITempDataProvider _tempData;
@@ -21,115 +22,173 @@ namespace WazaWare.co.za.Controllers
 		public CheckoutController(ILogger<ShopController> logger, WazaWare_db_context context, IHttpContextAccessor httpContextAccessor, IRazorViewEngine viewEngine, ITempDataProvider tempData)
 		{
 			_logger = logger;
-			_context = context;
+			_DbContext = context;
 			_httpContextAccessor = httpContextAccessor;
 			_viewEngine = viewEngine;
 			_tempData = tempData;
 		}
 		[HttpGet]
 		public IActionResult Index()
-		{
-			var userModel = CookieTime();
-			if (userModel!.Email!.Contains("@wazaware.co.za"))
+		{						
+			// 
+			WebServices services = new(_DbContext, _httpContextAccessor);
+			// 
+			var user = services.LoadDbUser();
+			// 
+			var cart = services.LoadCart(user!.UserId);
+			// 
+			bool isCookie = true;
+			if (user != null)
 			{
-				if (_context.UsersShoppingCarts!.Any(s => s.UserId == userModel.UserId))
+				if (user.Email!.Contains("@wazaware.co.za"))
+					isCookie = false;
+			}
+			ViewBag.IsCookie = isCookie;
+			if (isCookie == false)			
+			{				
+				if (cart.Count > 0)
 					return RedirectToAction(nameof(CheckoutUser));
 				else
-					return RedirectToAction("Index", "Shop", new { message = "Your Shopping Cart is Empty!" });
+					return RedirectToAction("Home", "Shop", new { message = "Your Shopping Cart is Empty!" });
 			}
 			else
 			{
-				if (_context.UsersShoppingCarts!.Any(s => s.UserId == userModel.UserId))
-					return RedirectToAction(nameof(CheckoutUser));
-				else
-					return RedirectToAction("Index", "Shop", new { message = "Your Shopping Cart is Empty!" });
+				ViewBag.IsCookie = isCookie;
+				return RedirectToAction("Home", "Shop", new { message = "Something went wrong" });
 			}
 		}
 		[HttpGet]
 		public IActionResult CheckoutUser(string message)
 		{
-			WebServices services = new(_context);
-			var userModel = CookieTime();
-			var cartModel = services.LoadCart(userModel!.UserId);
-			if (userModel == null)
+			WebServices services = new(_DbContext, _httpContextAccessor);
+			var user = services.LoadDbUser();
+			var cart = services.LoadCart(user!.UserId);
+			var orders = services.LoadOrders(user!.UserId);
+			var viewUserAccount = new UserView();
+			bool isCookie = true;
+			bool hasOrders = false;
+			if (user != null)
 			{
-				ViewBag.isCookie = true;
+				viewUserAccount = new UserView
+				{
+					FirstName = user!.FirstName!,
+					LastName = user.LastName!,
+					Email = user.Email!,
+					Phone = user.Phone!
+				};
+				if (user.Email!.Contains("@wazaware.co.za"))
+					isCookie = false;
+				if (orders != null)
+					hasOrders = true;
+			}	
+			ViewBag.IsCookie = isCookie;
+			if (isCookie == false && hasOrders == true)
+			{
+				var shippingAddress = _DbContext.ShippingAddressDb!.Where(s => s.UserId == user!.UserId).FirstOrDefault();
+				var viewShippingAddress = new ShippingAddressView
+				{
+					FirstName = shippingAddress!.FirstName,
+					LastName = shippingAddress.LastName,
+					Email = shippingAddress.Email,
+					Phone = shippingAddress.Phone,
+					UnitNo = shippingAddress.UnitNo,
+					StreetAddress = shippingAddress.StreetAddress,
+					Suburb = shippingAddress.Suburb,
+					City = shippingAddress.City,
+					Province = shippingAddress.Province,
+					PostalCode = shippingAddress.PostalCode,
+				};
+				var view = new OrderViewModel
+				{
+					ShoppingCart = cart,
+					User = viewUserAccount,
+					ShippingAddress = viewShippingAddress
+				};
+				return View(view);
 			}
 			else
 			{
-				if (userModel.Email!.Contains("@wazaware.co.za"))
+				var view = new OrderViewModel
 				{
-					ViewBag.isCookie = true;
-				}
-				else
-				{
-					ViewBag.isCookie = false;
-					var userShipping = _context.UserShippings!.Where(s => s.UserId == userModel.UserId).FirstOrDefault();
-					var UserView = new UserModelView
-					{
-						FirstName = userModel!.FirstName!,
-						LastName = userModel.LastName!,
-						Email = userModel.Email!,
-						Phone = userModel.Phone!
-					};
-					var UserShippingView = new UserShippingViewModel
-					{
-						FirstName = userShipping!.FirstName,
-						LastName = userShipping.LastName,
-						Email = userShipping.Email,
-						Phone = userShipping.Phone,
-						UnitNo = userShipping.UnitNo,
-						StreetAddress = userShipping.StreetAddress,
-						Suburb = userShipping.Suburb,
-						City = userShipping.City,
-						Province = userShipping.Province,
-						PostalCode = userShipping.PostalCode,
-					};
-					var viewModel = new ViewModels
-					{
-						Cart = cartModel,
-						UserView = UserView,
-						UserShippingView = UserShippingView
-					};
-					return View(viewModel);
-				}
+					ShoppingCart = cart,
+					User = viewUserAccount
+				};
+				ViewBag.Message = message;
+				return View(view);
 			}
-			var viewModelDefault = new ViewModels
-			{
-				Cart = cartModel
-			};
-			ViewBag.Message = message;
-			return View(viewModelDefault);
 		}
 		[HttpPost]
-		public async Task<IActionResult> CheckoutUser(UserShippingViewModel model)
+		public async Task<IActionResult> CheckoutUser(ShippingAddressView model)
 		{
-			var userModel = CookieTime();
-			WebServices webServices = new(_context);
-			Dictionary<string, string> data = new()
-					{
-						{ "FirstName", model.FirstName },
-						{ "LastName", model.LastName }
-					};
-			Dictionary<string, string> updatedData = webServices.Capitilize(data);
-			var userShipping = _context.UserShippings!.Where(s => s.UserId == userModel!.UserId).FirstOrDefault();
-			if (userModel == null)
+			WebServices services = new(_DbContext, _httpContextAccessor);
+			var user = services.LoadDbUser();
+			var orders = services.LoadOrders(user!.UserId);
+			bool isCookie = true;
+			if (user != null)
 			{
-				ViewBag.isCookie = true;
+				if (user.Email!.Contains("@wazaware.co.za"))
+					isCookie = false;
+			}
+			ViewBag.IsCookie = isCookie;
+			if (isCookie)
+			{
+				Dictionary<string, string> data = new()
+				{
+					{ "FirstName", model.FirstName! },
+					{ "LastName", model.LastName! }
+				};
+				Dictionary<string, string> updatedData = services.Capitilize(data);
+				// Migrate User:
+				var migrateUser = _DbContext.UserAccountDb!.Find(user!.UserId);
+				if (migrateUser != null)
+				{
+					migrateUser.FirstName = updatedData.Where(s => s.Key.Equals("FirstName")).Select(S => S.Value).First();
+					migrateUser.LastName = updatedData.Where(s => s.Key.Equals("LastName")).Select(S => S.Value).First();
+					migrateUser.Email = model.Email;
+					migrateUser.Phone = model.Phone;
+
+					_DbContext.UserAccountDb!.Attach(migrateUser);
+					_DbContext.UserAccountDb!.Update(migrateUser);
+					await _DbContext.SaveChangesAsync();
+					var shippingAddress = new ShippingAddress
+					{
+						UserId = user.UserId,
+						FirstName = model.FirstName,
+						LastName = model.LastName,
+						Phone = model.Phone,
+						Email = model.Email,
+						UnitNo = model.UnitNo,
+						StreetAddress = model.StreetAddress,
+						Suburb = model.Suburb,
+						City = model.City,
+						Province = model.Province,
+						PostalCode = model.PostalCode
+					};
+					_DbContext.ShippingAddressDb!.Attach(shippingAddress);
+					_DbContext.ShippingAddressDb!.Add(shippingAddress);
+					const string cookieName = "wazaware.co.za-auto-sign-in";
+					var cookieOptions = new CookieOptions
+					{
+						Expires = DateTimeOffset.Now.AddDays(7),
+						IsEssential = true
+					};
+					HttpContext.Response.Cookies.Append(cookieName, model!.Email!, cookieOptions);
+				}
 			}
 			else
 			{
-				if (userModel.Email!.Contains("@wazaware.co.za"))
+				var shipping = _DbContext.ShippingAddressDb!.Where(s => s.UserId.Equals(user!.UserId)).FirstOrDefault();
+				if (!shipping!.Equals(model))
 				{
-					ViewBag.isCookie = true;
-					string notes = "No Instructions Given";
-					if (model.Notes != null)
-						notes = model.Notes;
-					string password = "AccountWasNotMade!";
-
-					var newUserShipping = new UserShipping
+					Dictionary<string, string> data = new()
 					{
-						UserId = userModel!.UserId,
+						{ "FirstName", model.FirstName! },
+						{ "LastName", model.LastName! }
+					};
+					Dictionary<string, string> updatedData = services.Capitilize(data);
+					var updateUserShipping = new ShippingAddress
+					{
+						UserId = user!.UserId,
 						FirstName = updatedData.Where(s => s.Key.Equals("FirstName")).Select(S => S.Value).First(),
 						LastName = updatedData.Where(s => s.Key.Equals("LastName")).Select(S => S.Value).First(),
 						Email = model.Email,
@@ -139,329 +198,268 @@ namespace WazaWare.co.za.Controllers
 						Suburb = model.Suburb,
 						City = model.City,
 						Province = model.Province,
-						PostalCode = model.PostalCode,
-						Notes = notes
+						PostalCode = model.PostalCode
 					};
-					_context.UserShippings!.Attach(newUserShipping);
-					_context.UserShippings.Add(newUserShipping);
-					var userToUpdate = _context.Users!.FirstOrDefault(u => u.UserId == userModel.UserId);
-					if (userToUpdate != null)
-					{
-						userToUpdate.FirstName = updatedData.Where(s => s.Key.Equals("FirstName")).Select(S => S.Value).First();
-						userToUpdate.LastName = updatedData.Where(s => s.Key.Equals("LastName")).Select(S => S.Value).First();
-						userToUpdate.Email = model.Email;
-						userToUpdate.Phone = model.Phone;
-						userToUpdate.Password = password;
-
-						_context.Users!.Update(userToUpdate);
-					}
-					await _context.SaveChangesAsync();
-
-					const string cookieName = "wazaware.co.za-auto-sign-in";
-					var cookieOptions = new CookieOptions
-					{
-						Expires = DateTimeOffset.Now.AddDays(7),
-						IsEssential = true
-					};
-					HttpContext.Response.Cookies.Append(cookieName, userToUpdate!.Email!, cookieOptions);
-				}
-				else
-				{
-					ViewBag.isCookie = false;
-					if (!userShipping!.Equals(model))
-					{
-						var updateUserShipping = new UserShipping
-						{
-							UserId = userModel!.UserId,
-							FirstName = updatedData.Where(s => s.Key.Equals("FirstName")).Select(S => S.Value).First(),
-							LastName = updatedData.Where(s => s.Key.Equals("LastName")).Select(S => S.Value).First(),
-							Email = model.Email,
-							Phone = model.Phone,
-							UnitNo = model.UnitNo,
-							StreetAddress = model.StreetAddress,
-							Suburb = model.Suburb,
-							City = model.City,
-							Province = model.Province,
-							PostalCode = model.PostalCode,
-							Notes = model.Notes
-
-						};
-						_context.UserShippings!.Update(updateUserShipping);
-					}
+					_DbContext.ShippingAddressDb!.Update(updateUserShipping);
+					await _DbContext.SaveChangesAsync();
 				}
 			}
 			return RedirectToAction(nameof(PlaceOrder));
 		}
 		[HttpGet]
-		public IActionResult CheckoutCurrentUser()
-		{
-			WebServices services = new(_context);
-			var userModel = CookieTime();
-			var cartModel = services.LoadCart(userModel!.UserId);
-			if (userModel == null)
-			{
-				ViewBag.isCookie = true;
-			}
-			else
-			{
-				if (userModel.Email!.Contains("@wazaware.co.za"))
-				{
-					ViewBag.isCookie = true;
-				}
-				else
-				{
-					ViewBag.isCookie = false;
-				}
-			}
-			var UserView = new UserModelView			
-			{
-				FirstName = userModel!.FirstName!,
-				LastName = userModel.LastName!,
-				Email = userModel.Email!,
-				Phone = userModel.Phone!
-			};
-			var viewModel = new ViewModels
-			{
-				Cart = cartModel,
-				UserView = UserView
-			};
-			return View(viewModel);
-		}
-		[HttpGet]
 		public IActionResult PlaceOrder()
 		{
-			WebServices services = new(_context);
-			var userModel = CookieTime();
-			var cartModel = services.LoadCart(userModel!.UserId);
-			if (userModel == null)
-			{
+			WebServices services = new(_DbContext, _httpContextAccessor);
+			var user = services.LoadDbUser();
+			var cart = services.LoadCart(user!.UserId);
+			// 
+			if (user == null)
 				ViewBag.isCookie = true;
-			}
 			else
 			{
-				if (userModel.Email!.Contains("@wazaware.co.za"))
-				{
+				if (user.Email!.Contains("@wazaware.co.za"))
 					ViewBag.isCookie = true;
-				}
 				else
-				{
 					ViewBag.isCookie = false;
-				}
 			}
-			var UserView = new UserModelView
+			var viewUserAccount = new UserView
 			{
-				FirstName = userModel!.FirstName!,
-				LastName = userModel.LastName!,
-				Email = userModel.Email!,
-				Phone = userModel.Phone!
+				FirstName = user!.FirstName!,
+				LastName = user.LastName!,
+				Email = user.Email!,
+				Phone = user.Phone!
 			};
-			var viewModel = new ViewModels
+			var view = new OrderViewModel
 			{
-				Cart = cartModel,
-				UserView = UserView
+				ShoppingCart = cart,
+				User = viewUserAccount,
 			};
-			return View(viewModel);
+			return View(view);
 		}
 		[HttpGet]
-		public async Task<IActionResult> Payment(string message)
+		public IActionResult Payment(string message)
 		{
-			WebServices services = new(_context);
-			var userModel = CookieTime();
-			if (userModel == null)
+			// 
+			WebServices services = new(_DbContext, _httpContextAccessor);
+			// 
+			var user = services.LoadDbUser();
+			// 
+			var cart = services.LoadCart(user!.UserId);
+			// 
+			bool isCookie = true;
+			if (user != null)
 			{
-				ViewBag.isCookie = true;
+				if (user.Email!.Contains("@wazaware.co.za"))
+					isCookie = false;
 			}
-			else
+			ViewBag.IsCookie = isCookie;
+			if (user != null && isCookie == false)
 			{
-				if (userModel.Email!.Contains("@wazaware.co.za"))
+				var shippingAddress = _DbContext.ShippingAddressDb!.Where(s => s.UserId == user.UserId).First();
+				var viewShippingAddress = new ShippingAddressView
 				{
-					ViewBag.isCookie = true;
-				}
-				else
+					FirstName = shippingAddress.FirstName,
+					LastName = shippingAddress.LastName,
+					Phone = shippingAddress.Phone,
+					Email = shippingAddress.Email,
+					UnitNo = shippingAddress.UnitNo,
+					StreetAddress = shippingAddress.StreetAddress,
+					Suburb = shippingAddress.Suburb,
+					City = shippingAddress.City,
+					Province = shippingAddress.Province,
+					PostalCode = shippingAddress.PostalCode,
+				};
+				var viewUserAccount = new UserView
 				{
-					ViewBag.isCookie = false;
-				}
+					FirstName = user!.FirstName!,
+					LastName = user.LastName!,
+					Email = user.Email!,
+					Phone = user.Phone!
+				};
+				var view = new OrderViewModel
+				{
+					ShoppingCart = cart,
+					User = viewUserAccount,
+					ShippingAddress = viewShippingAddress
+				};
+				return View(view);
 			}
-			if (userModel != null && !userModel.Email!.Contains("@wazaware.co.za"))
-			{
-				if (message != null)
-				{
-					var paymentModel = _context.PaymentModels!.Where(s => s.UserId == userModel.UserId).First();
-					var shippingModel = _context.UserShippings!.Where(s => s.UserId == userModel.UserId).First();
-					var cartModel = services.LoadCart(userModel!.UserId);
-					// RESET CART:
-					var removeCart = _context.UsersShoppingCarts!.Where(s => s.UserId != userModel.UserId).ToList();
-					_context.UsersShoppingCarts!.AddRange(removeCart);
-					_context.UsersShoppingCarts.RemoveRange(removeCart);
-					await _context.SaveChangesAsync();
-					var order = _context.Orders!.Where(s => s.UserId == userModel.UserId).First();
-					var orderSummary = new OrderSummary
-					{
-						OrderId = order.OrderId,
-						PaymentMethod = paymentModel!.PaymentMethod!,
-						OrderTotal = cartModel!.Select(s => s.CartSaleTotalFormatted!).First()
-					};
-					var UserView = new UserModelView
-					{
-						FirstName = userModel!.FirstName!,
-						LastName = userModel!.LastName!,
-						Email = userModel.Email,
-						Phone = userModel.Phone!
-					};
-					string notes = "No Instructions Provided";
-					if (shippingModel.Notes != null)
-						notes = shippingModel.Notes;
-					var shippingView = new UserShippingViewModel
-					{
-						FirstName = shippingModel.FirstName,
-						LastName = shippingModel.LastName,
-						Email = shippingModel.Email,
-						Phone = shippingModel.Phone,
-						UnitNo = shippingModel.UnitNo,
-						StreetAddress = shippingModel.StreetAddress,
-						Suburb = shippingModel.Suburb,
-						City = shippingModel.City,
-						Province = shippingModel.Province,
-						PostalCode = shippingModel.PostalCode,
-						Notes = notes
-					};
-					var view = new ViewModels
-					{
-						UserShippingView = shippingView,
-						Payment = paymentModel,
-						Cart = cartModel,
-						Summary = orderSummary,
-						UserView = UserView
-					};
-					ViewBag.Message = "hasBilling";
-					await SendEmail(view);
-					return View(view);
-				}
-				else
-				{
-					var cartModel = services.LoadCart(userModel!.UserId);
-					var shippingModel = _context.UserShippings!.Where(s => s.UserId == userModel.UserId).First();
-					var UserView = new UserModelView
-					{
-						FirstName = userModel!.FirstName!,
-						LastName = userModel!.LastName!,
-						Email = userModel.Email,
-						Phone = userModel.Phone!
-					};
-					string notes = "No Instructions Provided";
-					if (shippingModel.Notes != null)
-						notes = shippingModel.Notes;
-					var shippingView = new UserShippingViewModel
-					{
-						FirstName = shippingModel.FirstName,
-						LastName = shippingModel.LastName,
-						Email = shippingModel.Email,
-						Phone = shippingModel.Phone,
-						UnitNo = shippingModel.UnitNo,
-						StreetAddress = shippingModel.StreetAddress,
-						Suburb = shippingModel.Suburb,
-						City = shippingModel.City,
-						Province = shippingModel.Province,
-						PostalCode = shippingModel.PostalCode,
-						Notes = notes
-					};
-					var view = new ViewModels
-					{
-						Cart = cartModel,
-						UserView = UserView,
-						UserShippingView = shippingView
-					};
-					ViewBag.Message = "noBilling";
-					return View(view);
-				}
-			}
-			else
-				return RedirectToAction(nameof(CheckoutUser), new { message = "Sorry Something Went Wrong!" });
+			return RedirectToAction(nameof(CheckoutUser), new { message = "Sorry Something Went Wrong!" });
 		}
 		[HttpPost]
-		public async Task<IActionResult> Payment(PaymentModel model)
+		public async Task<IActionResult> Payment(BillingAddressView model)
 		{
-			WebServices services = new(_context);
-			var userModel = CookieTime();
-			var cartModel = services.LoadCart(userModel!.UserId);
-			if (userModel != null && !userModel.Email!.Contains("@wazaware.co.za"))
+			// 
+			WebServices services = new(_DbContext, _httpContextAccessor);
+			// 
+			var user = services.LoadDbUser();
+			// 
+			var cart = services.LoadCart(user!.UserId);
+			// 
+			bool isCookie = true;
+			if (user != null)
 			{
-				model.PaymentMethod = "EFT";
-				model.UserId = userModel.UserId;
-				_context.PaymentModels!.Attach(model);
-				_context.PaymentModels.Add(model);
-
-				var newOrder = new Orders
+				if (user.Email!.Contains("@wazaware.co.za"))
+					isCookie = false;
+			}
+			if (user != null && isCookie == false)
+			{
+				var createOrder = new Order
 				{
-					UserId = userModel.UserId,
-					PaymentId = model.Id,
-					ShippingPrice = 300,
-					OrderTotal = cartModel.Select(s => s.CartSaleTotalFormatted).First(),
-					isOrderPayed = false,
+					UserId = user.UserId,
+					ShippingPrice = 450,
+					OrderTotal = cart.Select(s => s.ProductTotal).Sum(),
+					IsOrderPayed = false,
 					OrderCreatedOn = DateTime.Now
 				};
-				_context.Orders!.Attach(newOrder);
-				_context.Orders.Add(newOrder);
-				var newOrderProducts = cartModel.Select(s => new OrderProducts
+				_DbContext.OrderDb!.Attach(createOrder);
+				_DbContext.OrderDb.Add(createOrder);
+				_DbContext.SaveChanges();
+				var orderedProducts = cart.Select(s => new OrderedProducts
 				{
-					OrderId = newOrder.UserId,
+					OrderId = createOrder.OrderId,
 					ProductId = s.ProductId,
-					ProductCount = s.ProductCount
+					ProductCount = s.ProductCount,
+					ProductTotal = s.ProductTotal
 				}).ToList();
-				_context.AttachRange(newOrderProducts);
-				_context.OrderProducts!.AddRange(newOrderProducts);
+				_DbContext.OrderedProductsDb!.AttachRange(orderedProducts);
+				await _DbContext.OrderedProductsDb!.AddRangeAsync(orderedProducts);
+				var billingAddress = new BillingAddress
+				{
+					OrderId = createOrder.OrderId,
+					PaymentMethod = "EFT",
+					FirstName = model.FirstName,
+					LastName = model.LastName,
+					Phone = model.Phone,
+					Email = model.Email,
+					UnitNo = model.UnitNo,
+					StreetAddress = model.StreetAddress,
+					Suburb = model.Suburb,
+					City = model.City,
+					Province = model.Province,
+					PostalCode = model.PostalCode
+				};
+				_DbContext.BillingAddressDb!.Attach(billingAddress);
+				_DbContext.BillingAddressDb.Add(billingAddress);
+				await _DbContext.SaveChangesAsync();
 
-
-				await _context.SaveChangesAsync();
-				return RedirectToAction(nameof(Payment), new { message = "200" });
+				var removeCart = _DbContext.ShoppingCartDb!.Where(s => s.UserId == user.UserId).ToList();
+				_DbContext.ShoppingCartDb!.AttachRange(removeCart);
+				_DbContext.ShoppingCartDb!.RemoveRange(removeCart);
+				await _DbContext.SaveChangesAsync();
+				var cartRefreshed = services.LoadCart(user!.UserId);
+				var viewUserAccount = new UserView
+				{
+					FirstName = user!.FirstName!,
+					LastName = user.LastName!,
+					Email = user.Email!,
+					Phone = user.Phone!
+				};
+				var viewOrder = new OrderView
+				{
+					OrderId = createOrder.OrderId,
+					ShippingPrice = createOrder.ShippingPrice,
+					OrderTotal = createOrder.OrderTotal
+				};
+				var products = _DbContext.ProductDb!.Where(s => s.ProductId.Equals(orderedProducts.Select(s => s.ProductId)))
+					.Select(p => new ProductInfomation
+					{
+						ProductId = p.ProductId,
+						ProductName = p.ProductName,
+						ProductDescription = p.ProductDescription,
+						ProductCategory = p.ProductCategory,
+						ProductStock = p.ProductStock,
+						ProductPriceBase = p.ProductPriceBase,
+						ProductPriceSale = p.ProductPriceSale,
+						ProductPic = p.ProductPic
+					}).ToList();
+				var view = new OrderViewModel
+				{
+					Products = products,
+					User = viewUserAccount,
+					ShoppingCart = cartRefreshed
+				};
+				await SendEmail(view);
+				return RedirectToAction(nameof(CheckoutComplete), new { orderId = createOrder.OrderId });
 			}
-			else
+			return RedirectToAction(nameof(CheckoutUser));
+		}
+		[HttpGet]
+		public IActionResult CheckoutComplete(int orderId)
+		{
+			// 
+			WebServices services = new(_DbContext, _httpContextAccessor);
+			// 
+			var user = services.LoadDbUser();
+			// 
+			var cart = services.LoadCart(user!.UserId);
+			// 
+			bool isCookie = true;
+			if (user != null)
 			{
-				return RedirectToAction(nameof(CheckoutUser), new { message = "Sorry Something Went Wrong!" });
+				if (user.Email!.Contains("@wazaware.co.za"))
+					isCookie = false;
 			}
+			ViewBag.IsCookie = isCookie;
+			if (user != null && isCookie == false)
+			{
+				var order = _DbContext.OrderDb!.Find(orderId);
+				if (order != null)
+				{
+					var viewOrder = new OrderView
+					{
+						OrderId = order.OrderId,
+						ShippingPrice = order.ShippingPrice,
+						OrderTotal = order.OrderTotal
+					};
+					var orderedProducts = _DbContext.OrderedProductsDb!.Where(s => s.OrderId == orderId)
+						.Select(s => new OrderedProductsView
+						{
+							OrderId = s.OrderId,
+							ProductId = s.ProductId,
+							ProductCount = s.ProductCount,
+							ProductTotal = s.ProductTotal
+						}).ToList();
+
+					var viewUserAccount = new UserView
+					{
+						FirstName = user!.FirstName!,
+						LastName = user.LastName!,
+						Email = user.Email!,
+						Phone = user.Phone!
+					};
+					var viewShippingAddress = _DbContext.ShippingAddressDb!.Where(s => s.UserId == user.UserId)
+						.Select(s => new ShippingAddressView
+						{
+							FirstName = s.FirstName,
+							LastName = s.LastName,
+							Phone = s.Phone,
+							Email = s.Email,
+							UnitNo = s.UnitNo,
+							StreetAddress = s.StreetAddress,
+							Suburb = s.Suburb,
+							City = s.City,
+							Province = s.Province,
+							PostalCode = s.PostalCode,
+						}).First();
+					var view = new OrderViewModel
+					{
+						User = viewUserAccount,
+						ShoppingCart = cart,
+						OrderedProducts = orderedProducts,
+						ShippingAddress = viewShippingAddress
+
+					};
+					return View(view);
+				}
+			}
+			return RedirectToAction(nameof(CheckoutUser), new { message = "Sorry Something Went Wrong!" });
 		}
 		[HttpPost]
-		public async Task SendEmail(ViewModels viewModel)
+		public async Task SendEmail(OrderViewModel viewModel)
 		{
 			EmailerService emailerService = new(_httpContextAccessor, _viewEngine, _tempData);
 			await emailerService.SendEmail(viewModel);
-		}
-		public UserModel? CookieTime()
-		{
-			WebServices services = new(_context);
-			UserModel? model = null;
-			const string cookieName = "wazaware.co.za-auto-sign-in";
-			var requestCookies = HttpContext.Request.Cookies;
-			var intialRequest = requestCookies[cookieName];
-			var cookieOptions = new CookieOptions
-			{
-				Expires = DateTimeOffset.Now.AddDays(7),
-				IsEssential = true
-			};
-			if (intialRequest != null)
-			{
-				if (_context.Users!.Any(u => u.Email == intialRequest))
-				{
-					model = _context.Users!.Where(x => x.Email == intialRequest).FirstOrDefault();
-				}
-				else
-				{
-					var email = services.CreateCookieReferance().Result;
-					HttpContext.Response.Cookies
-						.Append(cookieName, email, cookieOptions);
-					model = _context.Users!
-						.Where(x => x.Email == email).FirstOrDefault();
-				}
-			}
-			else
-			{
-				var email = services.CreateCookieReferance().Result;
-				HttpContext.Response.Cookies
-					.Append(cookieName, email, cookieOptions);
-				model = _context.Users!
-					.Where(x => x.Email == email).FirstOrDefault();
-			}
-			return model;
 		}
 	}
 

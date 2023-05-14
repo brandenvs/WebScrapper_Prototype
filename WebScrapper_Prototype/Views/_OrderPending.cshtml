@@ -1,4 +1,4 @@
-@model WazaWare.co.za.Models.ViewModels
+@model WazaWare.co.za.Models.ShopViewModel
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -12,9 +12,9 @@
             <div class="card mb-3">
             <img src="https://wazaware.co.za/Media/Logo/LogoOfficialCropped.png" style="height:10rem" class="img-fluid card-img-top" alt="Logo">
                 <div class="card-body">
-                  <h1 class="card-title">Hello @Model.UserView.FirstName,</h1>
-                  <h2>We have received your order! (@Model.Summary.OrderId)</h2>
-                  <p>
+                <h1 class="card-title">Hello @Model.UserView!.FirstName,</h1>
+                <h2>We have received your order! (@Model.Summary!.OrderId)</h2>
+                <p>
                     The next step is for you to make payment and send us proof of payment.<br>
                     Find your order and banking details below:
                 </p>
@@ -30,7 +30,7 @@
                           </tr>
                         </thead>
                         <tbody>
-                            @foreach(var product in Model.Cart)
+                            @foreach(var product in Model.Cart!)
                             {
                                 <tr style="padding:10px">
                                     <th scope="row" style="padding:10px"><img src="https://wazaware.co.za/Backend/GetImage/@product.ProductId" width="100" height="100" title="product" /></th>

@@ -1,42 +1,61 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using wazaware.co.za.Models.DatabaseModels;
 using WazaWare.co.za.DAL;
 using WazaWare.co.za.Models;
+using static wazaware.co.za.Models.ViewModels.User;
 
 namespace wazaware.co.za.Services
 {
 	public class WebServices
 	{
-		private readonly WazaWare_db_context _context;
-		public WebServices(WazaWare_db_context context)
+		private readonly WazaWare_db_context _DbContext;
+		private readonly IHttpContextAccessor _httpContextAccessor;
+		public WebServices(WazaWare_db_context context, IHttpContextAccessor httpContextAccessor)
 		{
-			_context = context;
+			_DbContext = context;
+			_httpContextAccessor = httpContextAccessor;
 		}
-		public UserModel LoadUser(string userEmail)
+		public UserView LoadViewUser(string userEmail)
 		{
-			var user = _context.Users!.Where(x => x.Equals(userEmail)).FirstOrDefault();
-			return user!;
+			var user = _DbContext.UserAccountDb!.Where(x => x.Equals(userEmail)).FirstOrDefault();
+			var userView = new UserView
+			{
+				FirstName = user!.FirstName,
+				LastName = user.LastName,
+				Email = user.Email,
+				Phone = user.Phone
+			};
+			return userView!;
 		}
-		public List<ProductsInCartModel> LoadCart(int userId)
+		public List<Order> LoadOrders(int userId)
+		{
+			// Database Query : Get OrderDb => WHERE : userId is TRUE
+			var userOrders = _DbContext.OrderDb!
+				.Where(s => s.UserId == userId).ToList();		
+			return userOrders;
+		}
+
+		public List<ShoppingCartView> LoadCart(int userId)
 		{
 			// Query Database for UserAccount's Shopping Cart using variable userId
 			// Convert Database response to a List using : .ToList()
-			var userShoppingCart = _context.UsersShoppingCarts!
+			var ShoppingCart = _DbContext.ShoppingCartDb!
 				.Where(c => c.UserId == userId)
 				.ToList();
-			// Select Product Ids in Shopping Cart List
-			var productIds = userShoppingCart
+			// Select ProductInfomation Ids in Shopping Cart List
+			var productIds = ShoppingCart
 				.Select(c => c.ProductId)
 				.ToList();
-			// Query Database for Products related to UserAccount's Shopping Cart
+			// Query Database for ProductDb related to UserAccount's Shopping Cart
 			// Convert Database response to a List using : .ToList()
-			var products = _context.Products!
+			var products = _DbContext.ProductDb!
 				.Where(p => productIds.Contains(p.ProductId))
 				.ToList();
-			// Join Products & Shopping Cart Lists
-			var joint = userShoppingCart
+			// Join ProductDb & Shopping Cart Lists
+			var joint = ShoppingCart
 				.Join(products, c => c.ProductId, p => p.ProductId, (c, p) => new { ShoppingCart = c, Product = p })
 				.ToList();
-			// Queue Product Total Values 
+			// Queue ProductInfomation Total Values 
 			Queue<decimal?> totalBase = new();
 			Queue<decimal?> totalSale = new();
 			foreach (var product in joint)
@@ -44,7 +63,7 @@ namespace wazaware.co.za.Services
 				totalBase.Enqueue(product.Product.ProductPriceBase * product.ShoppingCart.ProductCount);
 				totalSale.Enqueue(product.Product.ProductPriceSale * product.ShoppingCart.ProductCount);
 			}
-			// Calculations & Building ViewModels Model:
+			// Calculations & Building ShopViewModel Model:
 			decimal? shippingThreshold = 1500;
 			decimal? shippingCost = 0;
 			decimal? tryGetFreeShipping = 0;
@@ -62,20 +81,20 @@ namespace wazaware.co.za.Services
 			decimal? cartBaseSaleDiff = cartBaseTotal - cartSaleTotal;
 			// Build Model
 			var productsInCart = products
-				.Select(x => new ProductsInCartModel
+				.Select(x => new ShoppingCartView
 				{
 					ProductId = x.ProductId,
 					ProductName = x.ProductName,
 					ProductPriceBase = x.ProductPriceBase,
 					ProductPriceSale = x.ProductPriceSale,
 					ProductImageUrl = x.ProductImageUrl,
-					// Count : Quantity of a Product in Cart
-					ProductCount = userShoppingCart
+					// Count : Quantity of a ProductInfomation in Cart
+					ProductCount = ShoppingCart
 					.Where(p => p.ProductId == x.ProductId)
 					.Select(s => s.ProductCount)
 					.First(),
-					// Calculate : Products Sale Total
-					ProductTotal = userShoppingCart
+					// Calculate : ProductDb Sale Total
+					ProductTotal = ShoppingCart
 					.Where(p => p.ProductId == x.ProductId)
 					.Select(s => s.ProductCount)
 					.First() * x.ProductPriceSale,
@@ -91,14 +110,52 @@ namespace wazaware.co.za.Services
 			return productsInCart.ToList();
 
 		}
+		public UserAccount? LoadDbUser()
+		{
+			const string cookieName = "wazaware.co.za-auto-sign-in";
+
+			var requestCookies = _httpContextAccessor.HttpContext!.Request.Cookies;
+			var intialRequest = requestCookies[cookieName];
+			var cookieOptions = new CookieOptions
+			{
+				Expires = DateTimeOffset.Now.AddDays(7),
+				IsEssential = true
+			};
+			if (intialRequest != null)
+			{
+				if (_DbContext.UserAccountDb!.Any(u => u.Email == intialRequest))
+				{
+					var user = _DbContext.UserAccountDb!.Where(x => x.Email == intialRequest).FirstOrDefault();
+					return user!;
+				}
+				else
+				{
+					var email = CreateCookieReferance().Result;
+
+					_httpContextAccessor.HttpContext!.Response.Cookies
+						.Append(cookieName, email, cookieOptions);
+					var user = _DbContext.UserAccountDb!
+						.Where(x => x.Email == email).FirstOrDefault();
+					return user!;
+				}
+			}
+			else
+			{
+				var email = CreateCookieReferance().Result;
+				_httpContextAccessor.HttpContext!.Response.Cookies
+					.Append(cookieName, email, cookieOptions);
+				var user = _DbContext.UserAccountDb!
+					.Where(x => x.Email == email).FirstOrDefault();
+				return user!;
+			}
+		}
 		public async Task<string> CreateCookieReferance()
 		{
 			string generatedName = "wazaware.co.za-auto-sign-in";
 			string generatedEmail = "wazaware.co.za-auto-sign-in" + Guid.NewGuid().ToString() + "@wazaware.co.za";
 			string generatedPhone = "1234567890";
 			string generatedPwd = "3%@D8Iy2?Kt7*ceK";
-
-			var userModel = new UserModel
+			var user = new UserAccount
 			{
 				FirstName = generatedName,
 				LastName = generatedName,
@@ -107,10 +164,9 @@ namespace wazaware.co.za.Services
 				Password = generatedPwd,
 				Joined = DateTime.Now
 			};
-			_context!.Users!.Add(userModel);
-			await _context!.SaveChangesAsync();
-			var user = _context!.Users.Where(s => s.Email!.Equals(generatedEmail)).FirstOrDefault();
-			return user!.Email!;
+			_DbContext!.UserAccountDb!.Add(user);
+			await _DbContext!.SaveChangesAsync();
+			return generatedEmail;
 		}
 		public Dictionary<string, string> Capitilize(Dictionary<string, string> data)
 		{

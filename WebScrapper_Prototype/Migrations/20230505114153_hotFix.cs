@@ -10,7 +10,7 @@ namespace WazaWare.co.za.Migrations
 		{
 			migrationBuilder.AlterColumn<int>(
 				name: "Phone",
-				table: "Users",
+				table: "UserAccountDb",
 				type: "int",
 				nullable: false,
 				oldClrType: typeof(string),
@@ -21,7 +21,7 @@ namespace WazaWare.co.za.Migrations
 		{
 			migrationBuilder.AlterColumn<string>(
 				name: "Phone",
-				table: "Users",
+				table: "UserAccountDb",
 				type: "nvarchar(max)",
 				nullable: false,
 				oldClrType: typeof(int),

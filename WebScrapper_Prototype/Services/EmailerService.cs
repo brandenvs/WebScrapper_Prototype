@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using System.Net;
 using System.Net.Mail;
+using wazaware.co.za.Models.ViewModels;
 using WazaWare.co.za.Models;
 
 namespace wazaware.co.za.Services
@@ -23,7 +24,7 @@ namespace wazaware.co.za.Services
 			_viewEngine = viewEngine;
 			_tempData = tempData;
 		}
-		public async Task SendEmail(ViewModels viewModel)
+		public async Task SendEmail(OrderViewModel viewModel)
 		{
 			var serviceProvider = new ServiceCollection()
 	   .AddScoped<IUrlHelper>(x => Mock.Of<IUrlHelper>())
@@ -40,7 +41,7 @@ namespace wazaware.co.za.Services
 				// START
 				From = new MailAddress("brandenconnected@gmail.com")
 			};
-			mailMessage.To.Add(viewModel.UserView!.Email!);
+			mailMessage.To.Add(viewModel.User!.Email!);
 			mailMessage.CC.Add("brandenconnected@gmail.com");
 			mailMessage.Subject = "Your Order - wazaware.co.za";
 

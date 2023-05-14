@@ -1,5 +1,5 @@
 ﻿using CsvHelper.Configuration;
-using WazaWare.co.za.Models;
+using wazaware.co.za.Models.DatabaseModels;
 
 namespace WazaWare.co.za.Mappers
 {

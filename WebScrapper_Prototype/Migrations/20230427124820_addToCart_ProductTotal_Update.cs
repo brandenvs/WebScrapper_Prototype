@@ -10,7 +10,7 @@ namespace WazaWare.co.za.Migrations
 		{
 			migrationBuilder.AddColumn<decimal>(
 				name: "ProductTotal",
-				table: "UsersShoppingCarts",
+				table: "ShoppingCartDb",
 				type: "decimal(18,2)",
 				nullable: true);
 		}
@@ -19,7 +19,7 @@ namespace WazaWare.co.za.Migrations
 		{
 			migrationBuilder.DropColumn(
 				name: "ProductTotal",
-				table: "UsersShoppingCarts");
+				table: "ShoppingCartDb");
 		}
 	}
 }

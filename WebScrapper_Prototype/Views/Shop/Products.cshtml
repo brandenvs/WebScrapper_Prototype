@@ -1,9 +1,9 @@
 ﻿@using WazaWare.co.za.Controllers;
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
-@model WazaWare.co.za.Models.ViewModels
+@model WazaWare.co.za.Models.ShopViewModel
 @{
-	ViewData["Title"] = "Products";
+	ViewData["Title"] = "ProductDb";
 }
 <!DOCTYPE html>
 <configuration>
@@ -140,19 +140,19 @@
 						<!-- Side Cards -->
 						<div class="col-lg-3 col-md-6 col-12 text-center desktop">
 							<div class="card text-bg-dark" style="margin:10px;">
-								<a href="@Url.Action("Products", new { manufacturer = "amd" })">
+								<a href="@Url.Action("ProductDb", new { manufacturer = "amd" })">
 									<img src="/Media/Shop/SideCards/SideAMD.gif" class="card-img contain-fit" alt="SideAMD"
 										 data-toggle="tooltip" data-placement="right" title="Shop Latest AMD Radeon GPUs, Ryzen CPUs, Compatible Monitors and more!" />
 								</a>
 							</div>
 							<div class="card text-bg-dark" style="margin:10px;">
-								<a href="@Url.Action("Products", new { manufacturer = "intel" })">
+								<a href="@Url.Action("ProductDb", new { manufacturer = "intel" })">
 									<img src="/Media/Shop/SideCards/SideIntel.gif" class="card-img contain-fit" alt="SideIntel"
 										 data-toggle="tooltip" data-placement="right" title="Shop The Latest Intel i9 i7 & i5 CPUs, Laptops, NUC's and more!" />
 								</a>
 							</div>
 							<div class="card text-bg-dark" style="margin:10px;">
-								<a href="@Url.Action("Products", new { manufacturer = "nvidia" })">
+								<a href="@Url.Action("ProductDb", new { manufacturer = "nvidia" })">
 									<img src="/Media/Shop/SideCards/SideNvidia.gif" class="card-img contain-fit" alt="SideNvidia"
 										 data-toggle="tooltip" data-placement="right" title="Shop Latest Nvidia RTX GPUs, Compatible G-Sync Monitors and more!" />
 								</a>
@@ -222,17 +222,17 @@
 											<nav aria-label="Products navigation">
 												<ul class="pagination">
 													<li class="page-item @(!Model.Products.HasPreviousPage ? "disabled" : "")">
-														<a class="page-link" href="@Url.Action("Products", new { ViewBag.Search, page = Model.Products.PageNumber - 1 })" aria-label="Previous">
+														<a class="page-link" href="@Url.Action("ProductDb", new { ViewBag.Search, page = Model.Products.PageNumber - 1 })" aria-label="Previous">
 															<span aria-hidden="true">&laquo;</span>
 															<span class="sr-only">Previous</span>
 														</a>
 													</li>
 													@for (int i = 1; i <= Model.Products.PageCount; i++)
 													{
-														<li class="page-item @(i == Model.Products.PageNumber ? "active" : "")"><a class="page-link" href="@Url.Action("Products", new { ViewBag.Search, page = i })">@i</a></li>
+														<li class="page-item @(i == Model.Products.PageNumber ? "active" : "")"><a class="page-link" href="@Url.Action("ProductDb", new { ViewBag.Search, page = i })">@i</a></li>
 													}
 													<li class="page-item @(!Model.Products.HasNextPage ? "disabled" : "")">
-														<a class="page-link" href="@Url.Action("Products", new { ViewBag.Search, page = Model.Products.PageNumber + 1 })" aria-label="Next">
+														<a class="page-link" href="@Url.Action("ProductDb", new { ViewBag.Search, page = Model.Products.PageNumber + 1 })" aria-label="Next">
 															<span aria-hidden="true">&raquo;</span>
 															<span class="sr-only">Next</span>
 														</a>
@@ -353,17 +353,17 @@
 											<nav aria-label="Products navigation">
 												<ul class="pagination">
 													<li class="page-item @(!Model.Products.HasPreviousPage ? "disabled" : "")">
-														<a class="page-link" href="@Url.Action("Products", new { manufacturer = ViewBag.Manufacturer, page = Model.Products.PageNumber - 1 })" aria-label="Previous">
+														<a class="page-link" href="@Url.Action("ProductDb", new { manufacturer = ViewBag.Manufacturer, page = Model.Products.PageNumber - 1 })" aria-label="Previous">
 															<span aria-hidden="true">&laquo;</span>
 															<span class="sr-only">Previous</span>
 														</a>
 													</li>
 													@for (int i = 1; i <= Model.Products.PageCount; i++)
 													{
-														<li class="page-item @(i == Model.Products.PageNumber ? "active" : "")"><a class="page-link" href="@Url.Action("Products", new { manufacturer = ViewBag.Manufacturer, page = i })">@i</a></li>
+														<li class="page-item @(i == Model.Products.PageNumber ? "active" : "")"><a class="page-link" href="@Url.Action("ProductDb", new { manufacturer = ViewBag.Manufacturer, page = i })">@i</a></li>
 													}
 													<li class="page-item @(!Model.Products.HasNextPage ? "disabled" : "")">
-														<a class="page-link" href="@Url.Action("Products", new { manufacturer = ViewBag.Manufacturer, page = Model.Products.PageNumber + 1 })" aria-label="Next">
+														<a class="page-link" href="@Url.Action("ProductDb", new { manufacturer = ViewBag.Manufacturer, page = Model.Products.PageNumber + 1 })" aria-label="Next">
 															<span aria-hidden="true">&raquo;</span>
 															<span class="sr-only">Next</span>
 														</a>
@@ -394,19 +394,19 @@
 						<!-- Side Cards -->
 						<div class="col-lg-3 col-md-6 col-12 text-center desktop">
 							<div class="card text-bg-dark" style="margin:10px;">
-								<a href="@Url.Action("Products", new { manufacturer = "amd" })" target="_blank">
+								<a href="@Url.Action("ProductDb", new { manufacturer = "amd" })" target="_blank">
 									<img src="/Media/Shop/SideCards/SideAMD.gif" class="card-img contain-fit" alt="SideAMD"
 										 data-toggle="tooltip" data-placement="right" title="Shop Latest AMD Radeon GPUs, Ryzen CPUs, Compatible Monitors and more!" />
 								</a>
 							</div>
 							<div class="card text-bg-dark" style="margin:10px;">
-								<a href="@Url.Action("Products", new { manufacturer = "intel" })" target="_blank">
+								<a href="@Url.Action("ProductDb", new { manufacturer = "intel" })" target="_blank">
 									<img src="/Media/Shop/SideCards/SideIntel.gif" class="card-img contain-fit" alt="SideIntel"
 										 data-toggle="tooltip" data-placement="right" title="Shop The Latest Intel i9 i7 & i5 CPUs, Laptops, NUC's and more!" />
 								</a>
 							</div>
 							<div class="card text-bg-dark" style="margin:10px;">
-								<a href="@Url.Action("Products", new { manufacturer = "nvidia" })" target="_blank">
+								<a href="@Url.Action("ProductDb", new { manufacturer = "nvidia" })" target="_blank">
 									<img src="/Media/Shop/SideCards/SideNvidia.gif" class="card-img contain-fit" alt="SideNvidia"
 										 data-toggle="tooltip" data-placement="right" title="Shop Latest Nvidia RTX GPUs, Compatible G-Sync Monitors and more!" />
 								</a>
@@ -423,13 +423,13 @@
 										@if (ViewBag.filterMan != null)
 										{
 											<li>
-												<a style="margin:15px;margin-bottom:0;" href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filterSort = ViewBag.filterSort })"><i class="ti-close"></i> @ViewBag.filterMan</a>
+												<a style="margin:15px;margin-bottom:0;" href="@Url.Action("ProductDb", "Home", new { category = ViewBag.Category, filterSort = ViewBag.filterSort })"><i class="ti-close"></i> @ViewBag.filterMan</a>
 											</li>
 										}
 										@if (ViewBag.filterSort != null)
 										{
 											<li>
-												<a style="margin:15px;margin-bottom:0;" href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filterMan = ViewBag.filterMan })"><i class="ti-close"></i>  @ViewBag.filterSort</a>
+												<a style="margin:15px;margin-bottom:0;" href="@Url.Action("ProductDb", "Home", new { category = ViewBag.Category, filterMan = ViewBag.filterMan })"><i class="ti-close"></i>  @ViewBag.filterSort</a>
 											</li>
 										}
 									</ul>									
@@ -448,7 +448,7 @@
 																				<ul class="dropdown">
 																					@foreach (var filter in Model.FilterSortBy)
 																					{
-																						<li><a href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filterSort = filter.FilterId, filterMan = ViewBag.filterMan })"><em>@filter.FilterName</em></a></li>
+																						<li><a href="@Url.Action("ProductDb", "Home", new { category = ViewBag.Category, filterSort = filter.FilterId, filterMan = ViewBag.filterMan })"><em>@filter.FilterName</em></a></li>
 																					}
 																				</ul>
 																			</li>
@@ -457,7 +457,7 @@
 																				<ul class="dropdown">
 																					@foreach (var filter in Model.FilterManufacturer)
 																					{
-																						<li><a href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filterMan = filter.FilterId, filterSort = ViewBag.filterSort })"><em>@filter.FilterName</em></a></li>
+																						<li><a href="@Url.Action("ProductDb", "Home", new { category = ViewBag.Category, filterMan = filter.FilterId, filterSort = ViewBag.filterSort })"><em>@filter.FilterName</em></a></li>
 																					}
 																				</ul>
 																			</li>
@@ -497,7 +497,7 @@
 																@foreach (var filter in Model.FilterSortBy)
 																{
 																	<li>
-																		<a href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filterSort = filter.FilterId, filterMan = ViewBag.filterMan })" style="color:black"><i class="ti-plus"></i> @filter.FilterName</a>
+																		<a href="@Url.Action("ProductDb", "Home", new { category = ViewBag.Category, filterSort = filter.FilterId, filterMan = ViewBag.filterMan })" style="color:black"><i class="ti-plus"></i> @filter.FilterName</a>
 																	</li>
 																}
 															</ul>
@@ -521,7 +521,7 @@
 																@foreach (var filter in Model.FilterManufacturer)
 																{
 																	<li>
-																		<a href="@Url.Action("Products", "Shop", new { category = ViewBag.Category, filterMan = filter.FilterId, filterSort = ViewBag.filterSort })" style="color:black"><i class="ti-plus"></i> @filter.FilterName</a>
+																		<a href="@Url.Action("ProductDb", "Home", new { category = ViewBag.Category, filterMan = filter.FilterId, filterSort = ViewBag.filterSort })" style="color:black"><i class="ti-plus"></i> @filter.FilterName</a>
 																	</li>
 																}
 															</ul>
@@ -611,17 +611,17 @@
 											<nav aria-label="Products navigation">
 												<ul class="pagination">
 													<li class="page-item @(!Model.Products.HasPreviousPage ? "disabled" : "")">
-														<a class="page-link" href="@Url.Action("Products", new { category = ViewBag.Category, page = Model.Products.PageNumber - 1 })" aria-label="Previous">
+														<a class="page-link" href="@Url.Action("ProductDb", new { category = ViewBag.Category, page = Model.Products.PageNumber - 1 })" aria-label="Previous">
 															<span aria-hidden="true">&laquo;</span>
 															<span class="sr-only">Previous</span>
 														</a>
 													</li>
 													@for (int i = 1; i <= Model.Products.PageCount; i++)
 													{
-														<li class="page-item @(i == Model.Products.PageNumber ? "active" : "")"><a class="page-link" href="@Url.Action("Products", new { category = ViewBag.Category, page = i })">@i</a></li>
+														<li class="page-item @(i == Model.Products.PageNumber ? "active" : "")"><a class="page-link" href="@Url.Action("ProductDb", new { category = ViewBag.Category, page = i })">@i</a></li>
 													}
 													<li class="page-item @(!Model.Products.HasNextPage ? "disabled" : "")">
-														<a class="page-link" href="@Url.Action("Products", new { category = ViewBag.Category, page = Model.Products.PageNumber + 1 })" aria-label="Next">
+														<a class="page-link" href="@Url.Action("ProductDb", new { category = ViewBag.Category, page = Model.Products.PageNumber + 1 })" aria-label="Next">
 															<span aria-hidden="true">&raquo;</span>
 															<span class="sr-only">Next</span>
 														</a>

@@ -1,4 +1,4 @@
-﻿@model WazaWare.co.za.Models.ViewModels
+﻿@model WazaWare.co.za.Models.ShopViewModel
 <!-- Header Inner -->
 <div class="header-inner">
 	<div class="container">
@@ -15,32 +15,32 @@
 											<a href="/Shop">Shop</a>
 										</li>
 										<li>
-											<a href="@Url.Action("Products", "Shop", new { category = "essential_hardware" })">
+											<a href="@Url.Action("ProductDb", "Home", new { category = "essential_hardware" })">
 												Essential Hardware<i class="ti-arrow-top-right"></i>
 											</a>
 										</li>
 										<li>
-											<a href="@Url.Action("Products", "Shop", new { category = "latest_gpus" })">
+											<a href="@Url.Action("ProductDb", "Home", new { category = "latest_gpus" })">
 												Latest GPUS<i class="ti-arrow-top-right"></i>
 											</a>
 										</li>
 										<li>
-											<a href="@Url.Action("Products", "Shop", new { category = "great_deals" })">
+											<a href="@Url.Action("ProductDb", "Home", new { category = "great_deals" })">
 												Great Deals<i class="ti-arrow-top-right"></i>
 												</a>
 										</li>
 										<li>
-											<a href="@Url.Action("Products", "Shop", new { category = "pc_chassis" })">
+											<a href="@Url.Action("ProductDb", "Home", new { category = "pc_chassis" })">
 												PC Chassis<i class="ti-arrow-top-right"></i>
 												</a>
 										</li>
 										<li>
-											<a href="@Url.Action("Products", "Shop", new { category = "data_storage" })">
+											<a href="@Url.Action("ProductDb", "Home", new { category = "data_storage" })">
 												Data Storage<i class="ti-arrow-top-right"></i>
 												</a>
 										</li>
 										<li>
-											<a href="@Url.Action("Products", "Shop", new { category = "performace_laptops" })">
+											<a href="@Url.Action("ProductDb", "Home", new { category = "performace_laptops" })">
 												Performance Laptops<i class="ti-arrow-top-right"></i>
 												</a>
 										</li>

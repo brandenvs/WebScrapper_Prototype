@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using wazaware.co.za.Models;
-using WazaWare.co.za.Models;
+using wazaware.co.za.Models.DatabaseModels;
 
 namespace WazaWare.co.za.DAL
 {
@@ -8,13 +7,12 @@ namespace WazaWare.co.za.DAL
 	{
 		public WazaWare_db_context(DbContextOptions<WazaWare_db_context> options)
 			: base(options) { }
-		public DbSet<Orders>? Orders { get; set; }
-		public DbSet<ProductImage>? ProductImages { get; set; }
-		public DbSet<Product>? Products { get; set; }
-		public DbSet<UserModel>? Users { get; set; }
-		public DbSet<UserShipping>? UserShippings { get; set; }
-		public DbSet<UserShoppingCart>? UsersShoppingCarts { get; set; }
-		public DbSet<OrderProducts>? OrderProducts { get; set; }
-		public DbSet<PaymentModel>? PaymentModels { get; set; }
+		public DbSet<UserAccount>? UserAccountDb { get; set; }
+		public DbSet<ShoppingCart>? ShoppingCartDb { get; set; }
+		public DbSet<ShippingAddress>? ShippingAddressDb { get; set; }
+		public DbSet<Order>? OrderDb { get; set; }
+		public DbSet<OrderedProducts>? OrderedProductsDb { get; set; }
+		public DbSet<BillingAddress>? BillingAddressDb { get; set; }
+		public DbSet<Product>? ProductDb { get; set; }	
 	}
 }

@@ -1,4 +1,4 @@
-﻿@model WazaWare.co.za.Models.ViewModels
+﻿@model WazaWare.co.za.Models.ShopViewModel
 @{
 	ViewData["Title"] = "CheckoutUser";
 }
@@ -270,105 +270,184 @@
 						</div>
 					</div>
 				</div>
-			</section>
+		</section>
 	}
 	else if (ViewBag.Message == "hasBilling")
 	{
-		<section id="OrderSummary" class="shop checkout section">
-			<div class="container" style="max-width:100%">
-				<div class="row">
-					<div class="col-12">
-						<p class="fs-4 h4">Your Order has been received and is waiting for Proof of Payment</p>
+		<div class="container text-center" style="overflow:hidden;max-width:85%;">
+			<div class="row">
+				<div class="col" style="display: flex;flex-direction: column;justify-content: center;padding:15px;">
+					<h2>Order Received!</h2>
+				</div>
+				<div class="col" style="display: flex;flex-direction: column;justify-content: center;padding:15px;">
+					<script src="https://cdn.lordicon.com/bhenfmcm.js"></script>
+					<lord-icon src="https://cdn.lordicon.com/xxdqfhbi.json"
+							   trigger="loop"
+							   delay="2000"
+							   colors="primary:#121331,secondary:#e88c30,tertiary:#30c9e8"
+							   style="width:250px;height:250px">
+					</lord-icon>
+				</div>
+			</div>
+
+			<div class="row section-divider">
+				<div class="col" style="display: flex;flex-direction: column;justify-content: center;padding:15px;">
+					<script src="https://cdn.lordicon.com/bhenfmcm.js"></script>
+					<lord-icon src="https://cdn.lordicon.com/gzmgulpl.json"
+							   trigger="loop"
+							   delay="2000"
+							   colors="outline:#000000,primary:#e88c30,secondary:#30c9e8"
+							   style="width:250px;height:250px">
+					</lord-icon>
+				</div>
+				<div class="col" style="display: flex;flex-direction: column;justify-content: center;padding:15px;">
+					<h2 class="h2">Thank you for placing your order! Here's what you can expect:</h2>
+					<ol class="list-group list-group-numbered">
+						<li class="list-group-item">Check your email: We've sent you an order summary and banking details.</li>
+						<li class="list-group-item">Proof of payment: Once we receive your payment confirmation, we'll swiftly pack and ship your order, ensuring a speedy delivery.</li>
+						<li class="list-group-item">Stay in the loop: We'll keep you informed about your order status throughout the process. Keep an eye on your email inbox for updates after completing your payment.</li>
+					</ol>
+					<p><b>We're here to assist you every step of the way. If you have any questions, feel free to reach out. Happy shopping with Wazaware!</b><br /><a href="#" class=" btn fs-4 h4" style="padding:5px;">Got a Question?</a></p>
+				</div>
+			</div>
+
+			<div class="row section-divider">
+				<div class="col" style="display: flex;flex-direction: column;justify-content: center;padding:15px;">
+					<h4 class="h4">Your Order: #@Model.Summary!.OrderId</h4>
+					<div class="table-responsive" style="overflow:scroll">
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">Order</th>
+									<th scope="col">Name</th>
+									<th scope="col">Quantity</th>
+									<th scope="col">Price</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var product in Model.Cart!)
+								{
+									<tr>
+										<th scope="row"><img src="https://wazaware.co.za/Backend/GetImage/@product.ProductId" width="100" height="100" title="product" /></th>
+										<td><a href="https://wazaware.co.za/Shop/Product/@product.ProductId"><h5>@product.ProductName!.Substring(0,35) ...</h5></a></td>
+										<td>@product.ProductCount</td>
+										<td>
+											<span style="text-decoration-line:line-through;color:red;">@product.ProductPriceBaseFormatted</span><br>
+											<b>@product.ProductPriceSaleFormatted</b>
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
 					</div>
 				</div>
-				<div class="row section-divider">
-					<div class="col-12">
-						<div class="row">
-							<p class="fs-5 h5">Banking Details:</p>
-						</div>
+				<div class="col" style="display: flex;flex-direction: column;justify-content: center;padding:15px;">
+					<h4 class="h4">Total</h4>
+					<div class="table-responsive" style="overflow:scroll">
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">Sub Total Amount</th>
+									<th scope="col">Shipping</th>
+									<th scope="col">Discounted</th>
+									<th scope="col">Total</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var product in Model.Cart!)
+								{
+									<tr>
+										<th scope="row">@product.CartBaseTotalFormatted</th>
+										<td>@product.ShippingCostFormatted</td>
+										<td>@product.CartBaseSaleDiffFormatted</td>
+										<td>
+											<span style="text-decoration-line:line-through;color:red;">@product.CartBaseTotalFormatted</span><br>
+											<b>@product.CartSaleTotalFormatted</b>
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
 					</div>
-					<div class="col-lg-6 col-md-9 col-sm-12">
-						<div class="row">
-							<div class="col-lg-3 col-md-6 col-sm-12">
-								<p class="fs-6 h6">Bank</p>
-								<p class="fs-5 h5"><b>Standard Bank</b></p>
-							</div>
-							<div class="col-lg-3 col-md-6 col-sm-12">
-								<p class="fs-6 h6">Branch Code</p>
-								<p class="fs-5 h5" style="top:0;"><b>151001</b></p>
-							</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container" style="max-width:85%">
+			<div class="row">
+				<div class="col-lg-6 col-12">
+					<div class="row section-divider">
+						<div class="col-12">
+							<h4 class="h4">Shipping Address <i class="ti-pencil-alt" style="white-space: nowrap;" data-toggle="tooltip" data-placement="right" title="Change Shipping Address Details"></i></h4>
 						</div>
-					</div>
-					<div class="col-lg-6 col-md-9 col-sm-12">
-						<div class="row">
-							<div class="col-lg-3 col-md-6 col-sm-12">
-								<p class="fs-6 h6">Account Holder</p>
-								<p class="fs-5 h5" style="top:0;"><b>B VAN STADEN</b></p>
-							</div>
-							<div class="col-lg-3 col-md-6 col-sm-12">
-								<p class="fs-6 h6">Account Number</p>
-								<p class="fs-5 h5" style="top:0;"><b>10203232133</b></p>
-							</div>
+						<div class="col">
+							<dl>
+								@if (Model.UserShippingView!.UnitNo != 0)
+								{
+									<dt>Unit Number</dt>
+									<dd>@Model.UserShippingView!.UnitNo</dd>
+								}
+								else
+								{
+									<dt>Unit Number</dt>
+									<dd>Not Specified</dd>
+								}
+								<dt>Street Address</dt>
+								<dd>@Model.UserShippingView.StreetAddress</dd>
+							</dl>
 						</div>
-					</div>
-					<div class="col-lg-6 col-md-9 col-sm-12">
-						<div class="row">
-							<div class="col-lg-3 col-md-6 col-sm-12">
-								<p class="fs-6 h6">Reference</p>
-								<p class="fs-5 h5" style="top:0;"><b>Order#@Model.Summary.OrderId</b></p>
-							</div>
-							<div class="col-lg-3 col-md-6 col-sm-12">
-								<p class="fs-6 h6">Proof of Payment</p>
-								<p class="fs-5 h5" style="top:0;"><b>brandenconnected@gmail.com</b></p>
-							</div>
+						<div class="col">
+							<dl>
+								<dt>Suburb</dt>
+								<dd>@Model.UserShippingView.Suburb</dd>
+								<dt>City</dt>
+								<dd>@Model.UserShippingView.City</dd>
+							</dl>
+						</div>
+						<div class="col">
+							<dl>
+								<dt>Province</dt>
+								<dd>@Model.UserShippingView.Province</dd>
+								<dt>PostalCode</dt>
+								<dd>@Model.UserShippingView.PostalCode</dd>
+							</dl>
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-12">
-						<p class="fs-4 h5"><br>Shipping Address <a href="#"><i class="ti-pencil-alt" style="white-space: nowrap;" data-toggle="tooltip" data-placement="right" title="Change Contact Details"></i></a></p>
-					</div>
-				</div>
-				<div class="row section-divider">
-					<div class="col-lg-6 col-md-9 col-sm-12">
-						<div class="row">
-							<div class="col-lg-3 col-md-6 col-sm-12">
-								<p class="fs-6 h6">Unit Number</p>
-								<p class="fs-5 h5"><b>@Model.UserShippingView!.UnitNo</b></p>
-							</div>
-							<div class="col-lg-3 col-md-6 col-sm-12">
-								<p class="fs-6 h6">Street Address</p>
-								<p class="fs-5 h5" style="top:0;"><b>@Model.UserShippingView.StreetAddress</b></p>
-							</div>
+				<div class="col-lg-6 col-12">
+					<div class="row section-divider">
+						<div class="col-12">
+							<h5 class="h5">Our Banking Details</h5>
+							<p class="fs-4 h5">Standard Bank</p>
 						</div>
-					</div>
-					<div class="col-lg-6 col-md-9 col-sm-12">
-						<div class="row">
-							<div class="col-lg-3 col-md-6 col-sm-12">
-								<p class="fs-6 h6">Suburb</p>
-								<p class="fs-5 h5" style="top:0;"><b>@Model.UserShippingView.Suburb</b></p>
-							</div>
-							<div class="col-lg-3 col-md-6 col-sm-12">
-								<p class="fs-6 h6">City</p>
-								<p class="fs-5 h5" style="top:0;"><b>@Model.UserShippingView.City</b></p>
-							</div>
+						<div class="col">
+							<dl>
+								<dt>Branch Code</dt>
+								<dd>314</dd>
+								<dt>Account Holder</dt>
+								<dd>MR BRANDEN B VAN STADEN</dd>
+							</dl>
 						</div>
-					</div>
-					<div class="col-lg-6 col-md-9 col-sm-12">
-						<div class="row">
-							<div class="col-lg-3 col-md-6 col-sm-12">
-								<p class="fs-6 h6">Province</p>
-								<p class="fs-5 h5" style="top:0;"><b>@Model.UserShippingView.Province</b></p>
-							</div>
-							<div class="col-lg-3 col-md-6 col-sm-12">
-								<p class="fs-6 h6">PostalCode</p>
-								<p class="fs-5 h5" style="top:0;"><b>@Model.UserShippingView.PostalCode</b></p>
-							</div>
+						<div class="col">
+							<dl>
+								<dt>Account Number</dt>
+								<dd>08 134 172 5</dd>
+								<dt>Reference</dt>
+								<dd>ORDERID-@Model.Summary.OrderId</dd>
+							</dl>
+						</div>
+						<div class="col">
+							<dl>
+								<dt>Amount</dt>
+								<dd>@Model.Summary.OrderTotal</dd>
+								<dt>Email Proof of Payment to</dt>
+								<dd><a href="mailto:brandenconnected@gmail.com" title="proofofpaymentemail">brandenconnected@gmail.com</a></dd>
+							</dl>
 						</div>
 					</div>
 				</div>
 			</div>
-		</section>
+		</div>
 	}
 	<!--/ End Checkout -->
 	<!-- Shop Services Partial View-->
