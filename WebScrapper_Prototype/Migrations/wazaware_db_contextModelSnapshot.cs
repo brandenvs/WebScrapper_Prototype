@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WazaWare.co.za.DAL;
+using wazaware.co.za.DAL;
 
 #nullable disable
 
-namespace WazaWare.co.za.Migrations
+namespace wazaware.co.za.Migrations
 {
-    [DbContext(typeof(WazaWare_db_context))]
+    [DbContext(typeof(wazaware_db_context))]
     partial class WazaWare_db_contextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -22,77 +22,13 @@ namespace WazaWare.co.za.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("WazaWare.co.za.Models.OrderProducts", b =>
+            modelBuilder.Entity("wazaware.co.za.Models.DatabaseModels.BillingAddress", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("BillingId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("ProductTotal")
-                        .IsRequired()
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OrderProducts");
-                });
-
-            modelBuilder.Entity("WazaWare.co.za.Models.OrderDb", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"), 1L, 1);
-
-                    b.Property<DateTime?>("OrderCreatedOn")
-                        .IsRequired()
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("OrderTotal")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PaymentId")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ShippingPrice")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserShippingId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsOrderPayed")
-                        .HasColumnType("bit");
-
-                    b.HasKey("OrderId");
-
-                    b.ToTable("OrderDb");
-                });
-
-            modelBuilder.Entity("wazaware.co.za.Models.PaymentModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BillingId"), 1L, 1);
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -112,6 +48,9 @@ namespace WazaWare.co.za.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
 
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
@@ -142,15 +81,69 @@ namespace WazaWare.co.za.Migrations
                     b.Property<int>("UnitNo")
                         .HasColumnType("int");
 
+                    b.HasKey("BillingId");
+
+                    b.ToTable("BillingAddressDb");
+                });
+
+            modelBuilder.Entity("wazaware.co.za.Models.DatabaseModels.Order", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"), 1L, 1);
+
+                    b.Property<bool>("IsOrderPayed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("OrderCreatedOn")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal?>("OrderTotal")
+                        .IsRequired()
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("ShippingPrice")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("OrderId");
 
-                    b.ToTable("PaymentModels");
+                    b.ToTable("OrderDb");
                 });
 
-            modelBuilder.Entity("WazaWare.co.za.Models.ProductInfomation", b =>
+            modelBuilder.Entity("wazaware.co.za.Models.DatabaseModels.OrderedProducts", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("ProductTotal")
+                        .IsRequired()
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderedProductsDb");
+                });
+
+            modelBuilder.Entity("wazaware.co.za.Models.DatabaseModels.Product", b =>
                 {
                     b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
@@ -207,7 +200,7 @@ namespace WazaWare.co.za.Migrations
                     b.ToTable("ProductDb");
                 });
 
-            modelBuilder.Entity("WazaWare.co.za.Models.ProductImage", b =>
+            modelBuilder.Entity("wazaware.co.za.Models.DatabaseModels.ProductImage", b =>
                 {
                     b.Property<int>("ImageId")
                         .ValueGeneratedOnAdd()
@@ -232,53 +225,16 @@ namespace WazaWare.co.za.Migrations
 
                     b.HasKey("ImageId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImageDb");
                 });
 
-            modelBuilder.Entity("WazaWare.co.za.Models.UserModel", b =>
+            modelBuilder.Entity("wazaware.co.za.Models.DatabaseModels.ShippingAddress", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("ShippingId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Joined")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("UserAccountDb");
-                });
-
-            modelBuilder.Entity("WazaWare.co.za.Models.UserShipping", b =>
-                {
-                    b.Property<int>("UserShippingId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserShippingId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShippingId"), 1L, 1);
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -298,10 +254,6 @@ namespace WazaWare.co.za.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Notes")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone")
                         .IsRequired()
@@ -333,12 +285,12 @@ namespace WazaWare.co.za.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("UserShippingId");
+                    b.HasKey("ShippingId");
 
-                    b.ToTable("UserShippings");
+                    b.ToTable("ShippingAddressDb");
                 });
 
-            modelBuilder.Entity("WazaWare.co.za.Models.ShoppingCart", b =>
+            modelBuilder.Entity("wazaware.co.za.Models.DatabaseModels.ShoppingCart", b =>
                 {
                     b.Property<int>("CartId")
                         .ValueGeneratedOnAdd()
@@ -356,6 +308,7 @@ namespace WazaWare.co.za.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal?>("ProductTotal")
+                        .IsRequired()
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UserId")
@@ -364,6 +317,42 @@ namespace WazaWare.co.za.Migrations
                     b.HasKey("CartId");
 
                     b.ToTable("ShoppingCartDb");
+                });
+
+            modelBuilder.Entity("wazaware.co.za.Models.DatabaseModels.UserAccount", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Joined")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("UserAccountDb");
                 });
 #pragma warning restore 612, 618
         }

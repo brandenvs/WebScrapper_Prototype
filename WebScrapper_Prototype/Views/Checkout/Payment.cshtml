@@ -1,4 +1,4 @@
-﻿@model WazaWare.co.za.Models.ShopViewModel
+﻿@model wazaware.co.za.Models.ViewModels.OrderViewModel
 @{
 	ViewData["Title"] = "CheckoutUser";
 }
@@ -134,7 +134,7 @@
 		<div class="desktop">
 			<partial name="_TopBar" />
 			<!-- Middle Inner -->
-			<partial name="_MiddleInner" />
+			<partial name="_MiddleInner" model="@Model.PartialView" />
 			<!-- Header Inner Partial View-->
 			<partial name="_HeaderInner" />
 		</div>
@@ -166,110 +166,110 @@
 	<!-- End Breadcrumbs -->
 	@if (ViewBag.Message == "noBilling")
 	{
-			<section id="billingaddress" class="shop checkout section">
-				<div class="container">
-					<div class="row section-divider">
-						<div class="col-9">
-							<br>
-							<p class="fs-5 h5">Billing Address</p>
-							<p class="fs-2 h2">Please Complete the Form</p>
-						</div>
-						@if (ViewBag.ErrorMessage != null)
-						{
-							<p class="fs-2 h2">@ViewBag.ErrorMessage</p>
-						}
-						<div class="col-9" style="margin: 0 10px;">
-							<p class="fw-bolder h5"><br>We don't share any of your information with anyone</p>
-							<form id="userRegister" asp-action="Payment" class="form" method="post">
-								<div class="row" style="top:15px">
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label asp-for="Payment.FirstName" class="form-label">First Name<span>*</span></label>
-											<input asp-for="Payment.FirstName" value="@Model.UserView!.FirstName" type="text" name="firstName" autocomplete="on" placeholder="Bill" class="form-control" aria-label="FirstName" required>
-										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label asp-for="Payment.LastName" class="form-label">Last Name<span>*</span></label>
-										<input asp-for="Payment.LastName" value="@Model.UserView!.LastName" type=" text" name="lastName" autocomplete="on" placeholder="Gates" class="form-control" aria-label="LastName" required>
-										</div>
+		<section id="billingaddress" class="shop checkout section">
+			<div class="container">
+				<div class="row section-divider">
+					<div class="col-9">
+						<br>
+						<p class="fs-5 h5">Billing Address</p>
+						<p class="fs-2 h2">Please Complete the Form</p>
+					</div>
+					@if (ViewBag.ErrorMessage != null)
+					{
+						<p class="fs-2 h2">@ViewBag.ErrorMessage</p>
+					}
+					<div class="col-9" style="margin: 0 10px;">
+						<p class="fw-bolder h5"><br>We don't share any of your information with anyone</p>
+						<form id="userRegister" asp-action="Payment" class="form" method="post">
+							<div class="row" style="top:15px">
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="BillingAddress!.FirstName" class="form-label">First Name<span>*</span></label>
+										<input asp-for="BillingAddress!.FirstName" value="@Model.User!.FirstName" type="text" name="firstName" autocomplete="on" placeholder="Bill" class="form-control" aria-label="FirstName" required>
 									</div>
 								</div>
-								<div class="row" style="top:15px">
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label asp-for="Payment!.Email" class="form-label">Email Address<span>*</span></label>
-										<input asp-for="Payment!.Email" value="@Model.UserView!.Email" type="email" name="email" autocomplete="on" placeholder="lowprices@wazaware.co.za" class="form-control" aria-label="Email" required>
-										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label asp-for="Payment!.Phone" class="form-label">Phone Number<span>*</span></label>
-										<input asp-for="Payment!.Phone" value="@Model.UserView!.Phone" type="tel" name="phone" autocomplete="on" placeholder="0815650206" class="form-control" aria-label="PhoneNumber" required>
-										</div>
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="BillingAddress!.LastName" class="form-label">Last Name<span>*</span></label>
+										<input asp-for="BillingAddress!.LastName" value="@Model.User!.LastName" type=" text" name="lastName" autocomplete="on" placeholder="Gates" class="form-control" aria-label="LastName" required>
 									</div>
 								</div>
-								<div class="row" style="top:15px">
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label asp-for="Payment!.UnitNo" class="form-label">Unit No.</label>
-											<input asp-for="Payment!.UnitNo" value="@Model.UserShippingView!.UnitNo" type="number" name="UnitNo" autocomplete="on" placeholder="213" class="form-control" aria-label="UnitNumber">
-										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label asp-for="Payment!.StreetAddress" class="form-label">Street Address<span>*</span></label>
-											<input asp-for="Payment!.StreetAddress" value="@Model.UserShippingView.StreetAddress" type="text" name="StreetAddress" autocomplete="on" placeholder="16 St James Road" class="form-control" aria-label="StreetAddress" required>
-										</div>
+							</div>
+							<div class="row" style="top:15px">
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="BillingAddress!.Email" class="form-label">Email Address<span>*</span></label>
+										<input asp-for="BillingAddress!.Email" value="@Model.User!.Email" type="email" name="email" autocomplete="on" placeholder="lowprices@wazaware.co.za" class="form-control" aria-label="Email" required>
 									</div>
 								</div>
-								<div class="row" style="top:15px">
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label asp-for="Payment!.Suburb" class="form-label">Suburb<span>*</span></label>
-											<input asp-for="Payment!.Suburb" value="@Model.UserShippingView.Suburb" type="text" name="suburb" autocomplete="on" placeholder="Kenilworth" class="form-control" aria-label="Suburb" required>
-										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label asp-for="Payment!.City" class="form-label">City<span>*</span></label>
-											<input asp-for="Payment!.City" value="@Model.UserShippingView.City" type="text" name="City" autocomplete="on" placeholder="Cape Town" class="form-control" aria-label="City" required>
-										</div>
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="BillingAddress!.Phone" class="form-label">Phone Number<span>*</span></label>
+										<input asp-for="BillingAddress!.Phone" value="@Model.User!.Phone" type="tel" name="phone" autocomplete="on" placeholder="0815650206" class="form-control" aria-label="PhoneNumber" required>
 									</div>
 								</div>
-								<div class="row" style="top:15px">
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label asp-for="Payment!.Province" class="form-label">Province<span>*</span></label>
-											<input asp-for="Payment!.Province" value="@Model.UserShippingView.Province"type="text" name="province" autocomplete="on" placeholder="Western Cape" class="form-control" aria-label="Province" required>
-										</div>
-									</div>
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label asp-for="Payment!.PostalCode" class="form-label">Postal Code<span>*</span></label>
-											<input asp-for="Payment!.PostalCode" value="@Model.UserShippingView.PostalCode" type="number" name="postalCode" autocomplete="on" placeholder="6571" class="form-control" aria-label="Postal Code" required>
-										</div>
+							</div>
+							<div class="row" style="top:15px">
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="BillingAddress!.UnitNo" class="form-label">Unit No.</label>
+										<input asp-for="BillingAddress!.UnitNo" value="@Model.ShippingAddress!.UnitNo" type="number" name="UnitNo" autocomplete="on" placeholder="213" class="form-control" aria-label="UnitNumber">
 									</div>
 								</div>
-								<div class="row" style="top: 15px;">
-									<div class="col-lg-6 col-md-6 col-12">
-										<div class="form-group">
-											<label asp-for="Payment!.PaymentMethod" class="form-label">Select a Payment Method<span>*</span></label>
-										<select asp-for="Payment!.PaymentMethod" class="form-control">
-												<option asp-for="Payment.PaymentMethod" value="EFT Transaction">EFT Transaction</option>											
-											</select>
-										</div>
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="BillingAddress!.StreetAddress" class="form-label">Street Address<span>*</span></label>
+										<input asp-for="BillingAddress!.StreetAddress" value="@Model.ShippingAddress!.StreetAddress" type="text" name="StreetAddress" autocomplete="on" placeholder="16 St James Road" class="form-control" aria-label="StreetAddress" required>
 									</div>
 								</div>
-								<div class="row">
-									<div class="col">
-										<input type="submit" value="Continue" class="btn btn-primary" />
+							</div>
+							<div class="row" style="top:15px">
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="BillingAddress!.Suburb" class="form-label">Suburb<span>*</span></label>
+										<input asp-for="BillingAddress!.Suburb" value="@Model.ShippingAddress!.Suburb" type="text" name="suburb" autocomplete="on" placeholder="Kenilworth" class="form-control" aria-label="Suburb" required>
 									</div>
 								</div>
-							</form>
-						</div>
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="BillingAddress!.City" class="form-label">City<span>*</span></label>
+										<input asp-for="BillingAddress!.City" value="@Model.ShippingAddress!.City" type="text" name="City" autocomplete="on" placeholder="Cape Town" class="form-control" aria-label="City" required>
+									</div>
+								</div>
+							</div>
+							<div class="row" style="top:15px">
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="BillingAddress!.Province" class="form-label">Province<span>*</span></label>
+										<input asp-for="BillingAddress!.Province" value="@Model.ShippingAddress!.Province" type="text" name="province" autocomplete="on" placeholder="Western Cape" class="form-control" aria-label="Province" required>
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="BillingAddress!.PostalCode" class="form-label">Postal Code<span>*</span></label>
+										<input asp-for="BillingAddress!.PostalCode" value="@Model.ShippingAddress!.PostalCode" type="number" name="postalCode" autocomplete="on" placeholder="6571" class="form-control" aria-label="Postal Code" required>
+									</div>
+								</div>
+							</div>
+							<div class="row" style="top: 15px;">
+								<div class="col-lg-6 col-md-6 col-12">
+									<div class="form-group">
+										<label asp-for="BillingAddress!.PaymentMethod" class="form-label">Select a Payment Method<span>*</span></label>
+										<select asp-for="BillingAddress!.PaymentMethod" class="form-control">
+											<option asp-for="BillingAddress!.PaymentMethod" value="EFT Transaction">EFT Transaction</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
+									<input type="submit" value="Continue" class="btn btn-primary" />
+								</div>
+							</div>
+						</form>
 					</div>
 				</div>
+			</div>
 		</section>
 	}
 	else if (ViewBag.Message == "hasBilling")
@@ -305,7 +305,7 @@
 					<ol class="list-group list-group-numbered">
 						<li class="list-group-item">Check your email: We've sent you an order summary and banking details.</li>
 						<li class="list-group-item">Proof of payment: Once we receive your payment confirmation, we'll swiftly pack and ship your order, ensuring a speedy delivery.</li>
-						<li class="list-group-item">Stay in the loop: We'll keep you informed about your order status throughout the process. Keep an eye on your email inbox for updates after completing your payment.</li>
+						<li class="list-group-item">Stay in the loop: We'll keep you informed about your order status throughout the process. Keep an eye on your email inbox for updates after completing your BillingAddress!.</li>
 					</ol>
 					<p><b>We're here to assist you every step of the way. If you have any questions, feel free to reach out. Happy shopping with Wazaware!</b><br /><a href="#" class=" btn fs-4 h4" style="padding:5px;">Got a Question?</a></p>
 				</div>
@@ -313,7 +313,7 @@
 
 			<div class="row section-divider">
 				<div class="col" style="display: flex;flex-direction: column;justify-content: center;padding:15px;">
-					<h4 class="h4">Your Order: #@Model.Summary!.OrderId</h4>
+					<h4 class="h4">Your Order: #@Model.Order!.OrderId</h4>
 					<div class="table-responsive" style="overflow:scroll">
 						<table class="table">
 							<thead>
@@ -325,7 +325,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								@foreach (var product in Model.Cart!)
+								@foreach (var product in Model.ShoppingCart!)
 								{
 									<tr>
 										<th scope="row"><img src="https://wazaware.co.za/Backend/GetImage/@product.ProductId" width="100" height="100" title="product" /></th>
@@ -354,7 +354,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								@foreach (var product in Model.Cart!)
+								@foreach (var product in Model.ShoppingCart!)
 								{
 									<tr>
 										<th scope="row">@product.CartBaseTotalFormatted</th>
@@ -382,10 +382,10 @@
 						</div>
 						<div class="col">
 							<dl>
-								@if (Model.UserShippingView!.UnitNo != 0)
+								@if (Model.ShippingAddress!.UnitNo != 0)
 								{
 									<dt>Unit Number</dt>
-									<dd>@Model.UserShippingView!.UnitNo</dd>
+									<dd>@Model.ShippingAddress!.UnitNo</dd>
 								}
 								else
 								{
@@ -393,23 +393,23 @@
 									<dd>Not Specified</dd>
 								}
 								<dt>Street Address</dt>
-								<dd>@Model.UserShippingView.StreetAddress</dd>
+								<dd>@Model.ShippingAddress!.StreetAddress</dd>
 							</dl>
 						</div>
 						<div class="col">
 							<dl>
 								<dt>Suburb</dt>
-								<dd>@Model.UserShippingView.Suburb</dd>
+								<dd>@Model.ShippingAddress!.Suburb</dd>
 								<dt>City</dt>
-								<dd>@Model.UserShippingView.City</dd>
+								<dd>@Model.ShippingAddress!.City</dd>
 							</dl>
 						</div>
 						<div class="col">
 							<dl>
 								<dt>Province</dt>
-								<dd>@Model.UserShippingView.Province</dd>
+								<dd>@Model.ShippingAddress!.Province</dd>
 								<dt>PostalCode</dt>
-								<dd>@Model.UserShippingView.PostalCode</dd>
+								<dd>@Model.ShippingAddress!.PostalCode</dd>
 							</dl>
 						</div>
 					</div>
@@ -433,13 +433,13 @@
 								<dt>Account Number</dt>
 								<dd>08 134 172 5</dd>
 								<dt>Reference</dt>
-								<dd>ORDERID-@Model.Summary.OrderId</dd>
+								<dd>ORDERID-@Model.Order!.OrderId</dd>
 							</dl>
 						</div>
 						<div class="col">
 							<dl>
 								<dt>Amount</dt>
-								<dd>@Model.Summary.OrderTotal</dd>
+								<dd>@Model.Order!.OrderTotal</dd>
 								<dt>Email Proof of Payment to</dt>
 								<dd><a href="mailto:brandenconnected@gmail.com" title="proofofpaymentemail">brandenconnected@gmail.com</a></dd>
 							</dl>
@@ -562,6 +562,4 @@
 		}
 	</script>
 </body>
-
 </html>
-

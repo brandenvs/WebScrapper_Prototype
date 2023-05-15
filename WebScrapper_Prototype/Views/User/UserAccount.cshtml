@@ -1,5 +1,4 @@
-﻿@using WazaWare.co.za.Controllers;
-@model WazaWare.co.za.Models.ShopViewModel
+﻿@model wazaware.co.za.Models.ViewModels.UserViewModel
 @{
 	ViewData["Title"] = "Account Details";
 }
@@ -118,7 +117,7 @@
 		<div class="desktop">
 			<partial name="_TopBar" />
 			<!-- Middle Inner -->
-			<partial name="_MiddleInner" />
+			<partial name="_MiddleInner" model="@Model.PartialView" />
 			<!-- Header Inner Partial View-->
 			<partial name="_HeaderInner" />
 		</div>
@@ -137,7 +136,7 @@
 			<div class="row">
 				<div class="col-sm-6 col-md-4 col-12">
 					<p class="fs-4 h4">Welcome back,</p>
-					<p class="fs-2 h2">@Model.UserView!.FirstName @Model.UserView.LastName</p>
+					<p class="fs-2 h2">@Model.User!.FirstName @Model.User.LastName</p>
 				</div>
 				<div class="col-sm-6 col-md-4 col-12" style="display:flex; flex-direction:column;">
 					<a href="@Url.Action("Logout","User", new { delete = 10 })" class="button btn-outline-danger" style="padding:10px;">Delete Account</a>
@@ -154,23 +153,23 @@
 					<div style="top:15px" class="row">
 						<div class="col">
 							<p class="label-info fs-4 fw-bolder">First Name</p>
-							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.UserView.FirstName</p>
+							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.User.FirstName</p>
 						</div>
 						<div class="col">
 							<p class="label-info fs-4 fw-bolder">Last Name</p>
-							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.UserView.LastName</p>
+							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.User.LastName</p>
 						</div>
 					</div>
 					<div style="top:15px" class="row">
 						<div class="col">
 							<p class="label-info fs-4 fw-bolder">Email Address</p>
-							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.UserView.Email</p>
+							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.User.Email</p>
 						</div>
 					</div>
 					<div style="top:15px" class="row">
 						<div class="col">
 							<p class="label-info fs-4 fw-bolder">Phone Number</p>
-							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.UserView.Phone</p>
+							<p class="fs-4 h6 fw-bolder" style="top:0;">@Model.User.Phone</p>
 						</div>
 						<div class="col">
 							<p class="label-info fs-4 fw-bolder">Password <a href="#" onclick=""><i class="ti-pencil-alt" style="white-space: nowrap;" data-toggle="tooltip" data-placement="right" title="Change Password"></i></a></p>

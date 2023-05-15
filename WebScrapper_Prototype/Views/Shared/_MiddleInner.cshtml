@@ -1,5 +1,9 @@
-﻿@model WazaWare.co.za.Models.ShopViewModel
+﻿@using wazaware.co.za.Models.ViewModels;
+@model PartialView
+@{
 
+}
+	
 <div class="middle-inner">
 	<div class="container">
 		<div class="row">
@@ -37,7 +41,7 @@
 						{
 							<div id="AccountOptions" class="shopping-item">
 								<div class="dropdown-cart-header">
-									<p>@ViewBag.FirstName</p>
+									<p>@Model.User!.FirstName</p>
 								</div>
 								<ul class="shopping-list">
 									<li>
@@ -53,7 +57,7 @@
 						{
 							<div id="AccountOptions" class="shopping-item">
 								<div class="dropdown-cart-header">
-									<p>Hello <span class="font-weight-bold">@ViewBag.FirstName</span>,<br /> What would you like to do?</p>
+									<p>Hello <span class="font-weight-bold">@Model.User!.FirstName</span>,<br /> What would you like to do?</p>
 								</div>
 								<ul class="shopping-list">
 									<li>
@@ -78,7 +82,7 @@
 					<div id="shoppingbasket" class="sinlge-bar shopping">
 						<a id="basketHover" href="#" onclick="loadCart()" class="single-icon">
 							<i>
-								<span class="total-count">@Model.Cart!.Count</span>
+								<span class="total-count">@Model.ShoppingCart!.Count</span>
 								<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
 								<lord-icon src="https://cdn.lordicon.com/ggihhudh.json"
 										   trigger="loop-on-hover"
@@ -88,17 +92,17 @@
 								</lord-icon>
 							</i>
 						</a>
-						@if (Model.Cart.Count > 0)
+						@if (Model.ShoppingCart!.Count > 0)
 						{
 							<!-- Shopping Item -->
 							<div class="shopping-item">
 								<div class="dropdown-cart-header">
-									<span>Items: @Model.Cart.Count</span>
+									<span>Items: @Model.ShoppingCart!.Count</span>
 									<a href="/Shop/Cart">
 										View Cart
 									</a>
 								</div>
-								@foreach (var product in Model.Cart)
+								@foreach (var product in Model.ShoppingCart!)
 								{
 									<ul class="shopping-list">
 										<li>
@@ -129,15 +133,15 @@
 								<div class="bottom">
 									<div class="total">
 										<span>Price:</span>
-										<span class="total-amount" style="text-decoration-line:line-through; color:red;">@Model.Cart.Select(s => s.ProductPriceBaseFormatted).First()</span>
+										<span class="total-amount" style="text-decoration-line:line-through; color:red;">@Model.ShoppingCart!.</span>
 									</div>
 									<div class="total">
 										<span>Discount:</span>
-										<span class="total-amount" style="color:forestgreen;font-weight:800;">@Model.Cart.Select(s => s.CartBaseSaleDiffFormatted).First()</span>
+										<span class="total-amount" style="color:forestgreen;font-weight:800;">@Model.ShoppingCart!.Select(s => s.CartBaseSaleDiffFormatted).First()</span>
 									</div>
 									<div class="total">
 										<span>Total:</span>
-										<span class="total-amount" style="text-decoration-line:underline">@Model.Cart.Select(s => s.CartSaleTotalFormatted).First()</span>
+										<span class="total-amount" style="text-decoration-line:underline">@Model.ShoppingCart!.Select(s => s.CartSaleTotalFormatted).First()</span>
 									</div>
 									<a href="/Checkout" class="btn animate">Checkout</a>
 								</div>

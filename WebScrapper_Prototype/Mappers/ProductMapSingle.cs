@@ -1,7 +1,7 @@
 ﻿using CsvHelper.Configuration;
 using wazaware.co.za.Models.DatabaseModels;
 
-namespace WazaWare.co.za.Mappers
+namespace wazaware.co.za.Mappers
 {
 	public sealed class ProductMapSingle : ClassMap<Product>
 	{

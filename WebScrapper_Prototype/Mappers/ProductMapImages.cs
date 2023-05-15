@@ -1,7 +1,7 @@
 ﻿using CsvHelper.Configuration;
-using WazaWare.co.za.Models;
+using wazaware.co.za.Models;
 
-namespace WazaWare.co.za.Mappers
+namespace wazaware.co.za.Mappers
 {
 	public sealed class ProductMapImages : ClassMap<ProductImageURLs>
 	{

@@ -1,5 +1,4 @@
-﻿@model WazaWare.co.za.Models.UserModel
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -37,7 +36,7 @@
                 <div class="row">
                     <div class="col-lg-6 col-12">       
                         <h4>Registered Users</h4>
-                        <p class="badge bg-primary text-wrap" style="margin-left:10px">Total Users : @Model.Users!.Where(s => !s.Email!.Contains("wazaware.co.za")).Count()</p>
+                        <p class="badge bg-primary text-wrap" style="margin-left:10px">Total Users :</p>
                         <div class="row">                       
                             <div class="col">
                                 <div class="table-responsive-sm">
@@ -52,7 +51,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (var user in Model.Users!.Where(s => !s.Email!.Contains("wazaware.co.za")))
+@*                                            @foreach (var user in Model.Users!.Where(s => !s.Email!.Contains("wazaware.co.za")))
                                             {
                                                 <tr>
                                                     <th scope="row">@user.UserId</th>
@@ -61,7 +60,7 @@
                                                     <td>@user.Phone</td>
                                                     <td>@user.Joined</td>
                                                 </tr>
-                                            }
+                                            }*@
                                         </tbody>
                                     </table>
                                 </div>
@@ -70,7 +69,7 @@
                     </div>
                     <div class="col-lg-6 col-12">
                         <h4>Cookies</h4>
-                        <p class="badge bg-primary text-wrap" style="margin-left:10px">Total Cookies : @Model.Users!.Where(s => s.Email!.Contains("wazaware.co.za")).Count()</p>     
+                        <p class="badge bg-primary text-wrap" style="margin-left:10px">Total Cookies :</p>     
                         <div class="row">
                             <div class="col">
                                 <div class="table-responsive-sm">
@@ -85,7 +84,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (var user in Model.Users!.Where(s => s.Email!.Contains("wazaware.co.za")))
+@*                                            @foreach (var user in Model.Users!.Where(s => s.Email!.Contains("wazaware.co.za")))
                                             {
                                                 <tr>
                                                     <th scope="row">@user.UserId</th>
@@ -94,7 +93,7 @@
                                                     <td>@user.Phone</td>
                                                     <td>@user.Joined</td>
                                                 </tr>
-                                            }
+                                            }*@
                                         </tbody>
                                     </table>
                                 </div>

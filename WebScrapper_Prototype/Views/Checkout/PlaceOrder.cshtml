@@ -1,4 +1,4 @@
-﻿@model WazaWare.co.za.Models.ShopViewModel
+﻿@model wazaware.co.za.Models.ViewModels.OrderViewModel
 @{
 	ViewData["Title"] = "CheckoutUser";
 }
@@ -134,7 +134,7 @@
 		<div class="desktop">
 			<partial name="_TopBar" />
 			<!-- Middle Inner -->
-			<partial name="_MiddleInner" />
+			<partial name="_MiddleInner" model="@Model.PartialView" />
 			<!-- Header Inner Partial View-->
 			<partial name="_HeaderInner" />
 		</div>
@@ -171,7 +171,7 @@
 		</section>
 	</div>
 	<!-- Shopping Cart -->
-	@if (Model.Cart!.Count() > 0)
+	@if (Model.ShoppingCart!.Count() > 0)
 	{
 		<section id="123Section" class="product-area shop-sidebar shop section">
 			<div class="container" style="max-width:100%">
@@ -189,7 +189,7 @@
 						<div class="col-12" style="padding: 0;">
 							<div class="shop-top curvedEdges">
 								<div class="content" style="width:100%;">
-									@if (Model.Cart!.Select(s => s.ShippingCost).First() != 0)
+									@if (Model.ShoppingCart!.Select(s => s.ShippingCost).First() != 0)
 									{
 										<div class="row">
 											<div class="col">
@@ -208,7 +208,7 @@
 													</span>
 												</p>
 												<h3 class="text-sm-start text-md-start text-lg-center">
-													Spend @Model.Cart.Select(s => s.TryGetFreeShippingFormatted).First() and We Cover Your Shipping Costs
+													Spend @Model.ShoppingCart!.Select(s => s.TryGetFreeShippingFormatted).First() and We Cover Your Shipping Costs
 												</h3>
 											</div>
 										</div>
@@ -242,7 +242,7 @@
 						</div>
 						<!-- Cart Products: Grid -->
 						<div class="row">
-							@foreach (var product in Model.Cart!)
+							@foreach (var product in Model.ShoppingCart!)
 							{
 								<div class="col-lg-6 col-md-9 col-12">
 									<div class="single-product contain-fit">
@@ -261,7 +261,7 @@
 										<div class="product-content">
 											<h3><a href="/Shop/Product/@product.ProductId">@product.ProductName!.Substring(0,35) ...</a></h3>
 											<div class="product-price">
-												<span style="">Quantity : @Model.Cart.Select(s => s.ProductCount).First()</span>
+												<span style="">Quantity : @Model.ShoppingCart!.Select(s => s.ProductCount).First()</span>
 											</div>
 											<div class="product-price">
 												<span style="">Price : @product.ProductTotalFormatted</span>
@@ -286,12 +286,12 @@
 								</p>
 							</div>
 							<div class="card-body">
-								@if (Model.Cart.Select(s => s.ShippingCost).First() != 0)
+								@if (Model.ShoppingCart!.Select(s => s.ShippingCost).First() != 0)
 								{
 									<p class="fs-4 h4">
 										Shipping:<br>
 										<span>
-											@Model.Cart.Select(s => s.ShippingCostFormatted).First()
+											@Model.ShoppingCart!.Select(s => s.ShippingCostFormatted).First()
 										</span>
 									</p>
 									<br>
@@ -299,21 +299,21 @@
 								<p class="fs-4 h4">
 									Your Total WAS:<br>
 									<span class="text-decoration-line-through" style="color:red; text-decoration:line-through;">
-										@Model.Cart.Select(s => s.CartBaseTotalFormatted).First()
+										@Model.ShoppingCart!.Select(s => s.CartBaseTotalFormatted).First()
 									</span>
 								</p>
 								<br>
 								<p class="fs-4 h4">
 									You Save:<br>
 									<span style="color:forestgreen;">
-										@Model.Cart.Select(s => s.CartBaseSaleDiffFormatted).First()
+										@Model.ShoppingCart!.Select(s => s.CartBaseSaleDiffFormatted).First()
 									</span>
 								</p>
 								<br>
 								<p class="fs-4 h4">
 									Your Total NOW:<br>
 									<span style="text-decoration-line:underline;font-weight:700;">
-										@Model.Cart.Select(s => s.CartSaleTotalFormatted).First()
+										@Model.ShoppingCart!.Select(s => s.CartSaleTotalFormatted).First()
 									</span>
 								</p>
 								<br>

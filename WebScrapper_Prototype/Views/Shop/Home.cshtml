@@ -1,5 +1,6 @@
 ﻿@using X.PagedList;
-@model wazaware.co.za.Models.ViewModels.ShopViewModel
+@using wazaware.co.za.Models.ViewModels;
+@model ShopViewModel
 @{
 	ViewData["Title"] = "Home";
 }
@@ -96,7 +97,7 @@
 		<div class="desktop">
 			<partial name="_TopBar" />
 			<!-- Middle Inner -->
-			<partial name="_MiddleInner" />
+			<partial name="_MiddleInner" model="@Model.PartialView" />
 			<!-- Header Inner Partial View-->
 			<partial name="_HeaderInner" />
 		</div>

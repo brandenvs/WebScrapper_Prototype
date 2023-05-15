@@ -4,21 +4,22 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
-using WazaWare.co.za.DAL;
-using WazaWare.co.za.Models;
-using WazaWare.co.za.Services;
+using wazaware.co.za.Models.DatabaseModels;
+using wazaware.co.za.DAL;
+using wazaware.co.za.Models;
+using wazaware.co.za.Services;
 using X.PagedList;
 
-namespace WazaWare.co.za.Controllers
+namespace wazaware.co.za.Controllers
 {
 	public class BackendController : Controller
 	{
-		private readonly WazaWare_db_context _context;
+		private readonly wazaware_db_context _context;
 		private readonly IWebHostEnvironment _webHostEnvironment;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private const string API_KEY = "b4798a48-3db7-4bfd-8cdf-7e1d4dde5ed2";
 		private static readonly HttpClient client = new();
-		public BackendController(WazaWare_db_context context, IWebHostEnvironment webHost, IHttpContextAccessor httpContextAccessor)
+		public BackendController(wazaware_db_context context, IWebHostEnvironment webHost, IHttpContextAccessor httpContextAccessor)
 		{
 			_context = context;
 			_webHostEnvironment = webHost;
@@ -48,23 +49,11 @@ namespace WazaWare.co.za.Controllers
 		}
         public IActionResult ManageUsers()
 		{
-			var users = _context.UserAccountDb!.ToList();
-			var viewModel = new UserModel
-			{
-				Users = users
-			};
-			return View(viewModel);
+			return View();
 		}
 		public IActionResult Orders()
 		{
-			var orders = _context.OrderDb!.ToList();
-			var orderedProducts = _context.OrderProducts!.ToList();
-			var viewModel = new OrdersViewModel
-			{
-				Orders = orders, 
-				OrderedProducts = orderedProducts
-			};
-			return View(viewModel);
+			return View();
 		}
 		public async Task DeleteAllUsers()
 		{
@@ -87,7 +76,7 @@ namespace WazaWare.co.za.Controllers
 			Console.WriteLine("Preparing to Download Images...");
 			string proxy = "https://proxy.scrapeops.io/v1/";
 			string apiKey = "b4798a48-3db7-4bfd-8cdf-7e1d4dde5ed2";
-			var productImages = from s in _context.ProductImages
+			var productImages = from s in _context.ProductImageDb
 								select s.ImageFileName;
 			foreach (KeyValuePair<int, string> productUrl in productUrls)
 			{
@@ -141,7 +130,7 @@ namespace WazaWare.co.za.Controllers
 						Console.WriteLine(
 						$"Saving File...\n" +
 						$"File: {Image.ImageFileName}");
-						_context.ProductImages.Add(Image);
+						_context.ProductImageDb!.Add(Image);
 						await _context.SaveChangesAsync();
 					}
 				}
@@ -223,7 +212,7 @@ namespace WazaWare.co.za.Controllers
 		{
 			var products = from p in _context.ProductDb
 						   select p;
-			var images = from i in _context.ProductImages
+			var images = from i in _context.ProductImageDb
 						 select i;
 			int counter = 0;
 			if (clear > 0)
@@ -283,10 +272,10 @@ namespace WazaWare.co.za.Controllers
 		[HttpPost]
 		public async Task ClearImages()
 		{
-			var imageModel = _context.ProductImages;
+			var imageModel = _context.ProductImageDb;
 			foreach (var image in imageModel!)
 			{
-				_context.ProductImages!.Remove(image);
+				_context.ProductImageDb!.Remove(image);
 			}
 			await _context.SaveChangesAsync();
 		}
@@ -296,7 +285,7 @@ namespace WazaWare.co.za.Controllers
 		[HttpGet]
 		public IActionResult GetImage(int id)
 		{
-			var imageModel = _context.ProductImages!.FirstOrDefault(img => img.ProductId.Equals(id));
+			var imageModel = _context.ProductImageDb!.FirstOrDefault(img => img.ProductId.Equals(id));
 			if (imageModel != null && imageModel.ImageFileContent != null)
 				return File(imageModel.ImageFileContent, "image/jpeg");
 			else return NotFound();
@@ -314,28 +303,28 @@ namespace WazaWare.co.za.Controllers
 		/// <summary>
 		/// Automates Adding ProductDb from CSV file. Calls Services.
 		/// </summary>
-		[HttpPost]
-		public ActionResult AutoProductCreateTestImage(AddCSV addCSV)
-		{
-			var _productService = new ProductService();
-			string uniqueCSVFileName = ProcessUploadedCSVFile(addCSV);
-			var location = "wwwroot\\Uploads\\" + uniqueCSVFileName;
-			var rowData = _productService.ReadCSVFileImage(location);
-			foreach (ProductImageURLs item in rowData)
-			{
-				ProductImageURLs productImages = new()
-				{
-					VendorSiteOrigin = item.VendorSiteOrigin,
-					VendorSiteProduct = item.VendorSiteProduct,
-					ProductId = item.ProductId,
-					ImageURL = item.ImageURL
-				};
-				_context.Attach(productImages);
-				_context.Entry(productImages).State = EntityState.Added;
-				_context.SaveChanges();
-			}
-			return RedirectToAction(nameof(Index));
-		}
+		//[HttpPost]
+		//public ActionResult AutoProductCreateTestImage(AddCSV addCSV)
+		//{
+		//	var _productService = new ProductService();
+		//	string uniqueCSVFileName = ProcessUploadedCSVFile(addCSV);
+		//	var location = "wwwroot\\Uploads\\" + uniqueCSVFileName;
+		//	var rowData = _productService.ReadCSVFileImage(location);
+		//	foreach (ProductImageURLs item in rowData)
+		//	{
+		//		ProductImageURLs productImages = new()
+		//		{
+		//			VendorSiteOrigin = item.VendorSiteOrigin,
+		//			VendorSiteProduct = item.VendorSiteProduct,
+		//			ProductId = item.ProductId,
+		//			ImageURL = item.ImageURL
+		//		};
+		//		_context.Attach(productImages);
+		//		_context.Entry(productImages).State = EntityState.Added;
+		//		_context.SaveChanges();
+		//	}
+		//	return RedirectToAction(nameof(Index));
+		//}
 		/// <summary>
 		/// Automates Adding ProductDb from CSV file. Calls Services.
 		/// </summary>
@@ -348,35 +337,35 @@ namespace WazaWare.co.za.Controllers
 		/// <summary>
 		/// Automates Adding ProductDb from CSV file. Calls Services.
 		/// </summary>
-		[HttpPost]
-		public ActionResult AutoProductCreateTest(AddCSV addCSV)
-		{
-			var _productService = new ProductService();
-			string uniqueCSVFileName = ProcessUploadedCSVFile(addCSV);
-			var location = "wwwroot\\Uploads\\" + uniqueCSVFileName;
-			var rowData = _productService.ReadCSVFileSingle(location);
-			foreach (Product item in rowData)
-			{
-				Product product = new()
-				{
-					ProductVendorName = item.ProductVendorName,
-					ProductVendorUrl = item.ProductVendorUrl,
-					ProductCategory = item.ProductCategory,
-					ProductName = item.ProductName,
-					ProductStock = item.ProductStock,
-					ProductPriceBase = item.ProductPriceBase,
-					ProductPriceSale = item.ProductPriceSale,
-					ProductDescription = item.ProductDescription,
-					ProductImageUrl = item.ProductImageUrl,
-					ProductVisibility = "ProductVisibility",
-					ProductDataBatchNo = "March23"
-				};
-				_context.Attach(product);
-				_context.Entry(product).State = EntityState.Added;
-				_context.SaveChanges();
-			}
-			return RedirectToAction(nameof(Index));
-		}
+		//[HttpPost]
+		//public ActionResult AutoProductCreateTest(AddCSV addCSV)
+		//{
+		//	var _productService = new ProductService();
+		//	string uniqueCSVFileName = ProcessUploadedCSVFile(addCSV);
+		//	var location = "wwwroot\\Uploads\\" + uniqueCSVFileName;
+		//	var rowData = _productService.ReadCSVFileSingle(location);
+		//	foreach (Product item in rowData)
+		//	{
+		//		Product product = new()
+		//		{
+		//			ProductVendorName = item.ProductVendorName,
+		//			ProductVendorUrl = item.ProductVendorUrl,
+		//			ProductCategory = item.ProductCategory,
+		//			ProductName = item.ProductName,
+		//			ProductStock = item.ProductStock,
+		//			ProductPriceBase = item.ProductPriceBase,
+		//			ProductPriceSale = item.ProductPriceSale,
+		//			ProductDescription = item.ProductDescription,
+		//			ProductImageUrl = item.ProductImageUrl,
+		//			ProductVisibility = "ProductVisibility",
+		//			ProductDataBatchNo = "March23"
+		//		};
+		//		_context.Attach(product);
+		//		_context.Entry(product).State = EntityState.Added;
+		//		_context.SaveChanges();
+		//	}
+		//	return RedirectToAction(nameof(Index));
+		//}
 		/// <summary>
 		/// Method is called to process CSV File
 		/// </summary>

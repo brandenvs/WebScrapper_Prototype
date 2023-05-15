@@ -1,7 +1,6 @@
-﻿@using WazaWare.co.za.Controllers;
-@using X.PagedList.Mvc.Core;
-@using X.PagedList;
-@model WazaWare.co.za.Models.ShopViewModel
+﻿@using X.PagedList;
+@using wazaware.co.za.Models.ViewModels;
+@model UserViewModel
 @{
 	ViewData["Title"] = "Shopping Cart";
 }
@@ -131,7 +130,7 @@
 		<div class="desktop">
 			<partial name="_TopBar" />
 			<!-- Middle Inner -->
-			<partial name="_MiddleInner" />
+			<partial name="_MiddleInner" model="@Model.PartialView" />
 			<!-- Header Inner Partial View-->
 			<partial name="_HeaderInner" />
 		</div>
@@ -162,7 +161,7 @@
 	</div>
 	<!-- End Breadcrumbs -->
 	<!-- Shopping Cart -->
-	@if (Model.Cart!.Count() > 0)
+	@if (Model.ShoppingCart!.Count > 0)
 	{
 		<section class="product-area shop-sidebar shop section">
 			<div class="container" style="max-width:100%">
@@ -174,66 +173,11 @@
 					</div>
 				</div>
 				<div id="cartmain" class="row section-divider">
-					<!-- Shop Product Grid -->
-					<div class="col-lg-7 col-md-4 col-12">
-						<!-- Latest Products: Header -->
-						<div class="col-12" style="padding: 0;">
-							<div class="shop-top curvedEdges">
-								<div class="content" style="width:100%;">
-									@if (Model.Cart!.Select(s => s.ShippingCost).First() != 0)
-									{
-										<div class="row">
-											<div class="col">
-												<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-												<lord-icon src="https://cdn.lordicon.com/uetqnvvg.json"
-														   trigger="loop-on-hover"
-														   delay="1000"
-														   colors="primary:#121331,secondary:#f7941d"
-														   style="width:100px;height:100px">
-												</lord-icon>
-											</div>
-											<div class="col" style="padding:25px">
-												<p class="text-sm-start text-md-start text-lg-center">
-													<span style="color:#ff6b6b; font-weight:500;">
-														GET FREE SHIPPING
-													</span>
-												</p>
-												<h3 class="text-sm-start text-md-start text-lg-center">
-													Spend @Model.Cart!.Select(s => s.TryGetFreeShippingFormatted).First() and We Cover Your Shipping Costs
-												</h3>
-											</div>
-										</div>
-									}
-									else
-									{
-										<div class="row">
-											<div class="col">
-												<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
-												<lord-icon src="https://cdn.lordicon.com/uetqnvvg.json"
-														   trigger="loop-on-hover"
-														   delay="1000"
-														   colors="primary:#121331,secondary:#f7941d"
-														   style="width:100px;height:100px">
-												</lord-icon>
-											</div>
-											<div class="col">
-												<p class="text-sm-start text-md-start text-lg-center">
-													<span style="color:#ff6b6b; font-weight:500;">
-														FREE SHIPPING
-													</span>
-												</p>
-												<h3 class="text-sm-start text-md-start text-lg-center">
-													Your Shipping Costs are Covered Thats Means Its FREE!
-												</h3>
-											</div>
-										</div>
-									}
-								</div>
-							</div>
-						</div>
+					<!-- Cart Product Grid -->
+					<div class="col-lg-7 col-md-4 col-12">		
 						<!-- Cart Products: Grid -->
 						<div class="row">
-							@foreach (var product in Model.Cart!)
+							@foreach (var product in Model.ShoppingCart!)
 							{
 								<div class="col-lg-6 col-md-9 col-12">
 									<div class="single-product contain-fit" style="margin:0">
@@ -290,12 +234,12 @@
 								</p>
 							</div>
 							<div class="card-body">
-								@if (Model.Cart.Select(s => s.ShippingCost).First() != 0)
+								@if (Model.ShoppingCart!.Select(s => s.ShippingCost).First() != 0)
 								{
 									<p class="fs-4 h4">
 										Shipping:<br>
 										<span>
-											@Model.Cart.Select(s => s.ShippingCostFormatted).First()
+											@Model.ShoppingCart!.Select(s => s.ShippingCostFormatted).First()
 										</span>
 									</p>
 									<br>
@@ -303,21 +247,21 @@
 								<p class="fs-4 h4">
 									Your Total WAS:<br>
 									<span class="text-decoration-line-through" style="color:red; text-decoration:line-through;">
-										@Model.Cart.Select(s => s.CartBaseTotalFormatted).First()
+										@Model.ShoppingCart!.Select(s => s.CartBaseTotalFormatted).First()
 									</span>
 								</p>
 								<br>
 								<p class="fs-4 h4">
 									You Save:<br>
 									<span style="color:forestgreen;">
-										@Model.Cart.Select(s => s.CartBaseSaleDiffFormatted).First()
+										@Model.ShoppingCart!.Select(s => s.CartBaseSaleDiffFormatted).First()
 									</span>
 								</p>
 								<br>
 								<p class="fs-4 h4">
 									Your Total NOW:<br>
 									<span style="text-decoration-line:underline;font-weight:700;">
-										@Model.Cart.Select(s => s.CartSaleTotalFormatted).First()
+										@Model.ShoppingCart!.Select(s => s.CartSaleTotalFormatted).First()
 									</span>
 								</p>
 								<br>

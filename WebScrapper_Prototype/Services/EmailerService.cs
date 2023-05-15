@@ -8,7 +8,7 @@ using Moq;
 using System.Net;
 using System.Net.Mail;
 using wazaware.co.za.Models.ViewModels;
-using WazaWare.co.za.Models;
+using wazaware.co.za.Models;
 
 namespace wazaware.co.za.Services
 {

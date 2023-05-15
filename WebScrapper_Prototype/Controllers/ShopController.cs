@@ -3,22 +3,20 @@ using Microsoft.CodeAnalysis;
 using System.Data;
 using System.Data.Entity;
 using wazaware.co.za.Models.DatabaseModels;
+using wazaware.co.za.Models.ViewModels;
 using wazaware.co.za.Services;
-using WazaWare.co.za.DAL;
+using wazaware.co.za.DAL;
 using X.PagedList;
-using static wazaware.co.za.Models.ViewModels.ProductView;
-using static wazaware.co.za.Models.ViewModels.ShopView;
-using static wazaware.co.za.Models.ViewModels.User;
 
-namespace WazaWare.co.za.Controllers
+namespace wazaware.co.za.Controllers
 {
 	public class ShopController : Controller
 	{
 		private readonly ILogger<ShopController> _logger;
-		private readonly WazaWare_db_context _DbContext;
+		private readonly wazaware_db_context _DbContext;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public ShopController(ILogger<ShopController> logger, WazaWare_db_context context, IHttpContextAccessor httpContextAccessor)
+		public ShopController(ILogger<ShopController> logger, wazaware_db_context context, IHttpContextAccessor httpContextAccessor)
 		{
 			_logger = logger;
 			_DbContext = context;
@@ -88,7 +86,7 @@ namespace WazaWare.co.za.Controllers
 			while (user != null)
             {
                 // Load Shopping Cart
-                var ShoppingCart = services.LoadCart(user.UserId).ToList();
+                var cart = services.LoadCart(user.UserId).ToList();
                 // Load Latest Arrivals
                 var latestArrivalviewproducts = _DbContext.ProductDb!
                 .Where(p => p.ProductVisibility!.Equals("ProductVisibility") && p.ProductPriceBase < 20000 && p.ProductPriceBase > 10000)
@@ -145,14 +143,20 @@ namespace WazaWare.co.za.Controllers
 					Email = user.Email!,
 					Phone = user.Phone!
 				};
+				var viewPartial = new PartialView
+				{
+					ShoppingCart = cart,
+					User = viewUserAccount
+				};
 				// ShopViewModel Model to return
 				var view = new ShopViewModel
 				{
 					LatestArrivals = latestArrivalviewproducts,
 					LimitedStocks = limitedStockviewproducts,
 					TrendingProducts = trendingviewproducts,
-					ShoppingCart = ShoppingCart,
-					User = viewUserAccount
+					ShoppingCart = cart,
+					User = viewUserAccount,
+					PartialView = viewPartial
 				};
 				// 
                 return View(view);
@@ -167,8 +171,8 @@ namespace WazaWare.co.za.Controllers
 		/// WHILE true:
 		///		IF UserAccount IS NOT Null:
 		///			Display ShopViewModel : Appropriate Cookie ViewBage
-		///			LoadShoppingCart(userId) into Variable ShoppingCart
-		///			RETURN[BREAK WHILE LOOP // STOP] view { ShoppingCartView = ShoppingCart }
+		///			LoadShoppingCart(userId) into Variable cart
+		///			RETURN[BREAK WHILE LOOP // STOP] view { ShoppingCartView = cart }
 		///		ELSE:
 		///			UserAccount requires server to re-sync cookies : Trying Again
 		///			[RE-SYNC COOKIES WITH SEVER]
@@ -200,10 +204,16 @@ namespace WazaWare.co.za.Controllers
 				Email = user.Email!,
 				Phone = user.Phone!
 			};
-			var view = new ShopViewModel
+			var viewPartial = new PartialView
 			{
 				ShoppingCart = cart,
 				User = viewUserAccount
+			};
+			var view = new UserViewModel
+			{
+				ShoppingCart = cart,
+				User = viewUserAccount,
+				PartialView = viewPartial
 			};
 			return View(view);
 		}
@@ -219,9 +229,9 @@ namespace WazaWare.co.za.Controllers
 			            WebServices services = new(_DbContext, _httpContextAccessor);
 			var user = services.LoadDbUser();
 			var cart = services.LoadCart(user!.UserId);
-			var UserView = new UserView
+			var viewUserAccount = new UserView
 			{
-				FirstName = user.FirstName!,
+				FirstName = user!.FirstName!,
 				LastName = user.LastName!,
 				Email = user.Email!,
 				Phone = user.Phone!
@@ -594,13 +604,6 @@ namespace WazaWare.co.za.Controllers
 				.GroupBy(p => p.ProductCategory!.ToLower())
 				.Select(g => g.Take(10))
 				.SelectMany(g => g).ToPagedList(page, items);
-			var viewUserAccount = new UserView
-			{
-				FirstName = user!.FirstName!,
-				LastName = user.LastName!,
-				Email = user.Email!,
-				Phone = user.Phone!
-			};
 			var viewProducts = products.Select(s => new ProductInfomation
 			{
 				ProductId = s.ProductId,
@@ -613,13 +616,19 @@ namespace WazaWare.co.za.Controllers
 				ProductImageUrl = s.ProductImageUrl
 				//ProductPic = s.ProductPic
 			}).ToPagedList(1, 8);
+			var viewPartial = new PartialView
+			{
+				ShoppingCart = ShoppingCart,
+				User = viewUserAccount
+			};
 			var view = new ShopViewModel
 			{
 				Products = viewProducts,
 				FilterSortby = viewSortBy,
 				FilterManufacturer = viewManufacturers,
 				ShoppingCart = cart,
-				User = viewUserAccount
+				User = viewUserAccount,
+				PartialView = viewPartial
 			};
 			return View(view);
 		}
@@ -634,7 +643,7 @@ namespace WazaWare.co.za.Controllers
 			ViewBag.IsCookie = false;
 			WebServices services = new(_DbContext, _httpContextAccessor);
 			var user = services.LoadDbUser();
-			var cartModel = services.LoadCart(user!.UserId);
+			var cart = services.LoadCart(user!.UserId);
 			if (user == null)
 			{
 				ViewBag.isCookie = true;
@@ -669,11 +678,17 @@ namespace WazaWare.co.za.Controllers
 				Email = user.Email!,
 				Phone = user.Phone!
 			};
+			var viewPartial = new PartialView
+			{
+				ShoppingCart = cart,
+				User = viewUserAccount
+			};
 			var viewModel = new ShopViewModel
 			{
 				SingleProduct = viewProduct,
-				ShoppingCart = cartModel,
-				User = viewUserAccount
+				ShoppingCart = cart,
+				User = viewUserAccount,
+				PartialView = viewPartial
 			};
 			return View(viewModel);
 		}
@@ -741,7 +756,7 @@ namespace WazaWare.co.za.Controllers
 		/// ...
 		/// </summary>
 		/// <returns></returns>
-		public IPagedList<wazaware.co.za.Models.ViewModels.ProductView.ProductInfomation> Searchviewproducts(string search)
+		public IPagedList<ProductInfomation> Searchviewproducts(string search)
 		{
 			//
 			var products = _DbContext.ProductDb;

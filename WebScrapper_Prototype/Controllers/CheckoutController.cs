@@ -5,21 +5,19 @@ using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using wazaware.co.za.Models.DatabaseModels;
 using wazaware.co.za.Models.ViewModels;
 using wazaware.co.za.Services;
-using WazaWare.co.za.DAL;
-using static wazaware.co.za.Models.ViewModels.ProductView;
-using static wazaware.co.za.Models.ViewModels.User;
+using wazaware.co.za.DAL;
 
-namespace WazaWare.co.za.Controllers
+namespace wazaware.co.za.Controllers
 {
 	public class CheckoutController : Controller
 	{
 		private readonly ILogger<ShopController> _logger;
-		private readonly WazaWare_db_context _DbContext;
+		private readonly wazaware_db_context _DbContext;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly IRazorViewEngine _viewEngine;
 		readonly ITempDataProvider _tempData;
 
-		public CheckoutController(ILogger<ShopController> logger, WazaWare_db_context context, IHttpContextAccessor httpContextAccessor, IRazorViewEngine viewEngine, ITempDataProvider tempData)
+		public CheckoutController(ILogger<ShopController> logger, wazaware_db_context context, IHttpContextAccessor httpContextAccessor, IRazorViewEngine viewEngine, ITempDataProvider tempData)
 		{
 			_logger = logger;
 			_DbContext = context;

@@ -1,16 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using wazaware.co.za.Models.DatabaseModels;
-using WazaWare.co.za.DAL;
-using WazaWare.co.za.Models;
-using static wazaware.co.za.Models.ViewModels.User;
+﻿using wazaware.co.za.Models.DatabaseModels;
+using wazaware.co.za.Models.ViewModels;
+using wazaware.co.za.DAL;
 
 namespace wazaware.co.za.Services
 {
 	public class WebServices
 	{
-		private readonly WazaWare_db_context _DbContext;
+		private readonly wazaware_db_context _DbContext;
 		private readonly IHttpContextAccessor _httpContextAccessor;
-		public WebServices(WazaWare_db_context context, IHttpContextAccessor httpContextAccessor)
+		public WebServices(wazaware_db_context context, IHttpContextAccessor httpContextAccessor)
 		{
 			_DbContext = context;
 			_httpContextAccessor = httpContextAccessor;
@@ -33,6 +31,61 @@ namespace wazaware.co.za.Services
 			var userOrders = _DbContext.OrderDb!
 				.Where(s => s.UserId == userId).ToList();		
 			return userOrders;
+		}
+		public List<OrderCartView> LoadOrderedProductsView(int userId)
+		{
+			// Database Query : Get OrderDb => WHERE : userId is TRUE
+			var userOrders = _DbContext.OrderDb!
+				.Where(s => s.UserId == userId).ToList();
+			var orderedProducts = _DbContext.OrderedProductsDb!
+				.Where(s => userOrders.Select(s => s.OrderId).Contains(s.OrderId)).ToList();
+			var products = _DbContext.ProductDb!
+				.Where(p => orderedProducts.Select(s => s.ProductId).Contains(p.ProductId)).ToList();
+			var joinOrders = orderedProducts
+				.Join(products, c => c.ProductId, p => p.ProductId, (c, p)
+				=> new { orderedProducts = c, Product = p });
+			//.Join(userOrders, c => c.orderedProducts.OrderId, o => o.OrderId,(c, o)
+			//=> new {Order = o,  ;
+			var totalOrder = joinOrders.Select(s => s.orderedProducts.ProductTotal).Sum();
+			var view = joinOrders.Select(s => new OrderCartView
+			{
+				OrderId = s.orderedProducts.OrderId,
+				ProductId = s.Product.ProductId,
+				ProductName = s.Product.ProductName,
+				ProductPriceBase = s.Product.ProductPriceBase,
+				ProductPriceSale = s.Product.ProductPriceSale,
+				ProductImageUrl = s.Product.ProductImageUrl,
+				// Count : Quantity of a ProductInfomation in Cart
+				ProductCount = s.orderedProducts.ProductCount,
+				// Calculate : ProductDb Sale Total
+				ProductTotal = s.orderedProducts.ProductTotal,
+				ProductBaseSaleDiff = s.Product.ProductPriceBase - s.Product.ProductPriceSale,
+				OrderSaleTotal = totalOrder,
+				ShippingCost = userOrders
+				.Where(a => a.OrderId == s.orderedProducts.OrderId).Select(a => a.ShippingPrice).First(),
+				ProductPic = s.Product.ProductPic
+			}).ToList();
+			return view;
+		}
+		public void UpdateLoadedUser(UserAccount model)
+		{
+			const string cookieName = "wazaware.co.za-auto-sign-in";
+			var requestCookies = _httpContextAccessor.HttpContext!.Request.Cookies;
+			_ = requestCookies[cookieName];
+			var cookieOptions = new CookieOptions
+			{
+				Expires = DateTimeOffset.Now.AddDays(7),
+				IsEssential = true
+			};
+			if (!requestCookies.ContainsKey(cookieName))
+			{
+				_httpContextAccessor.HttpContext!.Response.Cookies.Append(cookieName, model.Email!, cookieOptions);
+			}
+			else
+			{
+				_httpContextAccessor.HttpContext!.Response.Cookies.Delete(cookieName);
+				_httpContextAccessor.HttpContext!.Response.Cookies.Append(cookieName, model.Email!, cookieOptions);
+			}
 		}
 
 		public List<ShoppingCartView> LoadCart(int userId)

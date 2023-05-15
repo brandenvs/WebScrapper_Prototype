@@ -22,7 +22,7 @@ namespace wazaware.co.za.Models.DatabaseModels
     {
         [Key]
         public int Id { get; set; }
-        [Required]
+        [ForeignKey(name: "OrderId")]
         public int OrderId { get; set; }
         [Required]
         public int ProductId { get; set; }
@@ -36,8 +36,8 @@ namespace wazaware.co.za.Models.DatabaseModels
     {
         [Key]
         public int BillingId { get; set; }
-        [Required]
-        public int OrderId { get; set; }
+		[ForeignKey(name: "OrderId")]
+		public int OrderId { get; set; }
         [Required]
         public string? PaymentMethod { get; set; }
 

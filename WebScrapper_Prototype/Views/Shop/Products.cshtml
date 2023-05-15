@@ -1,7 +1,6 @@
-﻿@using WazaWare.co.za.Controllers;
-@using X.PagedList.Mvc.Core;
+﻿@using X.PagedList.Mvc.Core;
 @using X.PagedList;
-@model WazaWare.co.za.Models.ShopViewModel
+@model wazaware.co.za.Models.ViewModels.ShopViewModel
 @{
 	ViewData["Title"] = "ProductDb";
 }
@@ -108,7 +107,7 @@
 		<div class="desktop">
 			<partial name="_TopBar" />
 			<!-- Middle Inner -->
-			<partial name="_MiddleInner" />
+			<partial name="_MiddleInner" model="@Model.PartialView" />
 			<!-- Header Inner Partial View-->
 			<partial name="_HeaderInner" />
 		</div>
@@ -446,7 +445,7 @@
 																			<li>
 																				<a href="#0" style="color:black">Sort By<i class="ti-filter"></i></a>
 																				<ul class="dropdown">
-																					@foreach (var filter in Model.FilterSortBy)
+																					@foreach (var filter in Model.FilterSortby!)
 																					{
 																						<li><a href="@Url.Action("ProductDb", "Home", new { category = ViewBag.Category, filterSort = filter.FilterId, filterMan = ViewBag.filterMan })"><em>@filter.FilterName</em></a></li>
 																					}
@@ -455,7 +454,7 @@
 																			<li>
 																				<a href="#0" style="color:black">Select Manufacturer<i class="ti-filter"></i></a>
 																				<ul class="dropdown">
-																					@foreach (var filter in Model.FilterManufacturer)
+																					@foreach (var filter in Model.FilterManufacturer!)
 																					{
 																						<li><a href="@Url.Action("ProductDb", "Home", new { category = ViewBag.Category, filterMan = filter.FilterId, filterSort = ViewBag.filterSort })"><em>@filter.FilterName</em></a></li>
 																					}
@@ -494,7 +493,7 @@
 														</div>
 														<div class="col-12" style="display: flex; flex-direction: row; justify-content: center; padding: 10px;">
 															<ul class="center">
-																@foreach (var filter in Model.FilterSortBy)
+																@foreach (var filter in Model.FilterSortby!)
 																{
 																	<li>
 																		<a href="@Url.Action("ProductDb", "Home", new { category = ViewBag.Category, filterSort = filter.FilterId, filterMan = ViewBag.filterMan })" style="color:black"><i class="ti-plus"></i> @filter.FilterName</a>

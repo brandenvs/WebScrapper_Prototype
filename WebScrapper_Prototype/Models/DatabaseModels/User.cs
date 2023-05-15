@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
-using WazaWare.co.za.Models;
 
 namespace wazaware.co.za.Models.DatabaseModels
 {
@@ -20,16 +18,8 @@ namespace wazaware.co.za.Models.DatabaseModels
 		[Phone]
 		public string? Phone { get; set; }
 		[Required]
-		[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
 		[DataType(DataType.Password)]
-		[Display(Name = "Password")]
 		public string? Password { get; set; }
-		[Required]
-		[DataType(DataType.Password)]
-		[NotMapped]
-		[Display(Name = "Confirm password")]
-		[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-		public string? ConfirmPassword { get; set; }
 		[Required]
 		public DateTime Joined { get; set; }
 	}
@@ -52,7 +42,7 @@ namespace wazaware.co.za.Models.DatabaseModels
 	{
 		[Key]
 		public int ShippingId { get; set; }
-		[Required]		
+		[ForeignKey(name: "UserId")]
 		public int UserId { get; set; }
 		[Required]
 		[MaxLength(50)]

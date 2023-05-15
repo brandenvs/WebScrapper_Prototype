@@ -1,9 +1,9 @@
 ﻿using CsvHelper;
 using System.Text;
 using wazaware.co.za.Models.DatabaseModels;
-using WazaWare.co.za.Mappers;
+using wazaware.co.za.Mappers;
 
-namespace WazaWare.co.za.Services
+namespace wazaware.co.za.Services
 {
 	public class ProductService
 	{

@@ -1,4 +1,4 @@
-﻿namespace WazaWare.co.za.Models
+﻿namespace wazaware.co.za.Models
 {
 	public class Gpt3
 	{

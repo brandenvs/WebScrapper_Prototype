@@ -5,4 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:WazaWare.co.za.Services.WebscrapperIoApiClient.ProxyScrapeOps(System.Collections.Generic.Dictionary{System.Int32,System.String})~System.Threading.Tasks.Task")]
+[assembly: SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>", Scope = "member", Target = "~M:wazaware.co.za.Services.WebscrapperIoApiClient.ProxyScrapeOps(System.Collections.Generic.Dictionary{System.Int32,System.String})~System.Threading.Tasks.Task")]

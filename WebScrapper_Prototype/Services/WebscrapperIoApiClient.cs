@@ -1,14 +1,15 @@
 ﻿using HtmlAgilityPack;
 using Microsoft.EntityFrameworkCore;
 using System.Web;
-using WazaWare.co.za.DAL;
-using WazaWare.co.za.Models;
+using wazaware.co.za.Models.DatabaseModels;
+using wazaware.co.za.DAL;
+using wazaware.co.za.Models;
 
-namespace WazaWare.co.za.Services
+namespace wazaware.co.za.Services
 {
 	public class WebscrapperIoApiClient
 	{
-		private readonly WazaWare_db_context _context;
+		private readonly wazaware_db_context _context;
 		readonly Dictionary<int, string?> VendorSite = new();
 		readonly Dictionary<int, string?> VendorProductURL = new();
 		readonly Dictionary<int, string?> ProductKey = new();
@@ -26,7 +27,7 @@ namespace WazaWare.co.za.Services
 		private readonly string url = "https://proxy.scrapeops.io/v1/";
 		private readonly string targetUrl = "https://www.wootware.co.za/sale";
 		private readonly string apiKey = "b4798a48-3db7-4bfd-8cdf-7e1d4dde5ed2";
-		public WebscrapperIoApiClient(WazaWare_db_context context)
+		public WebscrapperIoApiClient(wazaware_db_context context)
 		{
 			_context = context;
 		}
@@ -92,7 +93,7 @@ namespace WazaWare.co.za.Services
 				{
 					countId++;
 					string href = parent.GetAttributeValue("href", "");
-					filename = Path.Combine(@"K:\Web", "response" + countId + ".html");
+					filename = Path.Combine(@"wwwroot/Targets/ReadyToScrape/", "response" + countId + ".html");
 
 					Console.WriteLine("------------------------------------------------->>");
 					Console.WriteLine($"Checking if Child already exists in\n" +

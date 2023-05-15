@@ -1,7 +1,7 @@
-﻿@using WazaWare.co.za.Controllers;
+﻿@using wazaware.co.za.Controllers;
 @using X.PagedList.Mvc.Core;
 @using X.PagedList;
-@model WazaWare.co.za.Models.ShopViewModel
+@model wazaware.co.za.Models.ViewModels.ShopViewModel
 @{
 	ViewData["Title"] = "ProductName";
 }
@@ -119,7 +119,7 @@
 		<div class="desktop">
 			<partial name="_TopBar" />
 			<!-- Middle Inner -->
-			<partial name="_MiddleInner" />
+			<partial name="_MiddleInner" model="@Model.PartialView" />
 			<!-- Header Inner Partial View-->
 			<partial name="_HeaderInner" />
 		</div>
@@ -143,7 +143,7 @@
 					<div class="bread-inner">
 						<ul class="bread-list">
 							<li><a href="/">Shop<i class="ti-arrow-right"></i></a></li>
-							<li class="active"><a href="">@Model.Product!.ProductName!.Substring(0, 20)...</a></li>							
+							<li class="active"><a href="">@Model.SingleProduct!.ProductName!.Substring(0, 20)...</a></li>							
 						</ul>
 					</div>
 				</div>
@@ -162,13 +162,13 @@
 						<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
 							<!-- Product Slider -->
 							<div class="img-fluid">
-								<img src="@Url.Action("GetImage", "Backend", new { id = Model.Product.ProductId })" alt="@Model.Product.ProductName" />
+								<img src="@Url.Action("GetImage", "Backend", new { id = Model.SingleProduct!.ProductId })" alt="@Model.SingleProduct!.ProductName" />
 							</div>
 							<!-- End Product slider -->
 						</div>
 						<div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
 							<div class="quickview-content">
-								<h2>@Model.Product.ProductName</h2>
+								<h2>@Model.SingleProduct!.ProductName</h2>
 								<div class="quickview-ratting-review">
 									<div class="quickview-ratting-wrap">
 										<div class="quickview-ratting">
@@ -182,17 +182,17 @@
 									</div>
 								</div>
 								<div class="quickview-stock">
-									<span><i class="fa fa-check-circle-o"></i> @Model.Product.ProductStock</span>
+									<span><i class="fa fa-check-circle-o"></i> @Model.SingleProduct!.ProductStock</span>
 								</div>
 								<div class="product-price">
-									<span class="text-decoration-line-through" style="color:red">@Model.Product.ProductPriceBaseFormatted</span>
-									<h3 style="font-weight:800;">@Model.Product.ProductPriceSaleFormatted</h3>
+									<span class="text-decoration-line-through" style="color:red">@Model.SingleProduct!.ProductPriceBaseFormatted</span>
+									<h3 style="font-weight:800;">@Model.SingleProduct!.ProductPriceSaleFormatted</h3>
 								</div>
 								<div class="quickview-peragraph">
-									<p>@Model.Product.ProductDescription</p>
+									<p>@Model.SingleProduct!.ProductDescription</p>
 								</div>
 								<div class="add-to-cart">
-									<a href="#" class="btn" onclick="loadAddToCart('@Model.Product.ProductId')">Add to cart</a>
+									<a href="#" class="btn" onclick="loadAddToCart('@Model.SingleProduct!.ProductId')">Add to cart</a>
 								</div>
 								<div class="default-social">
 									<h4 class="share-now">Share:</h4>
