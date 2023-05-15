@@ -183,7 +183,6 @@ namespace wazaware.co.za.Controllers
 		[HttpGet]
 		public IActionResult Cart()
 		{
-			ViewBag.IsCookie = false;
 			WebServices services = new(_DbContext, _httpContextAccessor);
 			var user = services.LoadDbUser();
 			var cart = services.LoadCart(user!.UserId);
@@ -258,7 +257,7 @@ namespace wazaware.co.za.Controllers
 			{
 				if (page == 0)
 					page = 1;
-				products = Searchviewproducts(search).ToList();
+				products = Search(search).ToList();
 				ViewBag.Countviewproducts = products.Count;
 				ViewBag.Search = search;
 			}
@@ -598,24 +597,12 @@ namespace wazaware.co.za.Controllers
 			if (page < 1)
 				page = 1;
 			int items = 16;
-			if (products.Count > 32)
-				items = products.Count / 2;
-			var viewviewproducts = products
+			if (products.Capacity > 32)
+				items = products.Count() / 2;
+			var viewProducts = products
 				.GroupBy(p => p.ProductCategory!.ToLower())
 				.Select(g => g.Take(10))
-				.SelectMany(g => g).ToPagedList(page, items);
-			var viewProducts = products.Select(s => new ProductInfomation
-			{
-				ProductId = s.ProductId,
-				ProductName = s.ProductName,
-				ProductStock = s.ProductStock,
-				ProductDescription = s.ProductDescription,
-				ProductCategory	= s.ProductCategory,
-				ProductPriceBase = s.ProductPriceBase,
-				ProductPriceSale = s.ProductPriceSale,
-				ProductImageUrl = s.ProductImageUrl
-				//ProductPic = s.ProductPic
-			}).ToPagedList(1, 8);
+				.SelectMany(g => g).ToPagedList(page, 16);
 			var viewPartial = new PartialView
 			{
 				ShoppingCart = ShoppingCart,
@@ -756,7 +743,7 @@ namespace wazaware.co.za.Controllers
 		/// ...
 		/// </summary>
 		/// <returns></returns>
-		public IPagedList<ProductInfomation> Searchviewproducts(string search)
+		public IPagedList<ProductInfomation> Search(string search)
 		{
 			//
 			var products = _DbContext.ProductDb;

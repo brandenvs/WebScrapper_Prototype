@@ -16,7 +16,6 @@ namespace wazaware.co.za.Controllers
 			_DbContext = context;
 			_httpContextAccessor = httpContextAccessor;
 		}
-		[HttpGet]
 		public IActionResult Index()
 		{
 			WebServices services = new(_DbContext, _httpContextAccessor);
@@ -24,13 +23,13 @@ namespace wazaware.co.za.Controllers
 			bool isCookie = true;
 			if (user != null)
 			{
-				if (user.Email!.Contains("@wazaware.co.za"))
+				if (!user.Email!.Contains("@wazaware.co.za"))
 					isCookie = false;
 			}
 			if (isCookie)
 				return RedirectToAction(nameof(Login));
 			else
-				return RedirectToAction(nameof(UserAccount));
+				return RedirectToAction(nameof(UserAccount));			
 		}
 		[HttpGet]
 		public IActionResult Login()
@@ -42,9 +41,14 @@ namespace wazaware.co.za.Controllers
 			var user = services.LoadDbUser();
 			// 
 			var cart = services.LoadCart(user!.UserId);
-			var view = new UserViewModel
+			var viewPartial = new PartialView
 			{
 				ShoppingCart = cart
+			};
+			var view = new UserViewModel
+			{
+				ShoppingCart = cart,
+				PartialView = viewPartial
 			};
 			return View(view);
 		}
@@ -62,9 +66,9 @@ namespace wazaware.co.za.Controllers
 					var findUser = _DbContext.UserAccountDb!.Where(u => u.Email == model.Email).First();
 					if (model.Password != null)
 					{
-						if (model.Password == user.Password)
+						if (model.Password == findUser.Password)
 						{
-							services.UpdateLoadedUser(findUser);			
+							services.UpdateLoadedUser(findUser.Email!);			
 							return RedirectToAction(nameof(Index));
 						}
 						else
@@ -74,9 +78,14 @@ namespace wazaware.co.za.Controllers
 				else
 					ViewBag.InvalidCredentials = "Invalid Email... Please Register!";
 			}
-			var view = new UserViewModel
+			var viewPartial = new PartialView
 			{
 				ShoppingCart = cart
+			};
+			var view = new UserViewModel
+			{
+				ShoppingCart = cart,
+				PartialView = viewPartial
 			};
 			return View(view);
 		}
@@ -87,9 +96,14 @@ namespace wazaware.co.za.Controllers
 			WebServices services = new(_DbContext, _httpContextAccessor);
 			var user = services.LoadDbUser();
 			var cart = services.LoadCart(user!.UserId);
-			var view = new UserViewModel
+			var viewPartial = new PartialView
 			{
 				ShoppingCart = cart
+			};
+			var view = new UserViewModel
+			{
+				ShoppingCart = cart,
+				PartialView = viewPartial
 			};
 			return View(view);
 		}
@@ -104,10 +118,9 @@ namespace wazaware.co.za.Controllers
 			if (_DbContext.UserAccountDb!.Any(u => u.Email!.Equals(model.Email)))
 			{
 				var findUser = _DbContext.UserAccountDb!.Where(u => u.Email == model.Email).First();
-				services.UpdateLoadedUser(findUser);
+				services.UpdateLoadedUser(findUser.Email!);
 				ViewBag.Message = "That Email Already has an Account! " +
 					"Don't worry though: We have automatically signed you into your account!";
-
 			}
 			else
 			{
@@ -124,12 +137,17 @@ namespace wazaware.co.za.Controllers
 				_DbContext.UserAccountDb!.Add(newUser);
 				await _DbContext.SaveChangesAsync();
 				var userRefreshed = services.LoadDbUser();
-				services.UpdateLoadedUser(userRefreshed!);
+				services.UpdateLoadedUser(userRefreshed!.Email);
 				return RedirectToAction(nameof(Index));
 			}
-			var view = new UserViewModel
+			var viewPartial = new PartialView
 			{
 				ShoppingCart = cart
+			};
+			var view = new UserViewModel
+			{
+				ShoppingCart = cart,
+				PartialView = viewPartial
 			};
 			return View(view);
 		}
@@ -147,10 +165,16 @@ namespace wazaware.co.za.Controllers
 				Email = user.Email!,
 				Phone = user.Phone!
 			};
-			var view = new UserViewModel
+			var viewPartial = new PartialView
 			{
 				ShoppingCart = cart,
 				User = viewUserAccount
+			};
+			var view = new UserViewModel
+			{
+				ShoppingCart = cart,
+				User = viewUserAccount,
+				PartialView = viewPartial
 			};
 			return View(view);
 		}
@@ -193,10 +217,16 @@ namespace wazaware.co.za.Controllers
 				Email = user.Email!,
 				Phone = user.Phone!
 			};
-			var view = new UserViewModel
+			var viewPartial = new PartialView
 			{
 				ShoppingCart = cart,
 				User = viewUserAccount
+			};
+			var view = new UserViewModel
+			{
+				ShoppingCart = cart,
+				User = viewUserAccount,
+				PartialView = viewPartial
 			};
 			return View(view);
 		}
@@ -251,8 +281,7 @@ namespace wazaware.co.za.Controllers
 			};
 			if (isCookie == false)
 			{
-				HttpContext.Response.Cookies.Delete(cookieName);
-				
+				HttpContext.Response.Cookies.Delete(cookieName);				
 			}
 			else
 			{

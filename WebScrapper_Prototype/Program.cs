@@ -36,7 +36,7 @@ forwardedHeaderOptions.KnownProxies.Clear();
 app.UseForwardedHeaders(forwardedHeaderOptions);
 if (!app.Environment.IsDevelopment())
 {
-	app.UseExceptionHandler("/Home/WebsiteCritical");
+	app.UseExceptionHandler("/Shop/WebsiteCritical");
 	app.UseHsts();
 }
 

@@ -67,27 +67,18 @@ namespace wazaware.co.za.Services
 			}).ToList();
 			return view;
 		}
-		public void UpdateLoadedUser(UserAccount model)
+		public void UpdateLoadedUser(string userEmail)
 		{
 			const string cookieName = "wazaware.co.za-auto-sign-in";
 			var requestCookies = _httpContextAccessor.HttpContext!.Request.Cookies;
-			_ = requestCookies[cookieName];
+			var cookie = requestCookies[cookieName];
 			var cookieOptions = new CookieOptions
 			{
 				Expires = DateTimeOffset.Now.AddDays(7),
 				IsEssential = true
 			};
-			if (!requestCookies.ContainsKey(cookieName))
-			{
-				_httpContextAccessor.HttpContext!.Response.Cookies.Append(cookieName, model.Email!, cookieOptions);
-			}
-			else
-			{
-				_httpContextAccessor.HttpContext!.Response.Cookies.Delete(cookieName);
-				_httpContextAccessor.HttpContext!.Response.Cookies.Append(cookieName, model.Email!, cookieOptions);
-			}
+			_httpContextAccessor.HttpContext!.Response.Cookies.Append(cookieName, userEmail!, cookieOptions);
 		}
-
 		public List<ShoppingCartView> LoadCart(int userId)
 		{
 			// Query Database for UserAccount's Shopping Cart using variable userId
@@ -166,7 +157,6 @@ namespace wazaware.co.za.Services
 		public UserAccount? LoadDbUser()
 		{
 			const string cookieName = "wazaware.co.za-auto-sign-in";
-
 			var requestCookies = _httpContextAccessor.HttpContext!.Request.Cookies;
 			var intialRequest = requestCookies[cookieName];
 			var cookieOptions = new CookieOptions

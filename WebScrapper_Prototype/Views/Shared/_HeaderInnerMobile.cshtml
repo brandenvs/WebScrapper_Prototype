@@ -27,56 +27,45 @@
                                 <div class="nav-inner">
                                     <ul class="nav main-menu menu navbar-nav" style="display: flex; flex-direction: row;">
                                         <li>
-                                            <a href="#0">Shop<i class="ti-angle-down"></i></a>
+                                            <a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover" href="#0">Shop<i class="ti-angle-down"></i></a>
                                             <ul class="dropdown">
                                                 <li>
-                                                    <a href="@Url.Action("ProductDb", "Home", new { category = "essential_hardware" })">
+                                                    <a href="@Url.Action("Products", "Shop", new { category = "essential_hardware" })">
                                                         Essential Hardware<i class="ti-arrow-top-right"></i>
-                                                        @*<span class="new">New</span>*@
-                                                    </a>
-                                                    @*<ul class="dropdown">
-                                                    <li>
-                                                    @Html.ActionLink("Latest Hardware", "Products",
-                                                    new { category = "hardware_parent" })
-                                                    </li>
-                                                    <li>
-                                                    @Html.ActionLink("Latest Hardware", "Products",
-                                                    new { category = "hardware_parent" })
-                                                    </li>
-                                                    </ul>*@
+                                                    </a>          
                                                 </li>
                                                 <li>
-                                                    <a href="@Url.Action("ProductDb", "Home", new { category = "latest_gpus" })">
+                                                    <a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover" href="@Url.Action("Products", "Shop", new { category = "latest_gpus" })">
                                                         Latest GPUS<i class="ti-arrow-top-right"></i>
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="@Url.Action("ProductDb", "Home", new { category = "great_deals" })">
+                                                    <a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover" href="@Url.Action("Products", "Shop", new { category = "great_deals" })">
                                                         Great Deals<i class="ti-arrow-top-right"></i>
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="@Url.Action("ProductDb", "Home", new { category = "pc_chassis" })">
+                                                    <a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover" href="@Url.Action("Products", "Shop", new { category = "pc_chassis" })">
                                                         PC Chassis<i class="ti-arrow-top-right"></i>
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="@Url.Action("ProductDb", "Home", new { category = "data_storage" })">
+                                                    <a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover" href="@Url.Action("Products", "Shop", new { category = "data_storage" })">
                                                         Data Storage<i class="ti-arrow-top-right"></i>
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a href="@Url.Action("ProductDb", "Home", new { category = "performace_laptops" })">
+                                                    <a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover" href="@Url.Action("Products", "Shop", new { category = "performace_laptops" })">
                                                         Performance Laptops<i class="ti-arrow-top-right"></i>
                                                     </a>
                                                 </li>
                                             </ul>
                                         </li>
                                         <li>
-                                            <a href="/Shop/Cart"><i class="ti-shopping-cart-full" style="font-size:20px;"></i></a>
+                                            <a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover" href="/Shop/Cart"><i class="ti-shopping-cart-full" style="font-size:20px;"></i></a>
                                         </li>
                                         <li>
-                                            <a href="/User"><i class="ti-user" style="font-size:20px;"></i></a>
+                                            <a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover" href="/User"><i class="ti-user" style="font-size:20px;"></i></a>
                                         </li>
                                     </ul>
                                 </div>

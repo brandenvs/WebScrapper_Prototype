@@ -17,24 +17,9 @@
 </configuration>
 <html lang="zxx">
 <head>
-	<!-- Meta Tags -->
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="WazaWare.co.za | Gaming | PC | Laptops | Monitors | PC Builder">
-	<meta property="og:title" content="WazaWare">
-	<meta property="og:description" content="WazaWare.co.za | Gaming | PC | Laptops | Monitors | PC Builder">
-	<meta property="og:image" content="https://wazaware.co.za/Media/Logo/LogoOfficialIcon.png">
-	<meta property="og:url" content="https://wazaware.co.za">
-	<meta property="og:type" content="website">
-	<meta name="twitter:card" content="https://wazaware.co.za/Media/Logo/LogoOfficialIcon.png">
-	<meta name="twitter:title" content="WazaWare">
-	<meta name="twitter:description" content="WazaWare.co.za | Gaming | PC | Laptops | Monitors | PC Builder">
-	<meta name="twitter:image" content="https://wazaware.co.za/Media/Logo/LogoOfficialIcon.png">
-	<!-- Logo -->
-	<link rel="shortcut icon" href="https://WazaWare.co.zahttps://wazaware.co.za/Media/Logo/favicon.ico" type="image/x-icon">
-	<link rel="icon" href="https://wazaware.co.za/Media/Logo/favicon.ico" type="image/x-icon">
+	<partial name="_MetaData" />
 	<!-- Title Tag  -->
-	<title>Shop</title>
+	<title>Shop - Home</title>
 	<!-- Web Font -->
 	<link href="https://fonts.googleapis.com/css?family=Lato:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
 	<!-- StyleSheet -->
@@ -95,7 +80,7 @@
 	<div class="header shop" style="background-color:#FFF5E1;">
 		<!-- Topbar // Desktop Only -->
 		<div class="desktop">
-			<partial name="_TopBar" />
+			<partial name="_TopBar" model="@Model.PartialView" />
 			<!-- Middle Inner -->
 			<partial name="_MiddleInner" model="@Model.PartialView" />
 			<!-- Header Inner Partial View-->
@@ -324,7 +309,7 @@
 						</div>
 						<!-- Trending Products: Grid -->
 						<div class="row">
-							@foreach (var product in Model.TrendingProducts)
+							@foreach (var product in Model.TrendingProducts!)
 							{
 								<div class="col-lg-3 col-md-6 col-12">
 									<div class="single-product contain-fit">
@@ -486,7 +471,7 @@
 			actionCode = 1;
 			$.ajax({
 				type: 'GET',
-				url: '/Shop/Index',
+				url: '/Shop/Home',
 				data: { actionCode: actionCode },
 				success: function (r) {
 					$("#shoppingbasket").html($(r).find("#shoppingbasket").html());
@@ -503,7 +488,7 @@
 			actionCode = 5;
 			$.ajax({
 				type: 'GET',
-				url: '/Shop/Index',
+				url: '/Shop/Home',
 				data: { productId: productId, actionCode: actionCode },
 				success: function (r) {
 					$("#shoppingbasket").html($(r).find("#shoppingbasket").html());
@@ -521,7 +506,7 @@
 			actionCode = 10;
 			$.ajax({
 				type: 'GET',
-				url: '/Shop/Index',
+				url: '/Shop/Home',
 				data: { productId: productId, actionCode: actionCode },
 				success: function (r) {
 					$("#shoppingbasket").html($(r).find("#shoppingbasket").html());

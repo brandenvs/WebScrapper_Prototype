@@ -1,9 +1,5 @@
 ﻿@using wazaware.co.za.Models.ViewModels;
 @model PartialView
-@{
-
-}
-	
 <div class="middle-inner">
 	<div class="container">
 		<div class="row">
@@ -15,9 +11,8 @@
 			<div class="col-lg-7 col-md-7 col-12">
 				<div class="search-bar-top">
 					<div class="search-bar">
-						<form class="form-inline my-2 my-lg-0">
-							@Html.TextBox("search", ViewBag.Search as string,
-							new {Class="form-control me-2", Style="color:black;width: 100%;", PlaceHolder="Search..." })
+						<form class="form-inline my-2 my-lg-0" asp-controller="Shop" asp-action="Products" method="get">
+							<input asp-for="Search" class="form-control me-2" style="color:black;width: 100%;" placeholder="Search..." />	
 							<button href="#products" class="btnn" type="submit"><i class="ti-search"></i></button>
 						</form>
 					</div>
@@ -26,7 +21,7 @@
 			<div class="col-lg-2 col-md-3 col-12">
 				<div class="right-bar">
 					<div id="account" class="sinlge-bar shopping">
-						<a id="AccountHover" href="/User" onclick="loadAccount()" class="single-icon">
+						<a id="AccountHover" href="/user/index" class="single-icon">
 							<i>
 								<script src="https://cdn.lordicon.com/ritcuqlt.js"></script>
 								<lord-icon src="https://cdn.lordicon.com/dxjqoygy.json"
@@ -40,15 +35,14 @@
 						@if (ViewBag.isCookie)
 						{
 							<div id="AccountOptions" class="shopping-item">
-								<div class="dropdown-cart-header">
-									<p>@Model.User!.FirstName</p>
+								<div class="dropdown-cart-header">						
 								</div>
 								<ul class="shopping-list">
 									<li>
-										<a class="h5" href="@Url.Action("Login", "UserAccount")">Login</a>
+										<a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover h5" href="@Url.Action("Login", "User")">Login</a>
 									</li>
 									<li>
-										<a class="h5" href="@Url.Action("Register", "UserAccount")">Register</a>
+										<a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover h5" href="@Url.Action("Register", "User")">Register</a>
 									</li>
 								</ul>
 							</div>
@@ -64,17 +58,17 @@
 										<a class="cart-img" href="/User"><img src="" alt="UserImage" /></a>
 									</li>
 									<li>
-										<a class="h4" href="@Url.Action("Index", "UserAccount")">My Account</a>
+										<a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover h4"  href="@Url.Action("Index", "User")">My Account</a>
 									</li>
 									<li>
-										<a class="h5" href="/User">My Orders</a>
+										<a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover h4" href="/User">My Orders</a>
 									</li>
 									<li>
-										<a class="h6" href="/User">Check Order Status</a>
+										<a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover h5" href="/User">Check Order Status</a>
 									</li>
 								</ul>
 								<div class="bottom">
-									<a href="#" onclick="@Url.Action("Logout", "UserAccount")" class="btn animate">Logout</a>
+									<a href="#" onclick="@Url.Action("Logout", "User")" class="btn animate">Logout</a>
 								</div>
 							</div>
 						}
@@ -133,7 +127,7 @@
 								<div class="bottom">
 									<div class="total">
 										<span>Price:</span>
-										<span class="total-amount" style="text-decoration-line:line-through; color:red;">@Model.ShoppingCart!.</span>
+										<span class="total-amount" style="text-decoration-line:line-through; color:red;">@Model.ShoppingCart!.Select(s => s.CartBaseTotalFormatted).First()</span>
 									</div>
 									<div class="total">
 										<span>Discount:</span>

@@ -1,4 +1,6 @@
-﻿<div class="topbar">
+﻿@using wazaware.co.za.Models.ViewModels;
+@model PartialView
+<div class="topbar">
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-5 col-md-12 col-12">
@@ -41,17 +43,17 @@
 					@if (ViewBag.isCookie)
 					{
 						<ul class="list-main">
-							<li><i class="ti-shopping-cart"></i><a href="/Shop/Cart">Cart</a></li>
-							<li><i class="ti-bag"></i><a href="/Shop">Shop</a></li>
-							<li><i class="ti-power-off"></i><a href="/User">Login/Register</a></li>
+							<li><i class="ti-shopping-cart"></i><a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover" href="/Shop/Cart">Cart</a></li>
+							<li><i class="ti-bag"></i><a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover" href="/Shop">Shop</a></li>
+							<li><i class="ti-power-off"></i><a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover" href="/User">Login/Register</a></li>
 						</ul>
 					}
 					else
 					{
 						<ul class="list-main">
-							<li><i class="ti-shopping-cart"></i><a href="/Shop/Cart">Cart</a></li>
-							<li><i class="ti-bag"></i><a href="/Shop">Shop</a></li>
-							<li><i class="ti-power-off"></i><a href="/User">Account: @Model.UserView.FirstName</a></li>
+							<li><i class="ti-shopping-cart"></i><a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover" href="/Shop/Cart">Cart</a></li>
+							<li><i class="ti-bag"></i><a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover" href="/Shop">Shop</a></li>
+							<li><i class="ti-power-off"></i><a class="link-body-emphasis link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-10-hover" href="/User">Account: @Model.User!.FirstName</a></li>
 						</ul>
 					}
 				</div>
